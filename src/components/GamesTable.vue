@@ -107,6 +107,7 @@
                 <v-layout
                   v-else
                   justify-space-between
+                  align-center
                 >
                   <span class="text-truncate subheading font-weight-light ml-2">
                     {{ props.item.p1_.name }}
@@ -126,7 +127,10 @@
                 </v-layout>
               </td>
               <td class=" table-bg">
-                <div v-if="isAuthenticated && !props.item.isFinished">
+                <v-layout
+                  v-if="isAuthenticated && !props.item.isFinished"
+                  align-center
+                >
                   <v-btn
                     v-if="props.item.p2_.isUser"
                     :color="btnEnterColor"
@@ -143,10 +147,11 @@
                   <span class="text-truncate subheading font-weight-light ml-2">
                     {{ props.item.p2_.name }}
                   </span>
-                </div>
+                </v-layout>
                 <v-layout
                   v-else
                   justify-space-between
+                  align-center
                 >
                   <span class="text-truncate subheading font-weight-light  ml-2">
                     {{ props.item.p2_.name }}

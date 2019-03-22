@@ -7,7 +7,7 @@ const qs = require("querystring");
 export default new Vuex.Store({
   state: {
     // webUrl: "http://localhost:8080/api",
-    webUrl: process.env.VUE_APP_API_URL + "api",
+    webUrl: process.env.VUE_APP_BASE_URI,
     gamesInfo: [],
     gameDisplayed: {},
     defaultAnonymousPlayer: {
