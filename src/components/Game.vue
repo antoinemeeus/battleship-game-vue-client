@@ -262,7 +262,7 @@
               justify-center
             >
               <InstructionWizard
-                v-if="!placingShips"
+                v-show="!placingShips"
                 :nb-of-shots="maxSalvoSize"
                 @pauseTimer="wizardUnpausedTimer"
               />

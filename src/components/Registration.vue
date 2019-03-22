@@ -9,14 +9,20 @@
     :dark="isAuthenticated"
     :flat="isAuthenticated"
   >
-    <v-card-title v-if="!isAuthenticated" primary-title>
+    <v-card-title
+      v-if="!isAuthenticated"
+      primary-title
+    >
       <v-flex class="title text-xs-center">
         <span v-if="!choiceSignIn">Login</span>
         <span v-if="choiceSignIn">Register</span>
       </v-flex>
     </v-card-title>
 
-    <v-flex v-if="!isAuthenticated" class="text-xs-center">
+    <v-flex
+      v-if="!isAuthenticated"
+      class="text-xs-center"
+    >
       <v-btn
         v-if="choiceSignIn"
         small
@@ -24,21 +30,32 @@
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
         "
-        >{{
-          $vuetify.breakpoint.smAndDown ? "Login" : "Already have an account?"
-        }}</v-btn
-      >
-      <v-btn v-if="!choiceSignIn" small @click="choiceSignIn = !choiceSignIn"
-        >Create new account</v-btn
-      >
+      >{{
+        $vuetify.breakpoint.smAndDown ? "Login" : "Already have an account?"
+        }}</v-btn>
+      <v-btn
+        v-if="!choiceSignIn"
+        small
+        @click="choiceSignIn = !choiceSignIn"
+      >Create new account</v-btn>
     </v-flex>
 
     <v-card-text>
-      <v-alert :value="alert" :type="alertType" transition="scale-transition">
+      <v-alert
+        :value="alert"
+        :type="alertType"
+        transition="scale-transition"
+      >
         {{ alertMsg }}
       </v-alert>
-      <v-flex v-if="isAuthenticated" text-xs-center>
-        <AvatarsSelection v-model="currentUser.avatarID" :fixed="true" />
+      <v-flex
+        v-if="isAuthenticated"
+        text-xs-center
+      >
+        <AvatarsSelection
+          v-model="currentUser.avatarID"
+          :fixed="true"
+        />
       </v-flex>
       <div v-if="!isAuthenticated">
         <v-form
@@ -50,11 +67,19 @@
         >
           <v-container fluid>
             <v-layout column>
-              <v-layout v-if="choiceSignIn" row align-center>
+              <v-layout
+                v-if="choiceSignIn"
+                row
+                align-center
+              >
                 <AvatarsSelection v-model="avatarID" />
                 <div class="subheading">Select an avatar.</div>
               </v-layout>
-              <v-flex v-if="choiceSignIn" xs12 md4>
+              <v-flex
+                v-if="choiceSignIn"
+                xs12
+                md4
+              >
                 <v-text-field
                   v-model="userName"
                   clearable
@@ -64,7 +89,10 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 md4>
+              <v-flex
+                xs12
+                md4
+              >
                 <v-text-field
                   v-model="email"
                   clearable
@@ -75,7 +103,10 @@
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 md4>
+              <v-flex
+                xs12
+                md4
+              >
                 <v-text-field
                   v-model="password"
                   label="Password"
@@ -90,20 +121,35 @@
         </v-form>
       </div>
     </v-card-text>
-    <v-flex v-if="isAuthenticated" pb-3 class="title text-xs-center">
+    <v-flex
+      v-if="isAuthenticated"
+      pb-3
+      class="title text-xs-center"
+    >
       <span>Connected as: {{ currentUser.userName }} !</span>
     </v-flex>
 
     <v-card-actions>
-      <v-layout v-if="isAuthenticated" justify-center>
+      <v-layout
+        v-if="isAuthenticated"
+        justify-center
+      >
         <v-expand-transition>
-          <v-btn color="success" type="submit" @click="logOut">
+          <v-btn
+            color="success"
+            type="submit"
+            @click="logOut"
+          >
             <v-icon>exit_to_app</v-icon>
             <span class="px-2">Log out</span>
           </v-btn>
         </v-expand-transition>
       </v-layout>
-      <v-layout v-if="!isAuthenticated" align-center justify-center>
+      <v-layout
+        v-if="!isAuthenticated"
+        align-center
+        justify-center
+      >
         <v-btn
           v-if="!choiceSignIn && !isAuthenticated"
           :loading="loading"
@@ -219,26 +265,28 @@ export default {
         // that falls out of the range of 2xx
         if (error.response.status === 401)
           this.alertMsg = requestType + " failed : Invalid Email or Password";
-        else
-          this.alertMsg =
-            requestType + " failed : " + error.response.data.error;
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        else {
+          if (error.response.data)
+            this.alertMsg =
+              requestType + " failed : " + error.response.data.error;
+        }
+        // console.log(error.response.data);
+        // console.log(error.response.status);
+        // console.log(error.response.headers);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
         this.alertMsg = requestType + " failed : Request Error: Server is busy";
-        console.log(error.request);
+        // console.log(error.request);
       } else {
         // Something happened in setting up the request that triggered an Error
         this.alertMsg =
           requestType + " failed : Settings error:" + error.message;
-        console.log("Error", error.message);
+        // console.log("Error", error.message);
       }
       this.alert = true;
-      console.log(error.config);
+      console.log(error);
       this.$refs.form.validate();
       setTimeout(() => {
         this.alert = false;
