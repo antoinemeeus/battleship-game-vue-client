@@ -147,19 +147,23 @@ export default new Vuex.Store({
     authSuccess(state) {
       state.loggedIn = true;
       state.status = "success";
+      state.loading = false;
     },
     authLogOut(state) {
       state.loggedIn = false;
       state.status = "logout";
       state.userInfo = null;
+      state.loading = false;
     },
     authRequest(state) {
       state.status = "loading";
+      state.loading = true;
     },
     authError(state) {
       state.loggedIn = false;
       state.status = "error";
       state.userInfo = null;
+      state.loading = false;
     }
   },
   actions: {

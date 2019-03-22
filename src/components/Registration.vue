@@ -138,6 +138,7 @@
           <v-btn
             color="success"
             type="submit"
+            :loading="loading"
             @click="logOut"
           >
             <v-icon>exit_to_app</v-icon>
