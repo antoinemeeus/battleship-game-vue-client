@@ -1,14 +1,39 @@
 <template>
-  <v-container ma-0 pa-0 fluid>
-    <v-layout justify-space-around align-center>
-      <v-flex xs12 class="display-4" pa-4 text-xs-center>
+  <v-container
+    ma-0
+    pa-0
+    fluid
+  >
+    <v-layout
+      justify-space-around
+      align-center
+    >
+      <v-flex
+        xs12
+        class="display-4"
+        pa-4
+        text-xs-center
+      >
         <div class="game-title px-3 ">BattleWreck</div>
       </v-flex>
     </v-layout>
-    <v-layout row justify-space-around>
-      <v-flex xs5 class="box">
-        <v-layout column justify-center px-2>
-          <v-flex pb-1 class="subheading text-xs-center">
+    <v-layout
+      row
+      justify-space-around
+    >
+      <v-flex
+        xs5
+        class="box"
+      >
+        <v-layout
+          column
+          justify-center
+          px-2
+        >
+          <v-flex
+            pb-1
+            class="subheading text-xs-center"
+          >
             <div class="display-1 text-xs-center  pa-3">
               Welcome aboard, budding captain!
             </div>
@@ -26,8 +51,14 @@
               the multiplayer mode.
             </p>
           </v-flex>
-          <v-divider dark py-3></v-divider>
-          <v-flex py-3 text-xs-center>
+          <v-divider
+            dark
+            py-3
+          ></v-divider>
+          <v-flex
+            py-3
+            text-xs-center
+          >
             <div class="py-3 title">Game screen shots</div>
             <VueperSlides
               :visible-slides="2"
@@ -46,15 +77,36 @@
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex xs5 class="box">
-        <v-layout row wrap justify-center align-center fill-height>
-          <v-flex v-if="!isAuthenticated" xs12 text-xs-center pa-3>
+      <v-flex
+        xs5
+        class="box"
+      >
+        <v-layout
+          row
+          wrap
+          justify-center
+          align-center
+          fill-height
+        >
+          <v-flex
+            v-if="!isAuthenticated"
+            xs12
+            text-xs-center
+            pa-3
+          >
             <h3 class="display-1">Identify yourself before playing</h3>
           </v-flex>
 
-          <v-flex v-if="isAuthenticated" xs12 text-xs-center>
+          <v-flex
+            v-if="isAuthenticated"
+            xs12
+            text-xs-center
+          >
             <h3 class=" pa-3 display-1">Battle Mode:</h3>
-            <v-layout row justify-space-around>
+            <v-layout
+              row
+              justify-space-around
+            >
               <v-hover>
                 <v-flex
                   slot-scope="{ hover }"
@@ -63,12 +115,21 @@
                   xs5
                   pa-2
                 >
-                  <v-layout justify-center fill-height row wrap>
+                  <v-layout
+                    justify-center
+                    fill-height
+                    row
+                    wrap
+                  >
                     <v-flex xs12>
                       Play against the computer
                     </v-flex>
                     <v-flex xs5>
-                      <v-radio-group v-model="radios" dark hide-details>
+                      <v-radio-group
+                        v-model="radios"
+                        dark
+                        hide-details
+                      >
                         <v-radio
                           v-for="(item, i) in difficultyItems"
                           :key="i"
@@ -78,13 +139,17 @@
                         ></v-radio>
                       </v-radio-group>
                     </v-flex>
-                    <v-flex shrink align-self-center>
-                      <v-btn :color="radios.color" @click="gameVsComputer()"
-                        >{{
-                          $vuetify.breakpoint.mdAndDown ? "" : "Solo - "
+                    <v-flex
+                      shrink
+                      align-self-center
+                    >
+                      <v-btn
+                        :color="radios.color"
+                        @click="gameVsComputer()"
+                      >{{
+                        $vuetify.breakpoint.mdAndDown ? "" : "Solo - "
                         }}
-                        PLAY</v-btn
-                      >
+                        PLAY</v-btn>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -97,12 +162,20 @@
                   class="modebox"
                   xs5
                 >
-                  <v-layout justify-center fill-height row wrap>
+                  <v-layout
+                    justify-center
+                    fill-height
+                    row
+                    wrap
+                  >
                     <v-flex xs12>
                       Play against other players
                     </v-flex>
-                    <v-flex xs12> 
-                      <v-btn color="#ffe241" to="/lobby">Multiplayer</v-btn>
+                    <v-flex xs12>
+                      <v-btn
+                        color="#ffe241"
+                        to="/lobby"
+                      >Multiplayer</v-btn>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -110,7 +183,10 @@
             </v-layout>
           </v-flex>
 
-          <v-flex ma-3 xs8>
+          <v-flex
+            ma-3
+            xs8
+          >
             <Registration class="card-box" />
           </v-flex>
         </v-layout>

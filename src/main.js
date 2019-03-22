@@ -9,7 +9,6 @@ import store from "./store";
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure you are using css-loader
 
 // Helpers
-
 import moment from "moment";
 Vue.prototype.moment = moment;
 

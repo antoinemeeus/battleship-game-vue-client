@@ -1,7 +1,13 @@
 <template>
   <v-app>
-    <v-toolbar dense dark>
-      <v-btn icon to="/">
+    <v-toolbar
+      dense
+      dark
+    >
+      <v-btn
+        icon
+        to="/"
+      >
         <v-icon>home</v-icon>
       </v-btn>
       <v-toolbar-title class="">
@@ -10,11 +16,13 @@
 
       <v-spacer></v-spacer>
       <AvatarButton />
-      <v-btn icon to="/lobby">
+      <v-btn
+        icon
+        to="/lobby"
+      >
         <v-icon>menu</v-icon>
       </v-btn>
     </v-toolbar>
-
     <v-content>
       <v-parallax
         dark
