@@ -1,38 +1,45 @@
 <template>
   <v-app>
-    <v-toolbar app>
-      <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+    <v-toolbar dense dark>
+      <v-btn icon to="/">
+        <v-icon>home</v-icon>
+      </v-btn>
+      <v-toolbar-title class="">
+        <span class="px-3 font-weight-light">Battleship Game </span>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
-      <v-btn
-        flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
+      <AvatarButton />
+      <v-btn icon to="/lobby">
+        <v-icon>menu</v-icon>
       </v-btn>
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <v-parallax
+        dark
+        height="1100"
+        :src="require('@/assets/battle_ship_background.jpg')"
+      >
+        <router-view />
+      </v-parallax>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
-
+import AvatarButton from "./components/AvatarButton.vue";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  },
-  data () {
+  name: "App",
+  components: { AvatarButton },
+  data() {
     return {
       //
-    }
-  }
-}
+    };
+  },
+
+  created() {}
+};
 </script>
+
+<style></style>
