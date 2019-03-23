@@ -14,20 +14,7 @@
         pa-2
       >
         <div>GAME STATE: {{ gameState }}</div>
-        <v-btn
-          small
-          icon
-          @click="timerStartStop = !timerStartStop"
-        >
-          <v-icon
-            v-show="!timerStartStop"
-            color="white"
-          >timer</v-icon>
-          <v-icon
-            v-show="timerStartStop"
-            color="white"
-          >timer_off</v-icon>
-        </v-btn>
+
       </v-flex>
     </v-layout>
     <v-layout justify-space-between>
@@ -220,7 +207,6 @@
             <span v-else>Computer turn</span>
             <CountDownTimer
               ref="timer"
-              :pause="timerStartStop"
               :sound-enabled="playSound"
               @timerFinish="timerEnd()"
             />
@@ -260,6 +246,23 @@
                 :nb-of-shots="maxSalvoSize"
                 @pauseTimer="wizardUnpausedTimer"
               />
+              <v-flex text-xs-center>
+                <v-btn
+                  icon
+                  @click="pauseTimer = !pauseTimer"
+                >
+                  <v-icon
+                    v-show="pauseTimer"
+                    large
+                    color="white"
+                  >timer</v-icon>
+                  <v-icon
+                    v-show="!pauseTimer"
+                    large
+                    color="white"
+                  >timer_off</v-icon>
+                </v-btn>
+              </v-flex>
               <v-flex text-xs-center>
                 <v-btn
                   icon
@@ -378,7 +381,8 @@ export default {
   data() {
     return {
       // countDownTime: 90,
-      timerStartStop: true,
+      gameStart: false,
+      pauseTimer: false,
       playSound: true,
       dialog: false,
       selectedShip: "",
@@ -472,7 +476,14 @@ export default {
       ]
     };
   },
-  watch: {},
+  watch: {
+    pauseTimer(newVal) {
+      console.log("PauseTImer:", newVal);
+      if (newVal && this.gameStart) {
+        this.$refs.timer.start();
+      } else this.$refs.timer.stop();
+    }
+  },
   created() {
     this.placeShipRandomly(this.homeShips);
     this.placeShipRandomly(this.computerShips);
@@ -778,7 +789,7 @@ export default {
     },
     wizardUnpausedTimer(val) {
       //console.log("WIZARD UNPAUSED", val);
-      this.timerStartStop = val;
+      this.pauseTimer = val;
     },
     timerEnd() {
       //timer end emitted event
@@ -938,9 +949,6 @@ export default {
         }
       }
     },
-    updateSalvoPositions(value) {
-      this.homeNextSalvoPositions = value.positions;
-    },
 
     salvoTarget(target) {
       if (!this.canFireSalvo) {
@@ -1044,7 +1052,6 @@ export default {
       this.selectedShip = "";
       // this.$refs.timer.setTime({minutes:2,secondes:0});
       this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
-      this.$refs.timer.start();
       //console.log("READY! -> OK");
     },
     fireSalvo() {
@@ -1063,6 +1070,8 @@ export default {
         this.homeNextSalvoPositions = [];
 
         this.$refs.timer.reset();
+        //only time initialize for timer to now it can start
+        this.gameStart = true;
         this.homeTurn = false;
         //wait 1 s before computer turns for a more paced game;
         setTimeout(() => {
@@ -1139,6 +1148,7 @@ export default {
       this.$refs.timer.reset();
       this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
       this.$refs.timer.start();
+      this.pauseTimer = true;
 
       this.canFireSalvo = true;
       this.homeTurn = true;

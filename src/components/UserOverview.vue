@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto"
-    color="#373d5598"
+    color="transparent"
     dark
     flat
     max-width="800"
@@ -9,7 +9,10 @@
     min-height="212"
   >
     <v-card-title>
-      <div v-if="isUser" class="px-2 title font-weight-light">
+      <div
+        v-if="isUser"
+        class="px-2 title font-weight-light"
+      >
         <span class="hidden-md-and-down">Welcome to the battlefield,</span>
         Captain {{ user.userName }}!
       </div>
@@ -19,12 +22,19 @@
       >
         Your opponent: {{ user.userName }} !
       </div>
-      <div v-if="!isUser && waitingTojoin" class="px-2 title font-weight-light">
+      <div
+        v-if="!isUser && waitingTojoin"
+        class="px-2 title font-weight-light"
+      >
         Waiting for opponent to join
       </div>
     </v-card-title>
     <v-card-text v-if="waitingTojoin">
-      <v-layout justify-center align-center fill-height>
+      <v-layout
+        justify-center
+        align-center
+        fill-height
+      >
         <v-progress-circular
           :size="100"
           color="primary"
@@ -34,19 +44,64 @@
     </v-card-text>
     <v-card-text v-if="!waitingTojoin">
       <v-layout row>
-        <v-flex xs3 align-self-center>
-          <v-avatar :size="80" color="grey lighten-4" class="avatar_hover">
-            <img :src="userAvatar.src" :alt="userAvatar.name" />
-          </v-avatar>
+        <v-flex
+          xs3
+          align-self-center
+          text-xs-center
+        >
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-badge
+                :color="isUserConnected?'green':'red'"
+                left
+                overlap
+              >
+                <template v-slot:badge>
+                  <v-icon
+                    dark
+                    small
+                    v-on="on"
+                  >
+                    {{isUserConnected?'fa-user':'fa-user-alt-slash'}}
+                  </v-icon>
+                </template>
+                <v-avatar
+                  :size="80"
+                  color="grey lighten-4"
+                  class="avatar_hover"
+                >
+                  <img
+                    :src="userAvatar.src"
+                    :alt="userAvatar.name"
+                  />
+                </v-avatar>
+              </v-badge>
+            </template>
+            <span>{{isUserConnected?'Player is connected':'Player is disconnected'}}</span>
+          </v-tooltip>
+          <v-btn
+            v-if="isUser"
+            color="red"
+            :loading="status=='loading'"
+            small
+            round
+            @click.stop="logOut()"
+          >Log out</v-btn>
         </v-flex>
         <v-flex align-self-center>
           <v-flex class="subheading font-weight-bold">
             <span v-if="isUser">Your informations & Statistics :</span>
             <span v-if="!isUser">Enemy informations & Statistics :</span>
           </v-flex>
-          <v-layout row class=" text-no-wrap">
+          <v-layout
+            row
+            class=" text-no-wrap"
+          >
             <v-flex px-1>
-              <v-layout fill-height column>
+              <v-layout
+                fill-height
+                column
+              >
                 <v-flex>
                   Email:<span class="orange--text"> {{ user.email }}</span>
                 </v-flex>
@@ -55,16 +110,27 @@
                   <span class="orange--text">{{ user.id }}</span>
                 </v-flex>
                 <v-flex>
+                  Last move:
+                  <span class="orange--text">{{ moment(user.lastPlayedDate).calendar() }}</span>
+                </v-flex>
+                <v-flex>
+                  Last RqCo:
+                  <span class="orange--text">{{ moment(user.lastConnectedDate).calendar() }}</span>
+                </v-flex>
+                <v-flex>
                   <div v-if="isUser">
-                    <span class="orange--text">{{ userActions }}</span>
+                    Action: <span class="orange--text"> {{ userActions }}</span>
                   </div>
                   <div v-if="!isUser">
-                    <span class="orange--text">{{ opponentActions }}</span>
+                    Action: <span class="orange--text"> {{ opponentActions }}</span>
                   </div>
                 </v-flex>
               </v-layout>
             </v-flex>
-            <v-flex px-1 hidden-sm-and-down>
+            <v-flex
+              px-1
+              hidden-sm-and-down
+            >
               <v-layout column>
                 <v-flex>
                   <v-layout justify-space-between>
@@ -100,7 +166,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   props: {
     isUser: { type: Boolean, default: true },
@@ -109,15 +175,36 @@ export default {
       default: () => ({
         avatarID: 11,
         id: "AI",
+        lastPlayedDate: "",
+        lastConnectedDate: "",
         userName: "NotAComputer",
         email: "SinkAllShips@Skynet.evil",
         score: { total: 0, won: 0, lost: 0, tied: 0 }
       })
-    }
+    },
+    isUserConnected: { type: Boolean, default: true }
   },
   data: () => ({}),
+  methods: {
+    ...mapActions(["authRequest"]),
+    logOut() {
+      let payload = {
+        data: {},
+        rqUrl: "/logout"
+      };
+      this.authRequest(payload).then(
+        res => {
+          console.log(res);
+          this.$router.push("/");
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+  },
   computed: {
-    ...mapState(["avatarList", "avatarComputer"]),
+    ...mapState(["avatarList", "avatarComputer", "status"]),
     ...mapGetters(["gameStateCode"]),
     userAvatar() {
       let avatarFound = this.avatarList.find(

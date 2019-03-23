@@ -1,17 +1,37 @@
 <template>
   <div>
-    <v-menu v-model="menu" offset-y nudge-left="50%">
+    <v-menu
+      v-model="menu"
+      offset-y
+      nudge-left="50%"
+    >
       <template v-slot:activator="{ on }">
-        <v-btn fab icon v-on="on">
-          <v-avatar :size="40" color="grey lighten-4">
-            <img :src="selectedAvatar.src" :alt="selectedAvatar.name" />
+        <v-btn
+          fab
+          icon
+          v-on="on"
+        >
+          <v-avatar
+            :size="40"
+            color="grey lighten-4"
+          >
+            <img
+              :src="selectedAvatar.src"
+              :alt="selectedAvatar.name"
+            />
           </v-avatar>
         </v-btn>
       </template>
       <v-list>
-        <v-list-tile v-if="!isAuthenticated" @click.stop="openModal">
-          <v-list-tile-avatar tile :size="30">
-            <v-icon>exit_to_app</v-icon>
+        <v-list-tile
+          v-if="!isAuthenticated"
+          @click.stop="openModal"
+        >
+          <v-list-tile-avatar
+            tile
+            :size="30"
+          >
+            <v-icon>fa-sign-in-alt</v-icon>
           </v-list-tile-avatar>
 
           <v-list-tile-content>
@@ -19,9 +39,15 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile v-if="isAuthenticated" @click="logOut">
-          <v-list-tile-avatar tile :size="30">
-            <v-icon>exit_to_app</v-icon>
+        <v-list-tile
+          v-if="isAuthenticated"
+          @click="logOut"
+        >
+          <v-list-tile-avatar
+            tile
+            :size="30"
+          >
+            <v-icon color="red">fa-sign-out-alt</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title pr-2>Log out</v-list-tile-title>
@@ -29,7 +55,10 @@
         </v-list-tile>
       </v-list>
     </v-menu>
-    <v-dialog v-model="dialog" max-width="500">
+    <v-dialog
+      v-model="dialog"
+      max-width="500"
+    >
       <v-flex shrink>
         <Registration @loginSuccess="closeModal" />
       </v-flex>

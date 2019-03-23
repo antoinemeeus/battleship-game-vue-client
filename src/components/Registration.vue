@@ -26,6 +26,7 @@
       <v-btn
         v-if="choiceSignIn"
         small
+        color="primary"
         @click="
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
@@ -35,6 +36,7 @@
         }}</v-btn>
       <v-btn
         v-if="!choiceSignIn"
+        color="primary"
         small
         @click="choiceSignIn = !choiceSignIn"
       >Create new account</v-btn>
@@ -136,9 +138,9 @@
       >
         <v-expand-transition>
           <v-btn
-            color="success"
+            color="red"
             type="submit"
-            :loading="loading"
+            :loading="status=='loading'"
             @click="logOut"
           >
             <v-icon>exit_to_app</v-icon>
@@ -153,8 +155,8 @@
       >
         <v-btn
           v-if="!choiceSignIn && !isAuthenticated"
-          :loading="loading"
-          :disabled="loading || !valid"
+          :loading="status=='loading'"
+          :disabled="status=='loading' || !valid"
           color="success"
           type="submit"
           @click="logIn"
@@ -163,8 +165,8 @@
         </v-btn>
         <v-btn
           v-if="choiceSignIn && !isAuthenticated"
-          :loading="loading"
-          :disabled="!valid || loading"
+          :loading="status=='loading'"
+          :disabled="!valid || status=='loading'"
           color="primary"
           @click="signUp"
         >
@@ -237,7 +239,7 @@ export default {
     this.valid = false;
   },
   computed: {
-    ...mapState(["status", "gamesInfo", "loading", "avatarList"]),
+    ...mapState(["status", "gamesInfo", "loading", "status", "avatarList"]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
       return this.avatarList.find(av => av.id == this.currentUser.avatarID);
@@ -358,7 +360,10 @@ export default {
           },
           err => {
             console.log(err);
-            if (err.response.data.error == "Email already taken") {
+            if (
+              err.response &&
+              err.response.data.error == "Email already taken"
+            ) {
               this.lastEmailTaken = this.email;
             } else this.handleAuthErrors("SignUp", err);
           }

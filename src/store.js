@@ -147,23 +147,19 @@ export default new Vuex.Store({
     authSuccess(state) {
       state.loggedIn = true;
       state.status = "success";
-      state.loading = false;
     },
     authLogOut(state) {
       state.loggedIn = false;
       state.status = "logout";
       state.userInfo = null;
-      state.loading = false;
     },
     authRequest(state) {
       state.status = "loading";
-      state.loading = true;
     },
     authError(state) {
       state.loggedIn = false;
       state.status = "error";
       state.userInfo = null;
-      state.loading = false;
     }
   },
   actions: {
@@ -190,6 +186,7 @@ export default new Vuex.Store({
           })
           .catch(function(err) {
             commit("authError");
+            commit("authLogOut");
             commit("setRestrictedAccess", true);
             commit("setUserInfo", null);
             reject(err);
@@ -206,22 +203,25 @@ export default new Vuex.Store({
       };
       return new Promise((resolve, reject) => {
         axios(options)
-          .then(response => {
-            commit(payload.mutation, response.data);
+          .then(res => {
+            commit(payload.mutation, res.data);
             commit("dataIsReady");
             commit("userAuthorized");
-            commit("setServerMessage", response.status + " :: User authorized");
-            resolve(response.status);
+            commit("setServerMessage", res.status + " :: User authorized");
+            resolve(res.status);
           })
-          .catch(error => {
+          .catch(err => {
             commit("dataIsReady");
             commit("userUnauthorized");
-            if (error.response) {
-              commit("setServerMessage", error.response.data.error);
+            if (err.response) {
+              commit("setServerMessage", err.response.data.error);
               commit("userUnauthorized");
-              reject(error.response);
+              if (err.response.status == 401) {
+                commit("authLogOut");
+              }
+              reject(err.response);
             }
-            reject(error);
+            reject(err);
           });
       });
     },

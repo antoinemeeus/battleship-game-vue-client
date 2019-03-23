@@ -14,7 +14,7 @@
         pa-4
         text-xs-center
       >
-        <div class="game-title px-3 ">BattleWreck</div>
+        <div class="game-title px-3 tex-carve">BattleWreck</div>
       </v-flex>
     </v-layout>
     <v-layout
@@ -187,7 +187,14 @@
             ma-3
             xs8
           >
-            <Registration class="card-box" />
+            <Registration
+              v-if="!isAuthenticated"
+              class="card-box"
+            />
+            <UserOverview
+              v-if="isAuthenticated"
+              :user="currentUser"
+            />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -197,6 +204,7 @@
 
 <script>
 import Registration from "../components/Registration.vue";
+import UserOverview from "../components/UserOverview.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 import { VueperSlides, VueperSlide } from "vueperslides";
 
@@ -205,6 +213,7 @@ export default {
   name: "LandingPage",
   components: {
     Registration,
+    UserOverview,
     VueperSlides,
     VueperSlide
   },
@@ -252,5 +261,6 @@ export default {
   ); /* background-image: url("../assets/textures/metal_rivets_h.jpg");
   background-size: contain;
   background-repeat: repeat-x; */
+  text-shadow: 3px 5px 2px #474747;
 }
 </style>

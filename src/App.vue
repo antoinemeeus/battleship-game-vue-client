@@ -15,6 +15,11 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
+      <v-icon
+        :class="{refresh:this.$store.state.loading}"
+        dark
+        small
+      >sync</v-icon>
       <AvatarButton />
       <v-btn
         icon
@@ -45,9 +50,20 @@ export default {
       //
     };
   },
-
   created() {}
 };
 </script>
 
-<style></style>
+<style scoped>
+.refresh {
+  animation: rotation 2s infinite linear reverse;
+}
+@keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+</style>

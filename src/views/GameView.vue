@@ -25,23 +25,35 @@
     <div v-if="!pageIsRestricted">
       <v-layout>
         <v-flex pa-2>
-          <div
+          <!-- <div
             v-if="gameDisplayed.gameState"
             class="title text-xs-center"
           >
             {{ gameDisplayed.gameState.Status }} :
-            {{ gameDisplayed.gameState.Info }} :CODE:{{
-            gameDisplayed.gameState.code
-            }}
-          </div>
-          <v-flex xs12>
-            {{ loading ? "Loading..." : "Finished Loading" }}
-          </v-flex>
-          <v-flex xs12>
+            {{ gameDisplayed.gameState.Info }}
+          </div> -->
+          <v-snackbar
+            v-model="snackbar"
+            :timeout="4000"
+            top
+            vertical
+          >
+            <h4 class="title">
+              Player <span class="orange--text">{{ opponentPlayer.userName }}</span> has joined the battle!
+            </h4>
+            <v-btn
+              color="pink"
+              flat
+              @click="snackbar = false"
+            >
+              Close
+            </v-btn>
+          </v-snackbar>
+          <!-- <v-flex xs12>
             <div>Page is restricted: {{ pageIsRestricted }}</div>
             <div>Loading: {{ loading }}</div>
             <div>ServerResponse: {{ serverMessage }}</div>
-          </v-flex>
+          </v-flex> -->
         </v-flex>
       </v-layout>
       <v-layout justify-space-between>
@@ -49,21 +61,50 @@
           xs6
           md5
           xl4
+          class="user-bg-color"
         >
           <UserOverview :user="currentPlayer" />
         </v-flex>
+        <!-- <v-flex
+          align-self-end
+          text-xs-center
+        >
+          :CODE:{{
+          gameDisplayed.gameState?gameDisplayed.gameState.code:'waiting'
+          }}
+        </v-flex> -->
         <v-flex
           xs6
           md5
           xl4
+          class="user-bg-color"
         >
           <UserOverview
             :is-user="false"
             :user="opponentPlayer"
+            :isUserConnected="isOpponentConnected"
           />
         </v-flex>
       </v-layout>
       <v-layout
+        v-show="!gameDisplayed.ships"
+        justify-center
+        align-center
+        class="pa-3 elevation-8 game-box"
+      >
+        <v-flex
+          xs5
+          text-xs-center
+        >
+          <v-progress-circular
+            indeterminate
+            :size="100"
+            color="primary"
+          ></v-progress-circular>
+        </v-flex>
+      </v-layout>
+      <v-layout
+        v-show="gameDisplayed.ships"
         justify-space-between
         align-content-space-around
         row
@@ -76,7 +117,7 @@
             justify-center
           >
             <v-flex
-              v-if="!placingShips"
+              v-show="!placingShips"
               grow
             >
               <v-layout
@@ -119,7 +160,7 @@
               </Grid>
             </v-flex>
             <v-flex
-              v-if="placingShips"
+              v-show="placingShips"
               xs6
               px-2
               mx-1
@@ -176,6 +217,7 @@
                   <!-- <v-btn @click="placeShipRandomly(computerShips)">PlaceCOMPUTERShipRandomly</v-btn> -->
                   <v-btn
                     :disabled="!placingShips"
+                    :loading="sendingShips"
                     @click="ready()"
                   >
                     <v-icon>fa-play</v-icon>
@@ -227,18 +269,20 @@
             ></SalvoMissiles>
             <v-flex
               pa-1
+              pt-2
               class="title font-weight-bold text-xs-center"
             >
               Round {{ salvoTurn }}
             </v-flex>
-            <v-flex class="text-xs-center">
-              <span v-if="canFireSalvo">It's your turn</span>
-              <span v-else>Opponent turn</span>
-              <CountDownTimer
-                ref="timer"
-                :sound-enabled="playSound"
-                @timerFinish="timerEnd()"
-              />
+            <v-flex class="subheading text-xs-center">
+              <span
+                v-if="canFireSalvo"
+                class="green--text"
+              >It's your turn</span>
+              <span
+                v-else
+                class="red--text"
+              >Opponent turn</span>
             </v-flex>
             <v-flex class="text-xs-center">
               <div>Launch button</div>
@@ -271,7 +315,7 @@
                 justify-center
               >
                 <InstructionWizard
-                  v-if="!placingShips"
+                  v-if="!placingShips && userIsReady"
                   :nb-of-shots="maxSalvoSize"
                 />
                 <v-flex text-xs-center>
@@ -309,6 +353,7 @@
                   :grid-size="gridSize"
                   :cell-size="cellSize"
                   :is-salvo-target="salvoPositions"
+                  :isSalvoLocked="lockedSalvo"
                   :hits="opponentGridHits"
                   :can-fire="canFireSalvo && !isGameFinished"
                   :waiting-for-opponent="waitingOpponent"
@@ -336,8 +381,8 @@
         class="popup "
         column
       >
-        <span class="title"> {{ alertMsg }} </span>
         <span class="display-3">{{ gameResult }}</span>
+        <span class="title"> {{ resultMsg }} </span>
         <v-flex>
           <v-btn @click="$router.push('/lobby')">Back to Menu</v-btn>
         </v-flex>
@@ -370,10 +415,13 @@ export default {
   props: ["gp"],
   data() {
     return {
+      snackbar: false,
+      userIsReady: false,
       passedRoundCounter: 0,
       alertMsg: "",
+      resultMsg: "",
       maxSalvoSize: 5,
-      countDownTime: 90,
+      countDownTime: 180,
       timerStartStop: true,
       playSound: true,
       dialog: false,
@@ -383,6 +431,9 @@ export default {
       shipPositions: {},
       salvoPositions: [],
       salvoTurn: 1,
+      sendingSalvo: false,
+      sendingShips: false,
+      lockedSalvo: [],
       ships: [
         {
           type: "carrier",
@@ -423,33 +474,21 @@ export default {
         this.getGame();
       }
     },
-    opponentPlayer(newOpponent, oldOpponent) {
-      // if (oldOpponent == null)
-      //   alert(newOpponent.userName + " joined the game!");
+    playerSalvoes(newObj, oldObj) {
+      if (Object.keys(newObj).length > Object.keys(oldObj).length)
+        this.lockedSalvo = [];
     },
-    gameState(newGameState, oldGameState) {
-      if (
-        newGameState.code == "4" &&
-        oldGameState != undefined &&
-        oldGameState.code == "4"
-      ) {
-        this.$refs.timer.reset();
-        this.$refs.timer.setTime({
-          secondes: this.timeLeftToPlayInSec,
-          minutes: 0
-        });
-        this.$refs.timer.start();
+    opponentPlayer(newOpponent, oldOpponent) {
+      if (newOpponent.id != null && oldOpponent.id == null) {
+        // alert(newOpponent.userName + " joined the game!");
+        this.snackbar = true;
       }
-      if (
-        newGameState.code == "3" &&
-        oldGameState != undefined &&
-        oldGameState.code != "3"
-      ) {
-        this.$refs.timer.reset();
-        this.$refs.timer.setTime({
-          secondes: this.timeLeftToPlayInSec,
-          minutes: 0
-        });
+    },
+
+    gameState(newGameState, oldGameState) {
+      if (newGameState.Info) this.resultMsg = newGameState.Info;
+      if (newGameState.code > 1) {
+        this.userIsReady = true;
       }
       if (this.isGameFinished) {
         this.stopAutoRefresh();
@@ -459,10 +498,10 @@ export default {
     }
   },
   created() {
-    this.getGame();
     this.placeShipRandomly();
   },
   mounted() {
+    this.sendingSalvo = false;
     window.onkeydown = function(event) {
       if (event.keyCode === 32) {
         event.preventDefault();
@@ -473,8 +512,13 @@ export default {
     //   return false;
     // };
     this.$nextTick(() => {
+      this.getGame();
       window.addEventListener("keydown", this.gameKeyDownEvent, false);
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    this.stopAutoRefresh();
+    next();
   },
   beforeDestroy() {
     this.stopAutoRefresh();
@@ -565,7 +609,7 @@ export default {
     isGameFinished() {
       if (this.gameState != null) {
         if (this.gameState.code == "5") {
-          if (this.$refs.timer) this.$refs.timer.reset();
+          // if (this.$refs.timer) this.$refs.timer.reset();
           this.stopAutoRefresh();
           return true;
         }
@@ -582,7 +626,8 @@ export default {
       if (!this.objIsEmpty(this.userGridHits)) {
         let turns = Object.keys(this.userGridHits);
         let cu_turn = turns.length;
-        return this.userGridHits[cu_turn].fleetState;
+        if (this.userGridHits[cu_turn])
+          return this.userGridHits[cu_turn].fleetState;
       }
       return null;
     },
@@ -590,7 +635,8 @@ export default {
       if (!this.objIsEmpty(this.opponentGridHits)) {
         let turns = Object.keys(this.opponentGridHits);
         let cu_turn = turns.length;
-        return this.opponentGridHits[cu_turn].fleetState;
+        if (this.opponentGridHits[cu_turn])
+          return this.opponentGridHits[cu_turn].fleetState;
       }
       return null;
     },
@@ -624,14 +670,18 @@ export default {
       return true;
     },
     placingShips() {
-      if (this.gameDisplayed.ships && this.gameDisplayed.ships.length <= 0) {
+      if (
+        this.gameDisplayed.ships &&
+        this.gameDisplayed.ships.length <= 0 &&
+        this.gameDisplayed.gameState.code <= 1
+      ) {
         return true;
       }
       return false;
     },
     canFireSalvo() {
       if (this.gameState != null) {
-        return this.gameState.code == "4";
+        return this.gameState.code == "4" && !this.sendingSalvo;
       }
       return false;
     },
@@ -639,20 +689,43 @@ export default {
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
         let cur_gp = gamePlayers.find(gameP => gameP.id == this.gp);
-        if (cur_gp) return cur_gp.player;
+        if (cur_gp) {
+          let obj = cur_gp.player;
+          obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
+          obj["lastConnectedDate"] = cur_gp.lastConnectedDate;
+          return obj;
+        }
       }
       return this.defaultAnonymousPlayer;
     },
+    isOpponentConnected() {
+      if (this.opponentPlayer.lastConnectedDate) {
+        let now = this.moment();
+        let timeDiff = now.diff(
+          this.opponentPlayer.lastConnectedDate,
+          "seconds"
+        );
+        return timeDiff < 300;
+      }
+      return false;
+    },
     opponentPlayer() {
       let gamePlayers = this.gameDisplayed.gamePlayers;
-      if (gamePlayers != undefined) {
-        let cur_gp = gamePlayers.find(gp => gp.id != this.gp);
-        if (cur_gp) return cur_gp.player;
+      if (gamePlayers) {
+        let cur_gp = gamePlayers.find(gameP => gameP.id != this.gp);
+        if (cur_gp) {
+          let obj = cur_gp.player;
+          obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
+          obj["lastConnectedDate"] = cur_gp.lastConnectedDate;
+          return obj;
+        }
       }
       return this.defaultAnonymousPlayer;
     },
     playerSalvoes() {
-      return this.gameDisplayed.salvoes[this.currentPlayer.id];
+      if (this.gameDisplayed.salvoes)
+        return this.gameDisplayed.salvoes[this.currentPlayer.id];
+      return {};
     },
     opponentSalvoes() {
       if (this.opponentPlayer.id != undefined && this.opponentPlayer.id != null)
@@ -663,19 +736,9 @@ export default {
   methods: {
     ...mapActions(["getData", "postData"]),
     gameKeyDownEvent(event) {
-      if (!this.placingShips && event.keyCode == 32) {
-        this.fireSalvo();
+      if (event.keyCode == 32) {
+        if (!this.placingShips && this.canFireSalvo) this.fireSalvo();
       }
-    },
-    timerEnd() {
-      //timer end emitted event
-      //pass turn by sending current salvo locations
-      //console.log("TIMER ENDED! Pass salvo");
-      this.passedRoundCounter += 1;
-      if (this.passedRoundCounter > 2) {
-        this.sendOffLineStatus();
-      }
-      this.fireSalvo();
     },
     sendOffLineStatus() {
       let payload = {
@@ -797,7 +860,12 @@ export default {
     },
 
     setBoardFromServer() {
-      this.salvoTurn = Object.keys(this.playerSalvoes).length + 1;
+      let playerSalvoesTurnsList = Object.keys(this.playerSalvoes);
+      this.salvoTurn = Math.max(
+        Math.max(...playerSalvoesTurnsList) + 1,
+        playerSalvoesTurnsList.length + 1
+      );
+      // this.salvoTurn = Object.keys(this.playerSalvoes).length + 1;
       if (this.gameDisplayed.ships) {
         for (let server_ship of this.gameDisplayed.ships) {
           let gridShip = this.ships.find(ship => ship.type == server_ship.type);
@@ -813,7 +881,7 @@ export default {
             if (this.$route.name == "game") self.getGame();
             else this.stopAutoRefresh();
           }.bind(this),
-          3000
+          5000
         );
       }
     },
@@ -833,10 +901,6 @@ export default {
         }
       }
     },
-    updateSalvoPositions(value) {
-      this.salvoPositions = value.positions;
-    },
-
     salvoTarget(target) {
       //Player is supposed to have click, so it's still alive; Reset passedRoundCounter
       this.passedRoundCounter = 0;
@@ -902,6 +966,7 @@ export default {
       return new Set(newFlattenArray).size !== newFlattenArray.length;
     },
     sendShipToServer() {
+      this.sendingShips = true;
       let entries = Object.entries(this.shipPositions);
       let listOfShip = [];
       for (let [key, value] of entries) {
@@ -917,7 +982,17 @@ export default {
       this.postData(payload).then(
         res => {
           //console.log(res);
-          this.getGame();
+          this.getData({
+            mutation: "setGameDisplayed",
+            url: "/game_view/" + this.gp
+          }).then(
+            res => {
+              this.sendingShips = false;
+            },
+            reject => {
+              console.warn("Failed to getGames gameView", reject);
+            }
+          );
           // this.handleSuccessAlertMsgs(res, msgIntro);
         },
         error => {
@@ -940,6 +1015,9 @@ export default {
       );
     },
     sendSalvoToServer() {
+      if (this.sendingSalvo) return;
+      this.sendingSalvo = true;
+      this.lockedSalvo = this.salvoPositions;
       let currentSalvo = {
         turnNumber: this.salvoTurn,
         salvoLocations: this.salvoPositions
@@ -950,27 +1028,38 @@ export default {
         rqUrl: "/games/players/" + this.gp + "/salvos"
       };
       //console.log("Payload before sending: ", payload);
+      this.salvoPositions = [];
       this.postData(payload).then(
         res => {
-          //console.log(res);
-          this.getGame();
-          // this.handleSuccessAlertMsgs(res, msgIntro);
+          this.getData({
+            mutation: "setGameDisplayed",
+            url: "/game_view/" + this.gp
+          }).then(
+            res => {
+              this.sendingSalvo = false;
+              this.lockedSalvo = [];
+            },
+            reject => {
+              console.warn("Failed to getGames gameView", reject);
+            }
+          );
         },
         error => {
-          //console.log(error);
+          this.sendingSalvo = false;
+          console.log(error);
           let msg = "post salvo";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            //console.log(error.response.data);
-            //console.log(error.response.status);
-            //console.log(error.response.headers);
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            //console.log(error.request);
+            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            //console.log("Error", error.message);
+            console.log("Error", error.message);
           }
           // this.handleErrorAlertMsgs(err, msgIntro);
         }
@@ -986,17 +1075,16 @@ export default {
         //console.log("There is overlapping ships!");
         return;
       }
+      this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
       // this.$refs.timer.setTime({minutes:2,secondes:0});
-      this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
+      // this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
 
       //console.log("READY! -> OK");
     },
     fireSalvo() {
-      //add some verifications here
       this.sendSalvoToServer();
-      this.salvoPositions = [];
     },
     getGame() {
       this.getData({
@@ -1004,7 +1092,6 @@ export default {
         url: "/game_view/" + this.gp
       }).then(
         res => {
-          //console.log("Hey getData success", res);
           this.setBoardFromServer();
         },
         reject => {
@@ -1123,5 +1210,9 @@ export default {
 }
 .fillHeight {
   height: 100vh;
+}
+
+.user-bg-color {
+  background-color: #373d5598;
 }
 </style>

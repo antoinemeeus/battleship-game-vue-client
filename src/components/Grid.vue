@@ -9,8 +9,15 @@
     <slot></slot>
     <!-- ----- -->
     <!-- Loader Overlay -->
-    <div v-if="blockSalvoGrid" class="loading">
-      <v-layout justify-center align-center fill-height>
+    <div
+      v-if="blockSalvoGrid"
+      class="loading"
+    >
+      <v-layout
+        justify-center
+        align-center
+        fill-height
+      >
         <v-progress-circular
           :size="(cellSize * gridSize) / 2"
           color="primary"
@@ -33,7 +40,10 @@
       {{ x }}
     </div>
 
-    <div v-for="i in gridSize" :key="'R-' + i">
+    <div
+      v-for="i in gridSize"
+      :key="'R-' + i"
+    >
       <div
         class="grid-cell cell-header left-header"
         :style="cellSizeStyleObject"
@@ -53,25 +63,34 @@
         :data-type="null"
       >
         <span
-          v-if="isSalvoTarget.includes(getIdfromCoord(i, j))"
+          v-if="isSalvoTarget.includes(getIdfromCoord(i, j)) "
           class="numberOverEverything "
-          >{{ getMissileCount(i, j) }}</span
+        >{{ getMissileCount(i, j) }}</span>
+        <span
+          v-if="isSalvoLocked.includes(getIdfromCoord(i, j))"
+          class="targetLocked"
         >
-        <span v-if="!cellisEmpty(i, j)" class="numberInCorner">{{
+          <v-progress-circular
+            :size="(cellSize) / 1.2"
+            :width="cellSize/8"
+            indeterminate
+          ></v-progress-circular>
+        </span>
+        <span
+          v-if="!cellisEmpty(i, j)"
+          class="numberInCorner"
+        >{{
           getTurnNumber(i, j)
-        }}</span>
+          }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Ship from "./Ship.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
-  components: {
-    Ship
-  },
+  components: {},
   props: {
     assignedID: { type: String, default: "shipGrid" },
     canFire: { type: Boolean, default: false },
@@ -81,6 +100,7 @@ export default {
     hasShipList: { type: Array, default: () => [] },
     duplicateLocation: { type: Array, default: () => [] },
     isSalvoTarget: { type: Array, default: () => [] },
+    isSalvoLocked: { type: Array, default: () => [] },
     hits: { type: Object, default: () => ({}) },
     probabilities: { type: Object, default: () => ({}) },
     waitingForOpponent: { type: Boolean, default: false }
@@ -88,13 +108,7 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    if (this.assignedID == "salvoGrid") {
-      this.$nextTick(() => {
-        this.$el.addEventListener("click", this.clickEvent);
-      });
-    }
-  },
+
   beforeDestroy() {
     this.$el.removeEventListener("click", this.clickEvent);
   },
@@ -117,6 +131,13 @@ export default {
       return this.gameStateCode == 0 && this.assignedID == "salvoGrid";
     }
   },
+  mounted() {
+    if (this.assignedID == "salvoGrid") {
+      this.$nextTick(() => {
+        this.$el.addEventListener("click", this.clickEvent);
+      });
+    }
+  },
   methods: {
     ...mapActions([]),
     clickEvent(event) {
@@ -128,12 +149,14 @@ export default {
       let hasMissed = hitTp.locType == "missed";
       let hashit = hitTp.locType == "hit";
       let isCellTargeted = this.isSalvoTarget.includes(id);
+      let isCellLockedTarget = this.isSalvoLocked.includes(id);
       let isCellContainingShip = this.hasShipList.includes(id);
       let isOverlappingCell = this.duplicateLocation.includes(id);
 
       let idClass = {
         pulse: isCellTargeted,
         isSalvoTarget: isCellTargeted,
+        targetLocked: isCellLockedTarget && !hashit && !hasMissed,
         target: isCellTargeted,
         hasShip: isCellContainingShip,
         isOverlaping: isOverlappingCell,
@@ -186,7 +209,8 @@ export default {
     cellisEmpty(i, j) {
       let id = this.getIdfromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
-      if (hitTp.turnNumber) return false;
+      let hasLockedClass = this.isSalvoLocked.includes(id);
+      if (hitTp.turnNumber && !hasLockedClass) return false;
       return true;
     },
     getMissileCount(i, j) {
@@ -310,6 +334,7 @@ export default {
   background-color: #64b5f6 !important;
   width: inherit;
   height: inherit;
+  z-index: 2;
 }
 .missed::before {
   position: absolute;
@@ -334,6 +359,7 @@ export default {
   content: " ";
   width: inherit;
   height: inherit;
+  z-index: 2;
 }
 .explosion::before {
   position: absolute;
@@ -343,7 +369,6 @@ export default {
   background-image: url("../assets/explosion/explosion_sprite_2_100px.png");
   background-size: 900% 900%;
   animation: moveX 0.15s steps(9) 1, moveY 1.35s steps(9) 1;
-  z-index: 1;
 }
 @keyframes moveX {
   0% {
@@ -373,7 +398,11 @@ export default {
   background-size: 100%;
   /* animation: run-x-2 0.4s infinite steps(8), run-y-2 1.6s infinite steps(4); */
 }
-
+/* Salvo Locked*/
+.targetLocked {
+  background-color: blueviolet;
+  z-index: 0;
+}
 /*SalvoTarget*/
 .targetHover:hover {
   background-color: blueviolet;

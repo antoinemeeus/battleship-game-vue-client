@@ -1,12 +1,25 @@
 <template>
-  <v-layout row justify-center>
-    <v-dialog v-model="dialog" max-width="800">
+  <v-layout
+    row
+    justify-center
+  >
+    <v-dialog
+      v-model="dialog"
+      max-width="800"
+    >
       <template v-slot:activator="{ on }">
-        <v-btn icon color="orange" v-on="on">
-          <v-icon large>help</v-icon>
+        <v-btn
+          color="white"
+          icon
+          v-on="on"
+        >
+          <v-icon large>help_outline</v-icon>
         </v-btn>
       </template>
-      <v-card elevation="8" class="roundCorners">
+      <v-card
+        elevation="8"
+        class="roundCorners"
+      >
         <v-card-title class="headline">How to play</v-card-title>
         <v-card-text>
           <v-flex>
@@ -17,6 +30,8 @@
                   round, you have {{ nbOfShots }} missile(s) in a salvo to place
                   in the opponent's grid, which is to be shot at.
                 </p>
+              </li>
+              <li>
                 <p>
                   Using your mouse, click on the enemy grid cells where to place
                   a salvo.
@@ -29,7 +44,10 @@
               </li>
               <li>
                 <p>
-                  <img class="aim-img px-2" src="../assets/launchBtnSB.png" />
+                  <img
+                    class="aim-img px-2"
+                    src="../assets/launchBtnSB.png"
+                  />
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
                   middle or by pressing the spacebar of the keyboard. Of cours
@@ -41,16 +59,25 @@
                 <p>
                   After a few second you can see the result of your shots on the
                   enemy grid.
-                  <img class="aim-img px-2" src="../assets/missedCell.png" />
+                  <img
+                    class="aim-img px-2"
+                    src="../assets/missedCell.png"
+                  />
                   blue cell means you missed,
-                  <img class="aim-img px-2" src="../assets/hitCell.png" /> red
+                  <img
+                    class="aim-img px-2"
+                    src="../assets/hitCell.png"
+                  /> red
                   cell means you hit a ship
                 </p>
               </li>
               <li>
                 <p>
                   The number in the top left corner of a shot cell
-                  <img class="aim-img px-2" src="../assets/hitCell.png" /> is
+                  <img
+                    class="aim-img px-2"
+                    src="../assets/hitCell.png"
+                  /> is
                   the round in which the salvo was fired.
                 </p>
               </li>
@@ -64,7 +91,10 @@
               </li>
               <li>
                 <p>
-                  <img class="aim-img px-2" src="../assets/timerImg.png" />The
+                  <img
+                    class="aim-img px-2"
+                    src="../assets/timerImg.png"
+                  />The
                   time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in
                   the time allocated, the already placed shot will be fired
@@ -81,9 +111,11 @@
             label="Don`t show me this next"
           ></v-checkbox>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="dialog = !dialog"
-            >Let's play</v-btn
-          >
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = !dialog"
+          >Let's play</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -1,8 +1,11 @@
 <template>
   <div>
-    <span class="headline" :style="timerStyleObject">{{
+    <span
+      class="headline"
+      :style="timerStyleObject"
+    >{{
       prettyTime | prettify
-    }}</span>
+      }}</span>
   </div>
 </template>
 
@@ -24,8 +27,7 @@ export default {
     }
   },
   props: {
-    soundEnabled: { type: Boolean, default: true },
-    pause: { type: Boolean, default: false }
+    soundEnabled: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -67,20 +69,13 @@ export default {
       }
     }
   },
-  watch: {
-    pause(newBool) {
-      if (newBool) this.stop();
-      else this.start();
-    }
-  },
   beforeDestroy() {
     clearInterval(this.timer);
   },
   methods: {
     start() {
-      if (this.pause) return;
+      if (this.isRunning) return;
       this.isRunning = true;
-
       if (!this.timer) {
         this.timer = setInterval(() => {
           if (this.time > 1) {

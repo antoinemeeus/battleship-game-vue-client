@@ -1,16 +1,41 @@
 <template>
-  <v-container ma-0 pa-0 fluid>
-    <v-layout row wrap justify-center align-center>
-      <v-flex xs12 md10 pa-2>
+  <v-container
+    ma-0
+    pa-0
+    fluid
+  >
+    <v-layout
+      row
+      wrap
+      justify-center
+      align-center
+    >
+      <v-flex
+        xs12
+        md10
+        pa-2
+      >
         <h2 class="display-2 text-xs-center">Game List</h2>
       </v-flex>
-      <v-flex xs12 md10 pa-3>
+      <v-flex
+        xs12
+        md10
+        pa-3
+      >
         <GamesTable />
       </v-flex>
-      <v-flex xs12 md10 pa-3>
+      <v-flex
+        xs12
+        md10
+        pa-3
+      >
         <h2 class="display-2 text-xs-center">Leader Board</h2>
       </v-flex>
-      <v-flex xs12 md10 pa-3>
+      <v-flex
+        xs12
+        md10
+        pa-3
+      >
         <LeaderBoard />
       </v-flex>
     </v-layout>
@@ -20,6 +45,7 @@
 <script>
 import GamesTable from "../components/GamesTable.vue";
 import LeaderBoard from "../components/LeaderBoard.vue";
+import { mapActions } from "vuex";
 export default {
   name: "Lobby",
   components: {
@@ -28,8 +54,51 @@ export default {
   },
   data() {
     return {
-      //
+      autorefresh: null
     };
+  },
+  mounted() {
+    this.setAutoRefresh();
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.setAutoRefresh();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.stopAutoRefresh();
+    next();
+  },
+  beforeDestroy() {
+    this.stopAutoRefresh();
+  },
+
+  methods: {
+    ...mapActions(["getData"]),
+    getGames() {
+      let payload = { mutation: "setGames", url: "/games" };
+      this.getData(payload);
+    },
+    getPlayers() {
+      let payload = { mutation: "setPlayers", url: "/players" };
+      this.getData(payload);
+    },
+    setAutoRefresh() {
+      var self = this;
+      if (this.autoRefresh == null) {
+        this.autoRefresh = setInterval(
+          function() {
+            if (this.$route.name == "lobby") {
+              self.getGames();
+              self.getPlayers();
+            } else this.stopAutoRefresh();
+          }.bind(this),
+          10000
+        );
+      }
+    },
+    stopAutoRefresh() {
+      clearInterval(this.autoRefresh);
+      this.autoRefresh = null;
+    }
   }
 };
 </script>
