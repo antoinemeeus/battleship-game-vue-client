@@ -31,7 +31,7 @@
             tile
             :size="30"
           >
-            <v-icon>fa-sign-in-alt</v-icon>
+            <v-icon color="green">fa-sign-in-alt</v-icon>
           </v-list-tile-avatar>
 
           <v-list-tile-content>
