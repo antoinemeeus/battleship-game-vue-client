@@ -52,7 +52,7 @@
           <v-btn
             large
             depressed
-            :loading="loading"
+            :loading="loading && dialog"
             v-if="!isAuthenticated"
             dark
             color="green"
@@ -524,3 +524,5 @@ export default {
   transform: translate(-50%, -50%);
 }
 </style>
+
+

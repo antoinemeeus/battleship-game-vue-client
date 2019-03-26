@@ -6,7 +6,7 @@
       'bg-transparent': isAuthenticated && $route.path == '/',
       'bg-col': !isAuthenticated
     }"
-    :dark="isAuthenticated"
+    :light="!isAuthenticated"
     :flat="isAuthenticated"
   >
     <v-card-title
@@ -378,7 +378,7 @@ export default {
 
 <style scoped>
 .bg-col {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(250, 252, 255);
 }
 .bg-transparent {
   background-color: rgba(58, 82, 110, 0.11);

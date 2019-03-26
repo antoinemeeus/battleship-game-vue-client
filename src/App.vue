@@ -4,30 +4,28 @@
       <v-toolbar
         dense
         dark
+        pa-3
       >
-        <v-btn
-          icon
-          to="/"
-        >
+        <v-toolbar-side-icon to="/">
+
           <v-icon>home</v-icon>
+
+        </v-toolbar-side-icon>
+        <v-btn to="/lobby">
+          <v-icon>fa-globe-europe</v-icon> <span class="px-2">Lobby</span>
         </v-btn>
-        <v-toolbar-title class="">
-          <span class="px-3 font-weight-light">Battleship Game </span>
+        <v-toolbar-title>
+          <span class="px-3  font-weight-light">Battleship Game </span>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
+        <AvatarButton />
         <v-icon
           :class="{refresh:this.$store.state.loading}"
           dark
           small
         >sync</v-icon>
-        <AvatarButton />
-        <v-btn
-          icon
-          to="/lobby"
-        >
-          <v-icon>menu</v-icon>
-        </v-btn>
+
       </v-toolbar>
       <v-content>
 
