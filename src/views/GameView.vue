@@ -549,9 +549,8 @@ export default {
       return this.salvoPositions.length >= this.maxSalvoSize;
     },
     fireButtonColor() {
-      if (this.allMissilePlaced)
-        // return "#3abc12";
-        return "#dc3b3b";
+      //Dynamic color button depending of number of missile place in a Salvo
+      if (this.allMissilePlaced) return "#dc3b3b";
       if (this.salvoPositions.length > 0 && !this.allMissilePlaced)
         return "#ffe419";
       else return "#616163";
@@ -560,6 +559,9 @@ export default {
       return this.getDuplicates(this.userShipsPositionList);
     },
     cellSize() {
+      //Important method for reactivity!
+      //Compute the cellSize depending of the window breakpoint with the vuetify.breakpoint helper class.
+      //Grid is made of cells that need to be a fixed size.
       let innerWidth = window.innerWidth;
       if (this.$vuetify.breakpoint) innerWidth = this.$vuetify.breakpoint.width;
       let newPixelValue = +((innerWidth * 0.28) / (this.gridSize + 1)).toFixed(
@@ -569,6 +571,7 @@ export default {
       return 40;
     },
     gameResult() {
+      //Return String with the result message
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         switch (this.gameDisplayed.gameState.Status) {
           case "WON":
@@ -601,6 +604,7 @@ export default {
     },
 
     gameState() {
+      //Computed property to handle undefined cases.
       if (this.gameDisplayed) {
         return this.gameDisplayed.gameState;
       }
@@ -609,7 +613,6 @@ export default {
     isGameFinished() {
       if (this.gameState != null) {
         if (this.gameState.code == "5") {
-          // if (this.$refs.timer) this.$refs.timer.reset();
           this.stopAutoRefresh();
           return true;
         }
@@ -623,6 +626,7 @@ export default {
       return false;
     },
     lastUserFleet() {
+      //Get the last turn fleet state from user game to send to fleetStatus component
       if (!this.objIsEmpty(this.userGridHits)) {
         let turns = Object.keys(this.userGridHits);
         let cu_turn = turns.length;
@@ -632,6 +636,7 @@ export default {
       return null;
     },
     lastOpponentFleet() {
+      //Get the last turn fleet state from opponent game to send to fleetStatus component
       if (!this.objIsEmpty(this.opponentGridHits)) {
         let turns = Object.keys(this.opponentGridHits);
         let cu_turn = turns.length;
@@ -641,6 +646,7 @@ export default {
       return null;
     },
     userGridHits() {
+      //Computed property to handle undefined cases.
       if (this.gameDisplayed.hits) {
         let hits = this.gameDisplayed.hits.user;
         if (hits) return hits;
@@ -648,6 +654,7 @@ export default {
       return {};
     },
     opponentGridHits() {
+      //Computed property to handle undefined cases.
       if (this.gameDisplayed.hits) {
         let hits = this.gameDisplayed.hits.opponent;
         if (hits) return hits;
@@ -655,21 +662,25 @@ export default {
       return {};
     },
     userShipsPositionList() {
+      //Get all the ship position from object.
+      //Convert object to array.
       let shipLocList = this.shipPositions;
       let listOfList = Object.values(shipLocList);
       return [].concat.apply([], listOfList);
     },
     showSalvo() {
+      //Return if opponent has joined the game session.
       if (this.gameDisplayed.gamePlayers) {
         if (this.gameDisplayed.gamePlayers.length < 2) {
-          //Waiting for opponent
-          // return false;
+          //Waiting for opponent then
+          //Return false;
           return true;
         }
       }
       return true;
     },
     placingShips() {
+      //Check if user has finished placing ships. Get info from server, no from local.
       if (
         this.gameDisplayed.ships &&
         this.gameDisplayed.ships.length <= 0 &&
@@ -680,12 +691,17 @@ export default {
       return false;
     },
     canFireSalvo() {
+      //Check if user can fire a salvo.
       if (this.gameState != null) {
         return this.gameState.code == "4" && !this.sendingSalvo;
       }
       return false;
     },
     currentPlayer() {
+      //Return the current player from server info
+      //Add 2 properties from gamePlayer server info:
+      // -LastPlayedDate
+      // -LastConenctedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
         let cur_gp = gamePlayers.find(gameP => gameP.id == this.gp);
@@ -699,6 +715,9 @@ export default {
       return this.defaultAnonymousPlayer;
     },
     isOpponentConnected() {
+      //Return the opponent connection status for visual info to the user
+      //False if opponent didn't execute a action (like firing a salvo) since an arbitrary amounnt of time (300s)
+      //True if opponent is considered connected
       if (this.opponentPlayer.lastConnectedDate) {
         let now = this.moment();
         let timeDiff = now.diff(
@@ -710,6 +729,10 @@ export default {
       return false;
     },
     opponentPlayer() {
+      //Return the opponent player from server info
+      //Add 2 properties from gamePlayer server info:
+      // -LastPlayedDate
+      // -LastConenctedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
         let cur_gp = gamePlayers.find(gameP => gameP.id != this.gp);

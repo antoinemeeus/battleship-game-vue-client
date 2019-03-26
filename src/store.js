@@ -163,13 +163,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    //Login / Logout logic
     authRequest({ commit, state }, payload) {
       commit("authRequest");
       let requestUrl = state.webUrl + payload.rqUrl;
       const options = {
         method: "POST",
-        headers: { "content-type": "application/x-www-form-urlencoded" },
         data: qs.stringify(payload.data),
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        timeout: 15000,
         withCredentials: true,
         url: requestUrl
       };
@@ -199,6 +201,7 @@ export default new Vuex.Store({
       const options = {
         method: "GET",
         withCredentials: true,
+        timeout: 15000,
         url: requestUrl
       };
       return new Promise((resolve, reject) => {
@@ -231,6 +234,7 @@ export default new Vuex.Store({
       const options = {
         method: "POST",
         data: payload.data,
+        timeout: 15000,
         withCredentials: true,
         url: requestUrl
       };

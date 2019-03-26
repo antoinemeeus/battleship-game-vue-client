@@ -1,8 +1,23 @@
 <template>
-  <v-container pa-0 ma-0>
-    <v-layout row wrap justify-center style="overflow:auto">
-      <v-flex xs12 class="dark-bg">
-        <v-btn dark icon @click="getPlayers()">
+  <v-container
+    pa-0
+    ma-0
+  >
+    <v-layout
+      row
+      wrap
+      justify-center
+      style="overflow:auto"
+    >
+      <v-flex
+        xs12
+        class="dark-bg"
+      >
+        <v-btn
+          dark
+          icon
+          @click="getPlayers()"
+        >
           <v-icon>fa-redo-alt</v-icon>
         </v-btn>
         <!-- <v-btn @click="playAgainstComputer()">Play Against Computer</v-btn> -->
@@ -21,7 +36,10 @@
             color="red"
             indeterminate
           ></v-progress-linear>
-          <template slot="items" slot-scope="props">
+          <template
+            slot="items"
+            slot-scope="props"
+          >
             <td class="text-xs-center subheading font-weight-light">
               {{ props.item.id }}
             </td>
@@ -42,6 +60,15 @@
             </td>
           </template>
         </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination
+            v-show="pagination.totalItems > pagination.rowsPerPage"
+            v-model="pagination.page"
+            dark
+            color="orange"
+            :length="pages"
+          ></v-pagination>
+        </div>
       </v-flex>
     </v-layout>
   </v-container>
@@ -53,8 +80,10 @@ import { mapState, mapActions } from "vuex";
 export default {
   data: () => ({
     pagination: {
+      descending: true,
+      rowsPerPage: 8,
       sortBy: "total",
-      descending: true
+      totalItems: null
     },
     headers: [
       {
@@ -82,18 +111,36 @@ export default {
     ],
     fetchedGames: []
   }),
+  watch: {
+    presentPlayers(newPPlayers) {
+      this.pagination.totalItems = newPPlayers.length;
+    }
+  },
   computed: {
     ...mapState(["players", "loading"]),
 
     presentPlayers() {
       //flatten players.score to direct properties to make sortables items.
-      return this.players.map(player => {
+      let pPlayers = this.players.map(player => {
         player["total"] = player.score.total;
         player["won"] = player.score.won;
         player["lost"] = player.score.lost;
         player["tied"] = player.score.tied;
         return player;
       });
+
+      return pPlayers.filter(player => player.total != 0);
+    },
+    pages() {
+      if (
+        this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
+      )
+        return 0;
+
+      return Math.ceil(
+        this.pagination.totalItems / this.pagination.rowsPerPage
+      );
     }
   },
   methods: {

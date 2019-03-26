@@ -256,11 +256,7 @@ export default {
 
 .game-title {
   font-family: "Black Ops One", cursive;
-  transform: rotate(
-    -3deg
-  ); /* background-image: url("../assets/textures/metal_rivets_h.jpg");
-  background-size: contain;
-  background-repeat: repeat-x; */
+  transform: rotate(-3deg);
   text-shadow: 3px 5px 2px #474747;
 }
 </style>

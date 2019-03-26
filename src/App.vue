@@ -1,42 +1,41 @@
 <template>
-  <v-app>
-    <v-toolbar
-      dense
-      dark
-    >
-      <v-btn
-        icon
-        to="/"
+  <v-app dark>
+    <div class="background-fixed">
+      <v-toolbar
+        dense
+        dark
       >
-        <v-icon>home</v-icon>
-      </v-btn>
-      <v-toolbar-title class="">
-        <span class="px-3 font-weight-light">Battleship Game </span>
-      </v-toolbar-title>
+        <v-btn
+          icon
+          to="/"
+        >
+          <v-icon>home</v-icon>
+        </v-btn>
+        <v-toolbar-title class="">
+          <span class="px-3 font-weight-light">Battleship Game </span>
+        </v-toolbar-title>
 
-      <v-spacer></v-spacer>
-      <v-icon
-        :class="{refresh:this.$store.state.loading}"
-        dark
-        small
-      >sync</v-icon>
-      <AvatarButton />
-      <v-btn
-        icon
-        to="/lobby"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-content>
-      <v-parallax
-        dark
-        height="1100"
-        :src="require('@/assets/battle_ship_background.jpg')"
-      >
+        <v-spacer></v-spacer>
+        <v-icon
+          :class="{refresh:this.$store.state.loading}"
+          dark
+          small
+        >sync</v-icon>
+        <AvatarButton />
+        <v-btn
+          icon
+          to="/lobby"
+        >
+          <v-icon>menu</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-content>
+
         <router-view />
-      </v-parallax>
-    </v-content>
+
+      </v-content>
+
+    </div>
   </v-app>
 </template>
 
@@ -49,12 +48,16 @@ export default {
     return {
       //
     };
-  },
-  created() {}
+  }
 };
 </script>
 
 <style scoped>
+.background-fixed {
+  min-height: 100vh;
+  background-attachment: fixed;
+  background-image: url("./assets/battle_ship_background.jpg");
+}
 .refresh {
   animation: rotation 2s infinite linear reverse;
 }

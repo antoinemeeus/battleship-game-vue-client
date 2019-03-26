@@ -80,13 +80,14 @@
             <span>{{isUserConnected?'Player is connected':'Player is disconnected'}}</span>
           </v-tooltip>
           <v-btn
-            v-if="isUser"
+            v-if="isUser && !isUserDefaultAnonymous"
             color="red"
             :loading="status=='loading'"
             small
             round
             @click.stop="logOut()"
           >Log out</v-btn>
+          <div v-if="isUserDefaultAnonymous">Please Login</div>
         </v-flex>
         <v-flex align-self-center>
           <v-flex class="subheading font-weight-bold">
@@ -121,7 +122,7 @@
                   <div v-if="isUser">
                     Action: <span class="orange--text"> {{ userActions }}</span>
                   </div>
-                  <div v-if="!isUser">
+                  <div v-if="!isUser && !isComputerMode">
                     Action: <span class="orange--text"> {{ opponentActions }}</span>
                   </div>
                 </v-flex>
@@ -206,6 +207,12 @@ export default {
   computed: {
     ...mapState(["avatarList", "avatarComputer", "status"]),
     ...mapGetters(["gameStateCode"]),
+    isComputerMode() {
+      return this.$route.name == "computer";
+    },
+    isUserDefaultAnonymous() {
+      return this.user.id == null;
+    },
     userAvatar() {
       let avatarFound = this.avatarList.find(
         avatar => avatar.id == this.user.avatarID
