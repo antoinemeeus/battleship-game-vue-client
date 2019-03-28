@@ -9,11 +9,12 @@
         <v-btn
           fab
           icon
-          v-on="on"
+          small
         >
           <v-avatar
             :size="40"
             color="grey lighten-4"
+            v-on="on"
           >
             <img
               :src="selectedAvatar.src"
@@ -95,12 +96,7 @@ export default {
   methods: {
     ...mapActions(["authRequest", "postData", "getData"]),
     openModal() {
-      if (this.$route.path != "/") {
-        this.dialog = true;
-      } else {
-        this.menu = false;
-        this.dialog = false;
-      }
+      this.dialog = true;
     },
     closeModal(value) {
       if (value)

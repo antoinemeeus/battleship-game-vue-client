@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   components: {},
   filters: {
@@ -26,21 +27,17 @@ export default {
       return minutes + ":" + secondes;
     }
   },
-  props: {
-    soundEnabled: { type: Boolean, default: true }
-  },
   data() {
     return {
       isRunning: false,
       minutes: 0,
       secondes: 0,
       time: 0,
-      timer: null,
-      sound: new Audio(require("../assets/sounds/timer_end.wav")),
-      tick_sound: new Audio(require("../assets/sounds/timer_tick.wav"))
+      timer: null
     };
   },
   computed: {
+    ...mapState(["soundEffects"]),
     prettyTime() {
       let time = this.time / 60;
       let minutes = parseInt(time);
@@ -80,11 +77,11 @@ export default {
         this.timer = setInterval(() => {
           if (this.time > 1) {
             this.time--;
-            this.time < 6 && this.soundEnabled ? this.tick_sound.play() : null;
+            this.time < 6 ? this.soundEffects.play("timerTick") : null;
           } else {
             clearInterval(this.timer);
             this.$emit("timerFinish");
-            this.soundEnabled ? this.sound.play() : null;
+            this.soundEffects.play("timerEnd");
             this.reset();
           }
         }, 1000);

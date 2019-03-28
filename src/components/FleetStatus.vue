@@ -113,7 +113,30 @@ export default {
       ]
     };
   },
+  watch: {
+    //Sound logic
+    fleetState(newVal, oldVal) {
+      if (newVal != undefined && newVal != null && oldVal != undefined) {
+        for (let ship of this.ships) {
+          if (newVal[ship.type].sunk && !oldVal[ship.type].sunk) {
+            //On opponent sound
+            if (newVal[ship.type].damage == undefined)
+              setTimeout(() => this.soundEffects.play("targetDestroyed"), 1000);
+            //On current sound
+            else {
+              let randomNb = Math.floor(Math.random() * 3) + 1;
+              setTimeout(
+                () => this.soundEffects.play("userShipDestroyed" + randomNb),
+                2000
+              );
+            }
+          }
+        }
+      }
+    }
+  },
   computed: {
+    ...mapState(["soundEffects"]),
     fontSize() {
       switch (this.$vuetify.breakpoint.name) {
         case "xs":

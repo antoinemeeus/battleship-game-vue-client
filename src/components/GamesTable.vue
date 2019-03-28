@@ -525,4 +525,12 @@ export default {
 }
 </style>
 
+<style>
+/* OverWrite Vuetify class */
+.v-datatable__progress {
+  height: 3px !important;
+}
+</style>
+
+
 

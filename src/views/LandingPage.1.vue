@@ -20,7 +20,7 @@
     </v-layout>
     <v-expand-transition>
       <v-layout
-        v-show="!alreadyVisited"
+        v-show="!expand"
         justify-center
         align-center
         class="height-box"
@@ -40,7 +40,7 @@
     </v-expand-transition>
     <v-expand-transition>
       <v-layout
-        v-show="alreadyVisited"
+        v-show="expand"
         row
         justify-space-around
       >
@@ -117,12 +117,15 @@
               text-xs-center
               pa-3
             >
-              <h3 class="display-1">Battle Mode:</h3>
+              <h3 class="display-1">Identify yourself before playing</h3>
             </v-flex>
+
             <v-flex
+              v-if="isAuthenticated"
               xs12
               text-xs-center
             >
+              <h3 class=" pa-3 display-1">Battle Mode:</h3>
               <v-layout
                 row
                 justify-space-around
@@ -134,7 +137,6 @@
                     class="modebox"
                     xs5
                     pa-2
-                    @mouseenter="soundEffects.play('menuHover')"
                   >
                     <v-layout
                       justify-center
@@ -142,10 +144,7 @@
                       row
                       wrap
                     >
-                      <v-flex
-                        xs12
-                        class="title"
-                      >
+                      <v-flex xs12>
                         Play against the computer
                       </v-flex>
                       <v-flex xs5>
@@ -185,7 +184,6 @@
                     :class="[`elevation-${hover ? 12 : 0}`]"
                     class="modebox"
                     xs5
-                    @mouseenter="soundEffects.play('menuHover')"
                   >
                     <v-layout
                       justify-center
@@ -193,24 +191,14 @@
                       row
                       wrap
                     >
-                      <v-flex
-                        xs12
-                        class="title"
-                      >
+                      <v-flex xs12>
                         Play against other players
                       </v-flex>
                       <v-flex xs12>
                         <v-btn
                           color="#ffe241"
-                          @click="multiplayerSelected()"
+                          to="/lobby"
                         >Multiplayer</v-btn>
-
-                      </v-flex>
-                      <v-flex
-                        v-if="!isAuthenticated"
-                        xs12
-                      >
-                        You need to be logged in to play online
                       </v-flex>
                     </v-layout>
                   </v-flex>
@@ -222,23 +210,10 @@
               ma-3
               xs8
             >
-              <!-- <Registration
+              <Registration
                 v-if="!isAuthenticated"
                 class="card-box"
-              /> -->
-              <v-dialog
-                v-if="!isAuthenticated"
-                v-model="dialog"
-                max-width="500"
-              >
-                <v-flex shrink>
-                  <v-flex
-                    text-xs-center
-                    class="subheading white black--text"
-                  >Identify yourself before playing in multiplayer mode</v-flex>
-                  <Registration @loginSuccess="closeModal" />
-                </v-flex>
-              </v-dialog>
+              />
               <UserOverview
                 v-if="isAuthenticated"
                 :user="currentUser"
@@ -268,7 +243,8 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      expand: false,
+      sound: null,
       radios: { display: "Normal", diff: "normal", color: "green" },
       difficultyItems: [
         { display: "Normal", diff: "normal", color: "green" },
@@ -279,43 +255,35 @@ export default {
     };
   },
   watch: {
-    radios() {
-      this.soundEffects.play("menuSelect");
+    musicPlaying(newVal) {
+      if (newVal) {
+        this.sound.play();
+      } else {
+        this.sound.pause();
+      }
     }
   },
   computed: {
     ...mapGetters(["currentUser", "isAuthenticated"]),
-    ...mapState(["musicPlaying", "soundEffects", "bgMusic", "alreadyVisited"])
+    ...mapState(["musicPlaying"])
   },
   methods: {
-    multiplayerSelected() {
-      if (this.isAuthenticated) {
-        this.$router.push("/lobby");
-        this.soundEffects.play("menuEnter");
-      } else {
-        this.soundEffects.play("registrationTick");
-        this.dialog = true;
-      }
-    },
     startPlaying() {
-      if (!this.bgMusic.playing()) this.bgMusic.play();
-      this.$store.commit("setalreadyVisited", true);
+      this.sound = new Howl({
+        src: [require("@/assets/sounds/menu_music_rf.mp3")]
+      });
+      if (this.musicPlaying) this.sound.play();
+      this.expand = true;
+    },
+    playBackgroundMusic() {
+      // Setup the new Howl.
     },
     gameVsComputer() {
-      this.soundEffects.play("menuEnter");
       this.$store.commit("setGameDisplayed", {});
       this.$router.push({
         name: "computer",
         params: { difficulty: this.radios }
       });
-    },
-    closeModal(value) {
-      if (value)
-        setTimeout(() => {
-          this.dialog = false;
-          this.soundEffects.play("menuEnter");
-          this.$router.push("/lobby");
-        }, 3500);
     }
   }
 };
@@ -341,19 +309,19 @@ export default {
   height: 50vh;
 }
 .btn-pulse {
-  border: 1px solid rgba(255, 237, 77, 0.486);
-  box-shadow: 0 0 0 rgba(233, 197, 40, 0.836);
+  border: 1px solid rgba(87, 221, 93, 0.486);
+  box-shadow: 0 0 0 rgba(87, 221, 94, 0.836);
   animation: pulse 1.5s infinite;
 }
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(233, 197, 40, 0.836);
+    box-shadow: 0 0 0 0 rgba(87, 221, 94, 0.836);
   }
   70% {
-    box-shadow: 0 0 0 20px rgba(233, 197, 40, 0);
+    box-shadow: 0 0 0 10px rgba(87, 221, 94, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(233, 197, 40, 0);
+    box-shadow: 0 0 0 0 rgba(87, 221, 94, 0);
   }
 }
 </style>

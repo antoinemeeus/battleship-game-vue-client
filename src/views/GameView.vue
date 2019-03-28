@@ -218,7 +218,7 @@
                   <v-btn
                     :disabled="!placingShips"
                     :loading="sendingShips"
-                    @click="ready()"
+                    @click.prevent="ready()"
                   >
                     <v-icon>fa-play</v-icon>
                     <span class="pl-2">Start!</span>
@@ -531,7 +531,8 @@ export default {
       "loading",
       "pageIsRestricted",
       "gameDisplayed",
-      "defaultAnonymousPlayer"
+      "defaultAnonymousPlayer",
+      "soundEffects"
     ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     lastUpdate() {
@@ -955,7 +956,8 @@ export default {
       if (alreadyFiredPosition) {
         return;
       }
-
+      //CanFire
+      this.soundEffects.play("targetSelect");
       let currentSalvoesPositions = this.salvoPositions;
       //Check if arrays of salvoPositions doesn't contain duplicates
       if (!currentSalvoesPositions.includes(newPosition)) {
@@ -1098,6 +1100,8 @@ export default {
         //console.log("There is overlapping ships!");
         return;
       }
+      console.log("READY");
+      this.soundEffects.play("startGame");
       this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
@@ -1107,6 +1111,7 @@ export default {
       //console.log("READY! -> OK");
     },
     fireSalvo() {
+      this.soundEffects.play("fireMissile");
       this.sendSalvoToServer();
     },
     getGame() {

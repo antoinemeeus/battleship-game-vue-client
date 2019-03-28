@@ -68,6 +68,7 @@ export default {
   },
 
   computed: {
+    ...mapState(["soundEffects"]),
     battleShipDim() {
       let _h = this.gridCellSize * this.shipLength;
       let _w = this.gridCellSize;
@@ -154,6 +155,7 @@ export default {
       return url;
     },
     shakeImage() {
+      this.soundEffects.play("errorIllegalPos");
       let element = this.$refs.ship.$el;
       element.classList.add("shake");
       setTimeout(function() {
@@ -269,6 +271,10 @@ export default {
         this.saveLastPos(pos);
         this.passPositionToParent();
         this.passStopPositionToParent();
+        if (this.canMove) {
+          let idsound = this.soundEffects.play("shipMoving");
+          this.soundEffects.volume(0.4, idsound);
+        }
       }
     },
 

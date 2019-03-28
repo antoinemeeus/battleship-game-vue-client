@@ -9,7 +9,6 @@
     >
       <template v-slot:activator="{ on }">
         <v-btn
-          color="white"
           icon
           v-on="on"
         >

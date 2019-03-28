@@ -118,7 +118,6 @@ export default {
   },
   computed: {
     ...mapState(["players", "loading"]),
-
     presentPlayers() {
       //flatten players.score to direct properties to make sortables items.
       let pPlayers = this.players.map(player => {

@@ -1,12 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import { Howl, Howler } from "howler";
 Vue.use(Vuex);
 const qs = require("querystring");
 
 export default new Vuex.Store({
   state: {
-    // webUrl: "http://localhost:8080/api",
     webUrl: process.env.VUE_APP_BASE_URI,
     gamesInfo: [],
     gameDisplayed: {},
@@ -25,6 +25,58 @@ export default new Vuex.Store({
     loading: false,
     pageIsRestricted: false,
     serverMessage: "",
+    musicPlaying: true,
+    soundEffects: new Howl({
+      src: [require("@/assets/sounds/game_sounds_sprite_3.mp3")],
+      sprite: {
+        abandonShip: [0, 1907],
+        explosion: [1907, 5125],
+        fireMissile: [7032, 6269],
+        loserTheme: [13301, 11076],
+        menuEnter: [24377, 1714],
+        menuHover: [26091, 412],
+        menuSelect: [26503, 337],
+        registrationTick: [26840, 108],
+        shipMoving: [26948, 196],
+        shotFired: [27144, 1490],
+        startGame: [28633, 5564],
+        targetDestroyed: [34197, 1358],
+        targetSelect: [35556, 733],
+        timerEnd: [36289, 611],
+        voiceReady: [37202, 878],
+        timerTick: [36901, 302],
+        enemyShipDestroyed: [38080, 1933],
+        winnerTheme: [40013, 11964],
+        enemyDestroyedOrSunk: [52010, 1593],
+        enemyHeavilyDamaged: [53603, 1593],
+        farAwayShot: [55197, 2090],
+        loadAndFire1: [57287, 5695],
+        loadAndFire2: [62981, 4467],
+        loadAndFire3: [67448, 5068],
+        waterSplash: [72516, 2064],
+        userShipDestroyed1: [74580, 1698],
+        userShipDestroyed2: [76278, 1019],
+        userShipDestroyed3: [77296, 1646],
+        underAttack1: [78942, 1330],
+        underAttack2: [80272, 1382],
+        underAttack3: [81654, 1028],
+        errorIllegalPos: [82682, 751]
+      }
+    }),
+    bgMusic: new Howl({
+      src: [require("@/assets/sounds/menu_music_rf.mp3")],
+      loop: true,
+      autoUnlock: true,
+      autoplay: true,
+      volume: 0.1
+    }),
+    bgEpicIntro: new Howl({
+      src: [require("@/assets/sounds/epic_music_intro.mp3")],
+      loop: true,
+      autoplay: true,
+      volume: 0.2
+    }),
+    alreadyVisited: false,
     avatarComputer: {
       src: require("./assets/avatars/computer_avatar.png"),
       alt: "avatar computer",
@@ -90,7 +142,7 @@ export default new Vuex.Store({
       return "-2";
     },
     currentUser(state) {
-      if (state.userInfo && state.userInfo != null) {
+      if (state.userInfo && state.userInfo != null && state.userInfo != null) {
         return state.userInfo;
       } else if (state.gamesInfo && state.gamesInfo.player != null) {
         return state.gamesInfo.player;
@@ -100,7 +152,7 @@ export default new Vuex.Store({
       return state.loggedIn;
     },
     isPageRestricted(state) {
-      state.restricted;
+      return state.restricted;
     },
     authStatus(state) {
       return state.status;
@@ -110,6 +162,19 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setalreadyVisited(state, payload) {
+      state.alreadyVisited = payload;
+    },
+    playMusic(state) {
+      if (!state.musicPlaying) {
+        Howler.mute(false);
+        state.musicPlaying = true;
+      }
+    },
+    stopMusic(state) {
+      Howler.mute(true);
+      state.musicPlaying = false;
+    },
     setGames(state, payload) {
       state.gamesInfo = payload;
     },
@@ -144,8 +209,11 @@ export default new Vuex.Store({
     setLoading(state, payload) {
       state.loading = payload;
     },
-    authSuccess(state) {
+    userIsLoggedIn(state) {
       state.loggedIn = true;
+    },
+    authSuccess(state) {
+      // state.loggedIn = true;
       state.status = "success";
     },
     authLogOut(state) {
@@ -207,6 +275,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios(options)
           .then(res => {
+            if (state.status == "success") commit("userIsLoggedIn");
             commit(payload.mutation, res.data);
             commit("dataIsReady");
             commit("userAuthorized");

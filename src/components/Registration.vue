@@ -2,10 +2,6 @@
   <v-card
     max-width="500"
     min-width="200"
-    :class="{
-      'bg-transparent': isAuthenticated && $route.path == '/',
-      'bg-col': !isAuthenticated
-    }"
     :light="!isAuthenticated"
     :flat="isAuthenticated"
   >
@@ -170,7 +166,7 @@
           color="primary"
           @click="signUp"
         >
-          Continue
+          Register
         </v-btn>
       </v-layout>
     </v-card-actions>

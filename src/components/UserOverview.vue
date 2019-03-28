@@ -13,8 +13,8 @@
         v-if="isUser"
         class="px-2 title font-weight-light"
       >
-        <span class="hidden-md-and-down">Welcome to the battlefield,</span>
-        Captain {{ user.userName }}!
+        <span class="hidden-md-and-down">Captain on deck:</span>
+        {{ user.userName }}!
       </div>
       <div
         v-if="!isUser && !waitingTojoin"

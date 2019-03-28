@@ -126,8 +126,7 @@
                       :style="
                         getShipOverlappingPositions.includes(id)
                           ? { color: 'orange' }
-                          : { color: '' }
-                      "
+                          : { color: '' }"
                     >
                       {{ id }}
                     </div>
@@ -207,7 +206,6 @@
             <span v-else>Computer turn</span>
             <CountDownTimer
               ref="timer"
-              :sound-enabled="playSound"
               @timerFinish="timerEnd()"
             />
           </v-flex>
@@ -261,23 +259,6 @@
                     large
                     color="white"
                   >timer_off</v-icon>
-                </v-btn>
-              </v-flex>
-              <v-flex text-xs-center>
-                <v-btn
-                  icon
-                  @click="playSound = !playSound"
-                >
-                  <v-icon
-                    v-show="playSound"
-                    large
-                    color="white"
-                  >volume_up</v-icon>
-                  <v-icon
-                    v-show="!playSound"
-                    large
-                    color="white"
-                  >volume_off</v-icon>
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -383,7 +364,6 @@ export default {
       // countDownTime: 90,
       gameStart: false,
       pauseTimer: false,
-      playSound: true,
       dialog: false,
       selectedShip: "",
       resetKey: 0,
@@ -482,6 +462,78 @@ export default {
       if (newVal && this.gameStart) {
         this.$refs.timer.start();
       } else this.$refs.timer.stop();
+    },
+    userGridHits(newVal, oldVal) {
+      //Method to play sound depending of grid situations hit/missed
+      //Some sound need randomness in voice acting answers:
+      let randomNb = Math.floor(Math.random() * 3) + 1;
+      if (newVal[this.salvoTurn]) {
+        if (newVal[this.salvoTurn - 1] == undefined) {
+          if (newVal[this.salvoTurn].AllHits.length > 0) {
+            this.soundEffects.play("explosion");
+            setTimeout(
+              () => this.soundEffects.play("underAttack" + randomNb),
+              1000
+            );
+          }
+          if (newVal[this.salvoTurn].AllMissed.length > 0)
+            this.soundEffects.play("waterSplash");
+        } else {
+          if (
+            newVal[this.salvoTurn].AllHits.length >
+            newVal[this.salvoTurn - 1].AllHits.length
+          ) {
+            this.soundEffects.play("explosion");
+            setTimeout(
+              () => this.soundEffects.play("underAttack" + randomNb),
+              1000
+            );
+          }
+          if (
+            newVal[this.salvoTurn].AllMissed.length >
+            newVal[this.salvoTurn - 1].AllMissed.length
+          )
+            this.soundEffects.play("waterSplash");
+        }
+      }
+    },
+    gameState(newVal, oldVal) {
+      if (newVal != oldVal && oldVal != (undefined || null)) {
+        if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
+        if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
+      }
+    },
+    opponentGridHits(newVal, oldVal) {
+      //Method to play sound depending of grid situations hit/missed
+      //Some sound need randomness in voice acting answers:
+      if (newVal[this.salvoTurn]) {
+        if (newVal[this.salvoTurn - 1] == undefined) {
+          if (newVal[this.salvoTurn].AllHits.length > 0) {
+            console.log("udenfined previous onenemy farawayshot");
+            this.soundEffects.play("farAwayShot");
+          }
+          if (newVal[this.salvoTurn].AllMissed.length > 0) {
+            let idsound = this.soundEffects.play("waterSplash");
+            this.soundEffects.volume(0.4, idsound);
+          }
+        } else {
+          if (
+            newVal[this.salvoTurn].AllHits.length >
+            newVal[this.salvoTurn - 1].AllHits.length
+          ) {
+            console.log("onenemy farawayshot");
+            let idsound_1 = this.soundEffects.play("farAwayShot");
+          }
+          if (
+            newVal[this.salvoTurn].AllMissed.length >
+            newVal[this.salvoTurn - 1].AllMissed.length
+          ) {
+            console.log("on enemy watersplash");
+            let idsound_2 = this.soundEffects.play("waterSplash");
+            this.soundEffects.volume(0.4, idsound_2);
+          }
+        }
+      }
     }
   },
   created() {
@@ -510,7 +562,14 @@ export default {
     window.onkeydown = null;
   },
   computed: {
-    ...mapState(["serverMessage", "loading", "pageIsRestricted", "gamesInfo"]),
+    ...mapState([
+      "serverMessage",
+      "loading",
+      "pageIsRestricted",
+      "gamesInfo",
+      "soundEffects",
+      "musicPlaying"
+    ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     countDownTime() {
       switch (this.difficulty.diff) {
@@ -638,9 +697,11 @@ export default {
         this.homeShipsPositionList.includes(pos)
       );
       let homeWins =
-        hitsOnComputerShips.length >= this.computerShipsPositionList.length;
+        hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
+        hitsOnComputerShips.length != 0;
       let computerWins =
-        hitsOnHomeShips.length >= this.homeShipsPositionList.length;
+        hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
+        hitsOnHomeShips.length != 0;
 
       if (homeWins || computerWins) {
         this.gameFinished = true;
@@ -706,8 +767,8 @@ export default {
           allMissed = [...allMissed, ...missed];
         }
         obj[i] = {
-          AllHits: [],
-          AllMissed: [],
+          AllHits: allHit,
+          AllMissed: allMissed,
           fleetState: {},
           hitsLoc: hit,
           missLoc: missed
@@ -736,8 +797,8 @@ export default {
           allMissed = [...allMissed, ...missed];
         }
         obj[i] = {
-          AllHits: [],
-          AllMissed: [],
+          AllHits: allHit,
+          AllMissed: allMissed,
           fleetState: {},
           hitsLoc: hit,
           missLoc: missed
@@ -1001,6 +1062,9 @@ export default {
           currentSalvoesPositions.splice(index, 1);
         }
       }
+      //CanFire
+      this.soundEffects.play("targetSelect");
+
       this.homeNextSalvoPositions = currentSalvoesPositions;
       // console.log(
       //   "CurrentTurn: " + this.salvoTurn + " - Current salvoes: ",
@@ -1046,6 +1110,7 @@ export default {
         return;
       }
       // this.cellSize = 20;
+      this.soundEffects.play("startGame");
       this.placingShips = false;
       this.showSalvo = true;
       this.canFireSalvo = true;
@@ -1056,27 +1121,69 @@ export default {
     },
     fireSalvo() {
       //add some verifications here
+      function applySalvo(self) {
+        self.$set(
+          self.homeSalvoPositions,
+          self.salvoTurn,
+          self.homeNextSalvoPositions
+        );
+        self.homeAllSalvoesPositionsList = [
+          ...self.homeAllSalvoesPositionsList,
+          ...self.homeNextSalvoPositions
+        ];
+        self.homeNextSalvoPositions = [];
+
+        self.$refs.timer.reset();
+        //only time initialize for timer to now it can start
+        self.gameStart = true;
+        self.homeTurn = false;
+      }
       if (this.canFireSalvo) {
         this.canFireSalvo = false;
-        this.$set(
-          this.homeSalvoPositions,
-          this.salvoTurn,
-          this.homeNextSalvoPositions
-        );
-        this.homeAllSalvoesPositionsList = [
-          ...this.homeAllSalvoesPositionsList,
-          ...this.homeNextSalvoPositions
-        ];
-        this.homeNextSalvoPositions = [];
+        // applySalvo(this);
+        // this.$set(
+        //   this.homeSalvoPositions,
+        //   this.salvoTurn,
+        //   this.homeNextSalvoPositions
+        // );
+        // this.homeAllSalvoesPositionsList = [
+        //   ...this.homeAllSalvoesPositionsList,
+        //   ...this.homeNextSalvoPositions
+        // ];
+        // this.homeNextSalvoPositions = [];
 
-        this.$refs.timer.reset();
-        //only time initialize for timer to now it can start
-        this.gameStart = true;
-        this.homeTurn = false;
+        // this.$refs.timer.reset();
+        // //only time initialize for timer to now it can start
+        // this.gameStart = true;
+        // this.homeTurn = false;
+
+        if (this.musicPlaying) {
+          let randomNb = Math.floor(Math.random() * 3) + 1;
+          console.log("loadAndFire" + randomNb);
+          let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+          let self = this;
+          this.soundEffects.rate(2.0, soundId);
+          this.soundEffects.on(
+            "end",
+            function() {
+              applySalvo(self);
+              // self.soundEffects.play("farAwayShot");
+              setTimeout(() => {
+                self.computerTurn();
+              }, 1000);
+            },
+            soundId
+          );
+        } else {
+          applySalvo(this);
+          setTimeout(() => {
+            this.computerTurn();
+          }, 1000);
+        }
         //wait 1 s before computer turns for a more paced game;
-        setTimeout(() => {
-          this.computerTurn();
-        }, 1000);
+        // setTimeout(() => {
+
+        // }, 1000);
 
         this.salvoTurn += 1;
       }
