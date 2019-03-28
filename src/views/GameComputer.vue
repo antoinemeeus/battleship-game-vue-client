@@ -459,7 +459,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.5, 0.0, 1500);
+    this.bgEpicIntro.fade(0.3, 0.0, 1500);
     next();
   },
   created() {
@@ -469,10 +469,8 @@ export default {
 
   mounted() {
     this.bgMusic.fade(0.6, 0.0, 1000);
-    if (!this.bgEpicIntro.playing()) {
-      this.bgEpicIntro.play();
-      this.bgEpicIntro.fade(0.0, 0.5, 1500);
-    }
+    this.bgEpicIntro.fade(0.0, 0.3, 1500);
+    if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
     this.getUserData();
     //Prevent space default behavior
     window.onkeydown = function(event) {
