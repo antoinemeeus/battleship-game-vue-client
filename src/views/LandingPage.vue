@@ -90,7 +90,7 @@
                 :arrows-outside="false"
               >
                 <VueperSlide
-                  v-for="i in 7"
+                  v-for="i in 6"
                   :key="i"
                   :image="
                   require(`../assets/landingImages/in_game_image00${i}.jpg`)
@@ -280,7 +280,7 @@ export default {
     };
   },
   mounted() {
-    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 1.0, 1500);
+    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
   },
   watch: {
     radios() {
@@ -302,7 +302,7 @@ export default {
       }
     },
     startPlaying() {
-      if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 1.0, 1500);
+      if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
       this.$store.commit("setalreadyVisited", true);
     },
     gameVsComputer() {
