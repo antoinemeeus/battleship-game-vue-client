@@ -1,7 +1,8 @@
 <template>
-  <v-container
+  <v-layout
     pa-0
     ma-0
+    justify-center
   >
     <v-alert
       :value="alert"
@@ -62,120 +63,158 @@
             <v-icon>fa-sign-in-alt</v-icon><span class="px-2">Login to create New Game</span>
           </v-btn>
         </div>
-        <v-data-table
-          :headers="headers"
-          :items="presentGames"
-          :pagination.sync="pagination"
-          class="table-height"
-          dark
-          hide-actions
-          :loading="loading"
-        >
-          <v-progress-linear
-            v-slot:progress
-            color="red"
-            indeterminate
-          ></v-progress-linear>
-          <template
-            slot="items"
-            slot-scope="props"
+        <div>
+          <v-data-table
+            :headers="headers"
+            :items="presentGames"
+            :pagination.sync="pagination"
+            class="table-height"
+            dark
+            hide-actions
+            :loading="loading"
           >
-            <tr :class="props.item.isFinished ? 'finished-row-bg' : ''">
-              <td class="text-xs-center px-1 table-bg">{{ props.item.id }}</td>
-              <td class="text-xs-center px-1 table-bg">
-                {{ moment(props.item.created).calendar() }}
-              </td>
-              <td class="table-bg">
-                <v-layout
-                  v-if="isAuthenticated && !props.item.isFinished"
-                  align-center
-                >
-                  <v-btn
-                    v-if="props.item.p1_.isUser"
-                    :color="btnEnterColor"
-                    @click="toPlayerBoard(props.item.p1_.gp_id)"
-                  >Enter</v-btn>
-                  <v-btn
-                    v-else-if="!props.item.p1_.isJoined"
-                    :color="btnJoinColor"
-                    @click="joinGame(props.item.id)"
-                  >Join</v-btn>
-                  <span class="text-truncate subheading font-weight-light  ml-2">
-                    {{ props.item.p1_.name }}
-                  </span>
-                </v-layout>
-                <v-layout
-                  v-else
-                  justify-space-between
-                  align-center
-                >
-                  <span class="text-truncate subheading font-weight-light ml-2">
-                    {{ props.item.p1_.name }}
-                  </span>
-                  <v-chip
-                    v-if="props.item.isFinished"
-                    light
-                    :color="
-                	    props.item.p1_.result == 'won' ? 'yellow' : props.item.p1_.result == 'tie' ?'cyan':'red lighten-3'"
-                    class="text-uppercase"
+            <v-progress-linear
+              v-slot:progress
+              color="red"
+              indeterminate
+            ></v-progress-linear>
+            <template
+              slot="items"
+              slot-scope="props"
+            >
+              <tr :class="props.item.isFinished ? 'finished-row-bg' : ''">
+                <td class="text-xs-center px-1 table-bg">{{ props.item.id }}</td>
+                <td class="text-xs-center px-1 table-bg">
+                  {{ moment(props.item.created).calendar() }}
+                </td>
+                <td class="table-bg">
+                  <v-layout
+                    v-if="isAuthenticated && !props.item.isFinished"
+                    align-center
+                    justify-space-between
                   >
-                    <v-icon>{{
-                      props.item.p1_.result == "won" ? "star" : props.item.p1_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
-                      }}</v-icon>
-                    <span class="pl-2">{{ props.item.p1_.result }}</span>
-                  </v-chip>
-                </v-layout>
-              </td>
-              <td class=" table-bg">
-                <v-layout
-                  v-if="isAuthenticated && !props.item.isFinished"
-                  align-center
-                >
-                  <v-btn
-                    v-if="props.item.p2_.isUser"
-                    :color="btnEnterColor"
-                    @click="toPlayerBoard(props.item.p2_.gp_id)"
-                  >Enter</v-btn>
-                  <v-btn
-                    v-else-if="
+                    <div>
+                      <v-avatar
+                        :size="22"
+                        color="grey lighten-4"
+                      >
+                        <img
+                          :src="playerAvatar(props.item.avatarP1).src"
+                          :alt="playerAvatar(props.item.avatarP1).name"
+                        />
+                      </v-avatar><span class="pl-2">{{ props.item.p1_.name }}</span>
+                    </div>
+                    <v-btn
+                      v-if="props.item.p1_.isUser"
+                      :color="btnEnterColor"
+                      @click="toPlayerBoard(props.item.p1_.gp_id)"
+                    >Enter</v-btn>
+                    <v-btn
+                      v-else-if="!props.item.p1_.isJoined"
+                      :color="btnJoinColor"
+                      @click="joinGame(props.item.id)"
+                    >Join</v-btn>
+
+                  </v-layout>
+                  <v-layout
+                    v-else
+                    justify-space-between
+                    align-center
+                  >
+                    <div>
+                      <v-avatar
+                        :size="22"
+                        color="grey lighten-4"
+                      >
+                        <img
+                          :src="playerAvatar(props.item.avatarP1).src"
+                          :alt="playerAvatar(props.item.avatarP1).name"
+                        />
+                      </v-avatar><span class="pl-2">{{ props.item.p1_.name }}</span>
+                    </div>
+                    <v-chip
+                      v-if="props.item.isFinished"
+                      light
+                      :color="
+                	    props.item.p1_.result == 'won' ? 'yellow' : props.item.p1_.result == 'tie' ?'cyan':'red lighten-3'"
+                      class="text-uppercase"
+                    >
+                      <v-icon>{{
+                        props.item.p1_.result == "won" ? "star" : props.item.p1_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
+                        }}</v-icon>
+                      <span class="pl-2">{{ props.item.p1_.result }}</span>
+                    </v-chip>
+                  </v-layout>
+                </td>
+                <td class=" table-bg">
+                  <v-layout
+                    v-if="isAuthenticated && !props.item.isFinished"
+                    align-center
+                    justify-space-between
+                  >
+                    <div>
+                      <v-avatar
+                        :size="20"
+                        color="grey lighten-4"
+                      >
+                        <img
+                          :src="playerAvatar(props.item.avatarP2).src"
+                          :alt="playerAvatar(props.item.avatarP2).name"
+                        />
+                      </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
+                    </div>
+                    <v-btn
+                      v-if="props.item.p2_.isUser"
+                      :color="btnEnterColor"
+                      @click="toPlayerBoard(props.item.p2_.gp_id)"
+                    >Enter</v-btn>
+                    <v-btn
+                      v-else-if="
                       !props.item.p2_.isJoined && !props.item.p1_.isUser
                     "
-                    :color="btnJoinColor"
-                    @click="joinGame(props.item.id)"
-                  >Join
-                  </v-btn>
-                  <span class="text-truncate subheading font-weight-light ml-2">
-                    {{ props.item.p2_.name }}
-                  </span>
-                </v-layout>
-                <v-layout
-                  v-else
-                  justify-space-between
-                  align-center
-                >
-                  <span class="text-truncate subheading font-weight-light  ml-2">
-                    {{ props.item.p2_.name }}
-                  </span>
-                  <v-chip
-                    v-if="props.item.isFinished"
-                    light
-                    :color="
-                     props.item.p2_.result == 'won' ? 'yellow' : props.item.p2_.result == 'tie' ?'cyan':'red lighten-3'"
-                    class="text-uppercase"
+                      :color="btnJoinColor"
+                      @click="joinGame(props.item.id)"
+                    >Join
+                    </v-btn>
+
+                  </v-layout>
+                  <v-layout
+                    v-else
+                    justify-space-between
+                    align-center
                   >
-                    <v-icon>{{
-                      props.item.p2_.result == "won" ? "star" : props.item.p2_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
-                      }}</v-icon>
-                    <span class="pl-2">{{ props.item.p2_.result }}</span>
-                  </v-chip>
-                </v-layout>
-              </td>
-              <td class="subheading font-weight-light table-bg">
-                {{ props.item.status }}
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
+                    <div>
+                      <v-avatar
+                        :size="20"
+                        color="grey lighten-4"
+                      >
+                        <img
+                          :src="playerAvatar(props.item.avatarP2).src"
+                          :alt="playerAvatar(props.item.avatarP2).name"
+                        />
+                      </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
+                    </div>
+                    <v-chip
+                      v-if="props.item.isFinished"
+                      light
+                      :color="
+                     props.item.p2_.result == 'won' ? 'yellow' : props.item.p2_.result == 'tie' ?'cyan':'red lighten-3'"
+                      class="text-uppercase"
+                    >
+                      <v-icon>{{
+                        props.item.p2_.result == "won" ? "star" : props.item.p2_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
+                        }}</v-icon>
+                      <span class="pl-2">{{ props.item.p2_.result }}</span>
+                    </v-chip>
+                  </v-layout>
+                </td>
+                <td class="subheading font-weight-light table-bg">
+                  {{ props.item.status }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </div>
         <div class="text-xs-center pt-2">
           <v-pagination
             v-show="pagination.totalItems > pagination.rowsPerPage"
@@ -187,7 +226,7 @@
         </div>
       </v-flex>
     </v-layout>
-  </v-container>
+  </v-layout>
 </template>
 
 <script>
@@ -232,7 +271,7 @@ export default {
     btnJoinColor: "blue"
   }),
   computed: {
-    ...mapState(["gamesInfo", "loading"]),
+    ...mapState(["gamesInfo", "loading", "avatarList"]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     pages() {
       if (
@@ -245,13 +284,10 @@ export default {
         this.pagination.totalItems / this.pagination.rowsPerPage
       );
     },
+
     presentGames() {
       function formatPlayer(playerObj) {
-        return (
-          (playerObj.userName || "-No username saved-") +
-          " :: " +
-          (playerObj.email || "-No email-")
-        );
+        return playerObj.userName || "-No username saved-";
       }
       let newGameList = [];
       if (this.gamesInfo.games) {
@@ -265,6 +301,7 @@ export default {
             player_id: null,
             gp_id: null,
             name: "Waiting for player",
+            avatarID: null,
             score: null,
             result: ""
           };
@@ -272,6 +309,7 @@ export default {
             isUser: false,
             isJoined: false,
             player_id: null,
+            avatarID: null,
             gp_id: null,
             name: "Waiting for player",
             score: null,
@@ -280,6 +318,7 @@ export default {
 
           if (game.gamePlayers[0]) {
             p1_.name = formatPlayer(game.gamePlayers[0].player);
+            p1_.avatarID = game.gamePlayers[0].player.avatarID;
             (p1_.player_id = game.gamePlayers[0].player.id),
               (p1_.gp_id = game.gamePlayers[0].id);
             p1_.isJoined = true;
@@ -290,6 +329,7 @@ export default {
           }
           if (game.gamePlayers[1]) {
             p2_.name = formatPlayer(game.gamePlayers[1].player);
+            p2_.avatarID = game.gamePlayers[1].player.avatarID;
             (p2_.player_id = game.gamePlayers[1].player.id),
               (p2_.gp_id = game.gamePlayers[1].id);
             p2_.isJoined = true;
@@ -342,6 +382,8 @@ export default {
           game["p2_"] = p2_;
           game["player1"] = p1_.name;
           game["player2"] = p2_.name;
+          game["avatarP1"] = p1_.avatarID;
+          game["avatarP2"] = p2_.avatarID;
           game["status"] = status;
           game["isFinished"] = isFinished;
           game["actionObj"] = action;
@@ -354,6 +396,10 @@ export default {
   },
   methods: {
     ...mapActions(["getData", "postData"]),
+    playerAvatar(p_avatar) {
+      if (p_avatar == null) return this.avatarList[0];
+      return this.avatarList.find(av => av.id == p_avatar);
+    },
     openModal() {
       this.dialog = true;
     },
@@ -475,35 +521,13 @@ export default {
 };
 </script>
 <style scoped>
-.won {
-  color: green;
-}
-/* .won::after {
-  content: "won!";
-  background-color: green;
-
-  opacity: 0.4;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-} */
-.lost {
-  color: grey;
-}
-.tie {
-  background-color: green;
-}
 .table-height {
-  height: 450px;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .finished-row-bg {
-  background-color: rgba(80, 96, 105, 0.623);
+  background-color: rgba(80, 102, 105, 0.623);
 }
 .dark-bg {
   background-color: rgba(68, 69, 70, 0.822);

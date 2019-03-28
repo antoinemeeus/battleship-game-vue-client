@@ -112,7 +112,7 @@ export default {
       this.authRequest(payload).then(
         res => {
           // console.log(res);
-          this.menu = true;
+          this.menu = false;
           this.$router.push("/");
         },
         err => {

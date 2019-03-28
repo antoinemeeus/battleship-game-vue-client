@@ -174,8 +174,8 @@ export default {
             this.shipPositions.includes(pos)
           );
           if (found) {
+            //Forbiden position placement
             this.overlapping = true;
-            //console.log("FORBIDEN PLACEMENT - Overlapping");
             return true;
           }
         }
@@ -187,7 +187,7 @@ export default {
       this.rotate = !this.rotate;
       this.getElementBelowBow(bowPos);
       if (this.outOfBounds == true || this.isShipOverlapping()) {
-        //console.log("FORBIDEN PLACEMENT - Obstacle detected");
+        //Forbiden position placement
         this.shakeImage();
         this.resetShipPosLastValid();
       } else {
@@ -244,14 +244,12 @@ export default {
       return bowPos;
     },
     onActivated(event) {
-      //console.log("Ship " + this.type + " Activated", event);
       this.isMoving = true;
       this.$refs.ship.limits;
       this.$refs.ship.limits = this.shipBoardLimits();
       this.passPositionToParent();
     },
     onDragging(pos) {
-      //console.log("Dragging!");
       this.isMoving = true;
       this.$refs.ship.limits = this.shipBoardLimits();
       this.getElementBelowBow(pos);
@@ -260,8 +258,7 @@ export default {
     onDragStop(pos) {
       this.isMoving = false;
       this.$refs.ship.active = false;
-      //console.log("Dropped");
-      //console.log(pos);
+
       if (this.isShipOverlapping()) {
         this.resetShipPosLastValid();
         this.shakeImage();

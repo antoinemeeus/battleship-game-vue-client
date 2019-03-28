@@ -279,6 +279,9 @@ export default {
       ]
     };
   },
+  mounted() {
+    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 1.0, 1500);
+  },
   watch: {
     radios() {
       this.soundEffects.play("menuSelect");
@@ -299,7 +302,7 @@ export default {
       }
     },
     startPlaying() {
-      if (!this.bgMusic.playing()) this.bgMusic.play();
+      if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 1.0, 1500);
       this.$store.commit("setalreadyVisited", true);
     },
     gameVsComputer() {

@@ -12,28 +12,28 @@
     >
       <v-flex
         xs12
-        md10
+        lg10
         pa-2
       >
         <h2 class="display-2 text-xs-center">Game List</h2>
       </v-flex>
       <v-flex
         xs12
-        md10
+        lg10
         pa-3
       >
         <GamesTable />
       </v-flex>
       <v-flex
         xs12
-        md10
+        lg10
         pa-3
       >
         <h2 class="display-2 text-xs-center">Leader Board</h2>
       </v-flex>
       <v-flex
         xs12
-        md10
+        lg10
         pa-3
       >
         <LeaderBoard />
@@ -45,7 +45,7 @@
 <script>
 import GamesTable from "../components/GamesTable.vue";
 import LeaderBoard from "../components/LeaderBoard.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Lobby",
   components: {
@@ -58,6 +58,7 @@ export default {
     };
   },
   mounted() {
+    this.bgMusic.fade(0.0, 1.0, 1500);
     this.setAutoRefresh();
   },
   beforeRouteUpdate(to, from, next) {
@@ -70,7 +71,9 @@ export default {
   beforeDestroy() {
     this.stopAutoRefresh();
   },
-
+  computed: {
+    ...mapState(["bgMusic"])
+  },
   methods: {
     ...mapActions(["getData"]),
     getGames() {

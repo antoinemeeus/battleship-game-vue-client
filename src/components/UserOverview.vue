@@ -195,11 +195,13 @@ export default {
       };
       this.authRequest(payload).then(
         res => {
-          console.log(res);
           this.$router.push("/");
         },
         err => {
-          console.log(err);
+          console.log(
+            "Error login out with userOverview",
+            err.response || err.request
+          );
         }
       );
     }

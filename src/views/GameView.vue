@@ -24,14 +24,7 @@
     </v-layout>
     <div v-if="!pageIsRestricted">
       <v-layout>
-        <v-flex pa-2>
-          <!-- <div
-            v-if="gameDisplayed.gameState"
-            class="title text-xs-center"
-          >
-            {{ gameDisplayed.gameState.Status }} :
-            {{ gameDisplayed.gameState.Info }}
-          </div> -->
+        <v-flex>
           <v-snackbar
             v-model="snackbar"
             :timeout="4000"
@@ -49,11 +42,6 @@
               Close
             </v-btn>
           </v-snackbar>
-          <!-- <v-flex xs12>
-            <div>Page is restricted: {{ pageIsRestricted }}</div>
-            <div>Loading: {{ loading }}</div>
-            <div>ServerResponse: {{ serverMessage }}</div>
-          </v-flex> -->
         </v-flex>
       </v-layout>
       <v-layout justify-space-between>
@@ -65,14 +53,6 @@
         >
           <UserOverview :user="currentPlayer" />
         </v-flex>
-        <!-- <v-flex
-          align-self-end
-          text-xs-center
-        >
-          :CODE:{{
-          gameDisplayed.gameState?gameDisplayed.gameState.code:'waiting'
-          }}
-        </v-flex> -->
         <v-flex
           xs6
           md5
@@ -315,21 +295,21 @@
                 justify-center
               >
                 <InstructionWizard
-                  v-if="!placingShips && userIsReady"
+                  v-if="!placingShips && displayWizard"
                   :nb-of-shots="maxSalvoSize"
                 />
                 <v-flex text-xs-center>
                   <v-btn
                     icon
-                    @click="playSound = !playSound"
+                    @click="soundOnOff()"
                   >
                     <v-icon
-                      v-show="playSound"
+                      v-show="musicPlaying"
                       large
                       color="white"
                     >volume_up</v-icon>
                     <v-icon
-                      v-show="!playSound"
+                      v-show="!musicPlaying"
                       large
                       color="white"
                     >volume_off</v-icon>
@@ -423,7 +403,6 @@ export default {
       maxSalvoSize: 5,
       countDownTime: 180,
       timerStartStop: true,
-      playSound: true,
       dialog: false,
       selectedShip: "",
       gridSize: 10,
@@ -507,6 +486,11 @@ export default {
     this.placeShipRandomly();
   },
   mounted() {
+    this.bgMusic.fade(1.0, 0.0, 1000);
+    if (!this.bgEpicIntro.playing()) {
+      this.bgEpicIntro.play();
+      this.bgEpicIntro.fade(0.0, 0.5, 1500);
+    }
     this.sendingSalvo = false;
     window.onkeydown = function(event) {
       if (event.keyCode === 32) {
@@ -523,6 +507,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
+    this.bgEpicIntro.fade(0.5, 0.0, 1500);
     this.stopAutoRefresh();
     next();
   },
@@ -538,12 +523,18 @@ export default {
       "pageIsRestricted",
       "gameDisplayed",
       "defaultAnonymousPlayer",
-      "soundEffects"
+      "musicPlaying",
+      "soundEffects",
+      "bgMusic",
+      "bgEpicIntro"
     ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     lastUpdate() {
       if (this.gameDisplayed) return this.gameDisplayed.lastPlayed;
       return 0;
+    },
+    displayWizard() {
+      return this.userIsReady || !this.placingShips;
     },
     timeLeftToPlayInSec() {
       let now = this.moment.utc();
@@ -765,6 +756,13 @@ export default {
   },
   methods: {
     ...mapActions(["getData", "postData"]),
+    soundOnOff() {
+      if (this.musicPlaying) {
+        this.$store.commit("stopMusic");
+      } else {
+        this.$store.commit("playMusic");
+      }
+    },
     gameKeyDownEvent(event) {
       if (event.keyCode == 32) {
         if (!this.placingShips && this.canFireSalvo) this.fireSalvo();
@@ -818,6 +816,7 @@ export default {
       return result;
     },
     placeShipRandomly() {
+      this.soundEffects.play("registrationTick");
       let shipCoord;
       //reinit ships positions.
       this.ships.forEach(ship => {
@@ -1077,20 +1076,19 @@ export default {
         },
         error => {
           this.sendingSalvo = false;
-          console.log(error);
           let msg = "post salvo";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
             console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            console.log("Error", error.message);
+            console.log(error.message);
           }
           // this.handleErrorAlertMsgs(err, msgIntro);
         }
@@ -1106,7 +1104,7 @@ export default {
         //console.log("There is overlapping ships!");
         return;
       }
-      console.log("READY");
+      console.log("Starting game...");
       this.soundEffects.play("startGame");
       this.userIsReady = true;
       this.sendShipToServer();

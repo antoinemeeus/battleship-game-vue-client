@@ -4,24 +4,12 @@
     pa-0
     fluid
   >
-    <v-layout
-      row
-      wrap
-    >
-      <v-flex
-        xs12
-        md10
-        pa-2
-      >
-        <div>GAME STATE: {{ gameState }}</div>
-
-      </v-flex>
-    </v-layout>
     <v-layout justify-space-between>
       <v-flex
         xs6
         md5
         xl4
+        class="user-bg-color"
       >
         <UserOverview :user="currentUser" />
       </v-flex>
@@ -29,6 +17,7 @@
         xs6
         md5
         xl4
+        class="user-bg-color"
       >
         <UserOverview :is-user="false" />
       </v-flex>
@@ -458,7 +447,6 @@ export default {
   },
   watch: {
     pauseTimer(newVal) {
-      console.log("PauseTImer:", newVal);
       if (newVal && this.gameStart) {
         this.$refs.timer.start();
       } else this.$refs.timer.stop();
@@ -476,6 +464,11 @@ export default {
   },
 
   mounted() {
+    this.bgMusic.fade(0.6, 0.0, 1000);
+    if (!this.bgEpicIntro.playing()) {
+      this.bgEpicIntro.play();
+      this.bgEpicIntro.fade(0.0, 0.5, 1500);
+    }
     this.getUserData();
     //Prevent space default behavior
     window.onkeydown = function(event) {
@@ -502,7 +495,9 @@ export default {
       "pageIsRestricted",
       "gamesInfo",
       "soundEffects",
-      "musicPlaying"
+      "musicPlaying",
+      "bgMusic",
+      "bgEpicIntro"
     ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     countDownTime() {
@@ -623,7 +618,7 @@ export default {
     gameState() {
       this.gameFinished = false;
       if (!this.homeTurn) return "PROGRESS";
-      //allComputerShips are sunk?
+      //Check if allComputerShips are sunk
       let hitsOnComputerShips = this.homeAllSalvoesPositionsList.filter(pos =>
         this.computerShipsPositionList.includes(pos)
       );
@@ -657,9 +652,6 @@ export default {
     homeFleetState() {
       let obj = {};
       for (let ship of this.homeShips) {
-        // let shipPositions = this.shipPositions[ship.type];
-        // //console.log("shipPositions", shipPositions);
-
         ship.hits = ship.initPosition.filter(pos =>
           this.computerAllSalvoesPositionsList.includes(pos)
         );
@@ -708,6 +700,7 @@ export default {
           missLoc: missed
         };
       }
+      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of opponent info in the same vue $tick.
       this.$set(this.computerAllSalvoResult, "missed", allMissed);
       this.$set(this.computerAllSalvoResult, "hit", allHit);
       this.computerCoordinatesHit = this.coordinatesComputerSalvo.filter(obj =>
@@ -738,9 +731,9 @@ export default {
           missLoc: missed
         };
       }
+      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of user info in the same vue $tick.
       this.$set(this.homeAllSalvoResult, "missed", allMissed);
       this.$set(this.homeAllSalvoResult, "hit", allHit);
-      // this.homeAllSalvoResult = { missed: allMissed, hit: allHit };
       return obj;
     },
     homeShipsPositionList() {
@@ -762,20 +755,19 @@ export default {
     ...mapActions(["authRequest", "getData", "postData"]),
     getUserData() {
       if (this.currentUser.id == null || !this.isAuthenticated) {
-        //console.log("gameComputer no userInfo, try to logged in and get data");
+        //Quick post to server to check if user was already logged in and still have permission to access.
+        //We can get user info, like avatar and name from server and displayed it when playing against computer.
         let payload = {
           data: {},
           rqUrl: "/checkLog"
         };
         this.authRequest(payload).then(
           res => {
-            //console.log("loggedIn");
-            //console.log(res);
-            //console.log("Trying to get player data");
+            //User has still has a valid session cookie.
             this.getData({ url: "/player", mutation: "setUserInfo" });
           },
           err => {
-            //console.log("Not logged in");
+            //Was not logged in
             console.error(err);
             this.$store.commit("authLogOut");
           }
@@ -783,13 +775,12 @@ export default {
       }
     },
     wizardUnpausedTimer(val) {
-      //console.log("WIZARD UNPAUSED", val);
+      //Event triggered when user finished to read the intruction. Start countdown timer when first salvo is fired.
       this.pauseTimer = val;
     },
     timerEnd() {
       //timer end emitted event
-      //pass turn by sending current salvo locations
-      //console.log("TIMER ENDED! Pass salvo");
+      //pass automatically user turn by sending his current salvo list locations! Possible to send a empty list.
       this.fireSalvo();
     },
     forceResetComponent() {
@@ -798,15 +789,10 @@ export default {
       this.placeShipRandomly(this.computerShips);
     },
     gameKeyDownEvent(event) {
-      //console.log("KEY EVENT IN GAMECOMPUTER:", event);
+      //Fire salvo when space is pressed and we are in placing ship mode.
       if (!this.placingShips && event.keyCode == 32) {
         this.fireSalvo();
       }
-      // if (this.placingShips && event.keyCode == 82) {
-      //   let shipRef = "ship_" + this.selectedShip;
-      //   console.log(this.$refs, this.$refs.shipRef);
-      //   if (this.$refs[shipRef]) this.$refs[shipRef][0].rotateShip();
-      // }
     },
     getDuplicates(arr) {
       var object = {};
@@ -826,6 +812,7 @@ export default {
     },
     placeShipRandomly(shipFleet) {
       //reinit gameShipFleet positions.
+      this.soundEffects.play("registrationTick");
       shipFleet.forEach(ship => {
         ship.initPosition = [];
       });
@@ -944,7 +931,6 @@ export default {
         }
       }
     },
-
     salvoTarget(target) {
       if (!this.canFireSalvo) {
         return;
@@ -1009,16 +995,14 @@ export default {
       return Object.keys(obj).length === 0 && obj.constructor === Object;
     },
     overlappingShips() {
-      //flatten all the ships positions to an array
+      //Flatten all the ships positions to an array
       let shipsPos = this.shipPositions;
       let arrays = Object.values(shipsPos);
       let newFlattenArray = [];
       for (let arrayOfPos of arrays) {
-        //console.log(arrayOfPos);
         newFlattenArray.push(arrayOfPos);
       }
       newFlattenArray = newFlattenArray.flat();
-      // console.log(newFlattenArray);
       //find duplicates:
       return new Set(newFlattenArray).size !== newFlattenArray.length;
     },
@@ -1031,31 +1015,29 @@ export default {
     },
     ready() {
       if (Object.keys(this.shipPositions).length < this.homeShips.length) {
-        //console.log("Ships positions missings");
+        //Ship position missing
         this.placingShips = true;
         this.showSalvo = false;
 
         return;
       }
       if (this.overlappingShips()) {
-        //console.log("There is overlapping ships!");
+        //Ships are ovelapping
         this.placingShips = true;
         this.showSalvo = false;
         return;
       }
-      // this.cellSize = 20;
       this.soundEffects.play("startGame");
       this.placingShips = false;
       this.showSalvo = true;
       this.canFireSalvo = true;
       this.selectedShip = "";
-      // this.$refs.timer.setTime({minutes:2,secondes:0});
       this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
-      //console.log("READY! -> OK");
     },
     fireSalvo() {
-      //add some verifications here
+      //Method to fireSalvo to computer ships.
       function applySalvo(self) {
+        //Method to update salvoes positions and and force reactivity of Vue (as these are object value to update)
         self.$set(
           self.homeSalvoPositions,
           self.salvoTurn,
@@ -1067,30 +1049,16 @@ export default {
         ];
         self.homeNextSalvoPositions = [];
 
+        //Reset timer and flags
         self.$refs.timer.reset();
-        //only time initialize for timer to now it can start
         self.gameStart = true;
         self.homeTurn = false;
       }
+
+      //If firing is permitted, fire salvo procedure
       if (this.canFireSalvo) {
         this.canFireSalvo = false;
-        // applySalvo(this);
-        // this.$set(
-        //   this.homeSalvoPositions,
-        //   this.salvoTurn,
-        //   this.homeNextSalvoPositions
-        // );
-        // this.homeAllSalvoesPositionsList = [
-        //   ...this.homeAllSalvoesPositionsList,
-        //   ...this.homeNextSalvoPositions
-        // ];
-        // this.homeNextSalvoPositions = [];
-
-        // this.$refs.timer.reset();
-        // //only time initialize for timer to now it can start
-        // this.gameStart = true;
-        // this.homeTurn = false;
-
+        //If music enable, method to update salvo position is in sound callback to avoid overlapping sounds
         if (this.musicPlaying) {
           let randomNb = Math.floor(Math.random() * 3) + 1;
           let soundId = this.soundEffects.play("loadAndFire" + randomNb);
@@ -1099,8 +1067,7 @@ export default {
           this.soundEffects.on(
             "end",
             function() {
-              applySalvo(self);
-              // self.soundEffects.play("farAwayShot");
+              applySalvo(self); //->funciton to update inside callback
               setTimeout(() => {
                 self.computerTurn();
               }, 1000);
@@ -1108,25 +1075,22 @@ export default {
             soundId
           );
         } else {
+          //If music not enable, we don't have to wait for music to update salvo position.
           applySalvo(this);
+          //wait 1 s before computer turns for a more paced game (too much happening otherwise)
           setTimeout(() => {
             this.computerTurn();
           }, 1000);
         }
-        //wait 1 s before computer turns for a more paced game;
-        // setTimeout(() => {
-
-        // }, 1000);
-
+        //We add a turn. to counter
         this.salvoTurn += 1;
       }
-      // this.salvoTurn = this.salvoTurn + 1;
     },
     getRandomPositions(size) {
-      let list = [],
-        coordList = [];
+      let list = [];
+      let coordList = [];
 
-      //if salvoList length is same size as all the grid positions, (sanity check but normally the game finishes).
+      //If salvoList length is same size as all the grid positions, (sanity check but normally the game finishes).
       while (
         list.length < size &&
         this.computerAllSalvoesPositionsList.length <
@@ -1138,16 +1102,13 @@ export default {
         //if position already in salvo list, generate new one.
         let idpos = this.getIdfromCoord(randomX, randomY);
 
-        //idpos from max
+        //get cell with max probabilies of having a ship
         if (this.salvoTurn > 1) {
           idpos = this.getMaxProbCellID(this.makeProbabilitiesDTO);
           randomX = this.makeProbabilitiesDTO[idpos].x;
           randomY = this.makeProbabilitiesDTO[idpos].y;
         }
-
-        // console.log(idpos);
-        // console.log(this.makeProbabilitiesDTO);
-        // console.log("size:", Object.keys(this.makeProbabilitiesDTO).length);
+        //check if cell isn't already included in list
         if (
           !this.computerAllSalvoesPositionsList.includes(idpos) &&
           !list.includes(idpos)
@@ -1158,9 +1119,10 @@ export default {
           obj["y"] = randomY;
           coordList.push(obj);
         }
-
+        //delete from probability stack the cell that was jut included
         delete this.makeProbabilitiesDTO[idpos];
       }
+      //Concat new list to array of position
       this.coordinatesComputerSalvo = [
         ...this.coordinatesComputerSalvo,
         ...coordList
@@ -1169,6 +1131,7 @@ export default {
       return list;
     },
     computerTurn() {
+      //Get random positions. Usefull when no probabilies were calculated .
       this.computerNextSalvoPositions = this.getRandomPositions(
         this.maxSalvoSize
       );
@@ -1184,12 +1147,11 @@ export default {
         ...this.computerAllSalvoesPositionsList,
         ...this.computerNextSalvoPositions
       ];
-      //console.log("END OF COMPUTER TURN- RESET TIMER");
+      //Reset timer and flags
       this.$refs.timer.reset();
       this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
       this.$refs.timer.start();
       this.pauseTimer = true;
-
       this.canFireSalvo = true;
       this.homeTurn = true;
     }
@@ -1198,6 +1160,9 @@ export default {
 </script>
 
 <style scoped>
+.user-bg-color {
+  background-color: #373d5598;
+}
 .game-box {
   background-color: #373d5598;
   border: 2px #363a49 solid;
@@ -1223,7 +1188,6 @@ export default {
 .fire-button {
   align-self: center;
   justify-self: center;
-  /* width: inherit; */
 }
 .spaceBar {
   align-self: center;

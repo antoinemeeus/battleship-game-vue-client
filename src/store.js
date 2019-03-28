@@ -67,14 +67,12 @@ export default new Vuex.Store({
       src: [require("@/assets/sounds/menu_music_rf.mp3")],
       loop: true,
       autoUnlock: true,
-      autoplay: true,
-      volume: 0.1
+      autoplay: true
     }),
     bgEpicIntro: new Howl({
       src: [require("@/assets/sounds/epic_music_intro.mp3")],
-      loop: true,
-      autoplay: true,
-      volume: 0.2
+      loop: true
+      // autoplay: true,
     }),
     alreadyVisited: false,
     avatarComputer: {
@@ -220,6 +218,7 @@ export default new Vuex.Store({
       state.loggedIn = false;
       state.status = "logout";
       state.userInfo = null;
+      state.gamesInfo.player = null;
     },
     authRequest(state) {
       state.status = "loading";

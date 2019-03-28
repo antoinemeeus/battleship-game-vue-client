@@ -1,5 +1,5 @@
 <template>
-  <v-container
+  <v-layout
     pa-0
     ma-0
   >
@@ -24,6 +24,7 @@
       </v-flex>
       <v-flex xs12>
         <v-data-table
+          class="table-height"
           :headers="headers"
           :items="presentPlayers"
           :pagination.sync="pagination"
@@ -71,7 +72,7 @@
         </div>
       </v-flex>
     </v-layout>
-  </v-container>
+  </v-layout>
 </template>
 
 <script>
@@ -161,5 +162,9 @@ export default {
 <style scoped>
 .dark-bg {
   background-color: rgba(68, 69, 70, 0.822);
+}
+.table-height {
+  max-height: 50vh;
+  overflow-y: auto;
 }
 </style>
