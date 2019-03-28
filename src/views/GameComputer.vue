@@ -458,6 +458,10 @@ export default {
       }
     }
   },
+  beforeRouteLeave(to, from, next) {
+    this.bgEpicIntro.fade(0.5, 0.0, 1500);
+    next();
+  },
   created() {
     this.placeShipRandomly(this.homeShips);
     this.placeShipRandomly(this.computerShips);
