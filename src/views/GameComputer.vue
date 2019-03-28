@@ -274,7 +274,7 @@
               <Grid
                 v-show="showSalvo"
                 ref="salvoGrid"
-                assigned-i-d="salvoGrid"
+                assignedID="salvoGrid"
                 :turn="salvoTurn"
                 :has-ship-list="gameFinished ? computerShipsPositionList : []"
                 :grid-size="gridSize"
@@ -463,76 +463,10 @@ export default {
         this.$refs.timer.start();
       } else this.$refs.timer.stop();
     },
-    userGridHits(newVal, oldVal) {
-      //Method to play sound depending of grid situations hit/missed
-      //Some sound need randomness in voice acting answers:
-      let randomNb = Math.floor(Math.random() * 3) + 1;
-      if (newVal[this.salvoTurn]) {
-        if (newVal[this.salvoTurn - 1] == undefined) {
-          if (newVal[this.salvoTurn].AllHits.length > 0) {
-            this.soundEffects.play("explosion");
-            setTimeout(
-              () => this.soundEffects.play("underAttack" + randomNb),
-              1000
-            );
-          }
-          if (newVal[this.salvoTurn].AllMissed.length > 0)
-            this.soundEffects.play("waterSplash");
-        } else {
-          if (
-            newVal[this.salvoTurn].AllHits.length >
-            newVal[this.salvoTurn - 1].AllHits.length
-          ) {
-            this.soundEffects.play("explosion");
-            setTimeout(
-              () => this.soundEffects.play("underAttack" + randomNb),
-              1000
-            );
-          }
-          if (
-            newVal[this.salvoTurn].AllMissed.length >
-            newVal[this.salvoTurn - 1].AllMissed.length
-          )
-            this.soundEffects.play("waterSplash");
-        }
-      }
-    },
     gameState(newVal, oldVal) {
       if (newVal != oldVal && oldVal != (undefined || null)) {
         if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
         if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
-      }
-    },
-    opponentGridHits(newVal, oldVal) {
-      //Method to play sound depending of grid situations hit/missed
-      //Some sound need randomness in voice acting answers:
-      if (newVal[this.salvoTurn]) {
-        if (newVal[this.salvoTurn - 1] == undefined) {
-          if (newVal[this.salvoTurn].AllHits.length > 0) {
-            console.log("udenfined previous onenemy farawayshot");
-            this.soundEffects.play("farAwayShot");
-          }
-          if (newVal[this.salvoTurn].AllMissed.length > 0) {
-            let idsound = this.soundEffects.play("waterSplash");
-            this.soundEffects.volume(0.4, idsound);
-          }
-        } else {
-          if (
-            newVal[this.salvoTurn].AllHits.length >
-            newVal[this.salvoTurn - 1].AllHits.length
-          ) {
-            console.log("onenemy farawayshot");
-            let idsound_1 = this.soundEffects.play("farAwayShot");
-          }
-          if (
-            newVal[this.salvoTurn].AllMissed.length >
-            newVal[this.salvoTurn - 1].AllMissed.length
-          ) {
-            console.log("on enemy watersplash");
-            let idsound_2 = this.soundEffects.play("waterSplash");
-            this.soundEffects.volume(0.4, idsound_2);
-          }
-        }
       }
     }
   },
@@ -1159,7 +1093,6 @@ export default {
 
         if (this.musicPlaying) {
           let randomNb = Math.floor(Math.random() * 3) + 1;
-          console.log("loadAndFire" + randomNb);
           let soundId = this.soundEffects.play("loadAndFire" + randomNb);
           let self = this;
           this.soundEffects.rate(2.0, soundId);

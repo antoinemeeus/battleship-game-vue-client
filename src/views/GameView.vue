@@ -347,7 +347,7 @@
                 <span class="title">Enemy Grid</span>
                 <Grid
                   ref="salvoGrid"
-                  assigned-i-d="salvoGrid"
+                  :assignedID="'salvoGrid'"
                   :turn="salvoTurn"
                   :has-ship-list="isGameFinished ? [] : []"
                   :grid-size="gridSize"
@@ -484,7 +484,13 @@ export default {
         this.snackbar = true;
       }
     },
-
+    gameResult(newVal, oldVal) {
+      if (newVal != oldVal) {
+        newVal == "WON"
+          ? this.soundEffects.play("winnerTheme")
+          : this.soundEffects.play("loserTheme");
+      }
+    },
     gameState(newGameState, oldGameState) {
       if (newGameState.Info) this.resultMsg = newGameState.Info;
       if (newGameState.code > 1) {
@@ -1111,7 +1117,9 @@ export default {
       //console.log("READY! -> OK");
     },
     fireSalvo() {
-      this.soundEffects.play("fireMissile");
+      let randomNb = Math.floor(Math.random() * 3) + 1;
+      let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+      this.soundEffects.rate(2.0, soundId);
       this.sendSalvoToServer();
     },
     getGame() {

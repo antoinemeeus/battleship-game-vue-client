@@ -1,5 +1,9 @@
 <template>
-  <v-menu v-model="menu" :disabled="fixed" transition="scale-transition">
+  <v-menu
+    v-model="menu"
+    :disabled="fixed"
+    transition="scale-transition"
+  >
     <template v-slot:activator="{ on }">
       <v-btn
         v-bind="{
@@ -11,8 +15,14 @@
         :disabled="fixed"
         v-on="on"
       >
-        <v-avatar :size="avatarSize" color="grey lighten-4">
-          <img :src="selectedAvatar.src" :alt="selectedAvatar.name" />
+        <v-avatar
+          :size="avatarSize"
+          color="grey lighten-4"
+        >
+          <img
+            :src="selectedAvatar.src"
+            :alt="selectedAvatar.name"
+          />
         </v-avatar>
       </v-btn>
     </template>
@@ -22,7 +32,11 @@
       v-bind="{ [`grid-list-${gridListSize}`]: true }"
       fluid
     >
-      <v-layout row wrap justify-space-around>
+      <v-layout
+        row
+        wrap
+        justify-space-around
+      >
         <v-flex
           v-for="avatar in avatarList"
           :key="avatar.id"
@@ -33,8 +47,12 @@
             :size="avatarSize"
             color="grey lighten-4"
             class="avatar_hover"
+            @mouseenter="soundEffects.play('registrationTick')"
           >
-            <img :src="avatar.src" :alt="avatar.name" />
+            <img
+              :src="avatar.src"
+              :alt="avatar.name"
+            />
           </v-avatar>
 
           <!-- {{avatar.name}} -->
@@ -55,7 +73,7 @@ export default {
     menu: false
   }),
   computed: {
-    ...mapState(["gamesInfo", "avatarList"]),
+    ...mapState(["gamesInfo", "avatarList", "soundEffects"]),
     gridListSize() {
       return this.$vuetify.breakpoint.name;
     },

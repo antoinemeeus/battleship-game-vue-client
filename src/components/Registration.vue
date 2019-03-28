@@ -26,6 +26,7 @@
         @click="
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
+          soundEffects.play('registrationTick')
         "
       >{{
         $vuetify.breakpoint.smAndDown ? "Login" : "Already have an account?"
@@ -34,7 +35,7 @@
         v-if="!choiceSignIn"
         color="primary"
         small
-        @click="choiceSignIn = !choiceSignIn"
+        @click="choiceSignIn = !choiceSignIn; soundEffects.play('registrationTick')"
       >Create new account</v-btn>
     </v-flex>
 
@@ -235,7 +236,14 @@ export default {
     this.valid = false;
   },
   computed: {
-    ...mapState(["status", "gamesInfo", "loading", "status", "avatarList"]),
+    ...mapState([
+      "status",
+      "gamesInfo",
+      "loading",
+      "status",
+      "avatarList",
+      "soundEffects"
+    ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
       return this.avatarList.find(av => av.id == this.currentUser.avatarID);

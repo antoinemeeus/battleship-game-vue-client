@@ -112,8 +112,35 @@ export default {
   beforeDestroy() {
     this.$el.removeEventListener("click", this.clickEvent);
   },
+  watch: {
+    allHitsList(newVal, oldVal) {
+      if (
+        (oldVal == undefined && newVal.length > 0) ||
+        newVal.length > oldVal.length
+      ) {
+        if (this.assignedID == "salvoGrid") {
+          this.soundEffects.play("farAwayShot");
+        } else {
+          this.soundEffects.play("explosion");
+          let randomNb = Math.floor(Math.random() * 3) + 1;
+          setTimeout(
+            () => this.soundEffects.play("underAttack" + randomNb),
+            1000
+          );
+        }
+      }
+    },
+    allMissList(newVal, oldVal) {
+      if (
+        (oldVal == undefined && newVal.length > 0) ||
+        newVal.length > (oldVal.length || 0)
+      ) {
+        this.soundEffects.play("waterSplash");
+      }
+    }
+  },
   computed: {
-    ...mapState(["gameDisplayed"]),
+    ...mapState(["gameDisplayed", "soundEffects"]),
     ...mapGetters(["gameStateCode"]),
     cellSizeStyleObject() {
       return {
@@ -129,6 +156,16 @@ export default {
     },
     blockSalvoGrid() {
       return this.gameStateCode == 0 && this.assignedID == "salvoGrid";
+    },
+    allHitsList() {
+      let lastTurn = Object.keys(this.hits).length;
+      if (this.hits[lastTurn]) return this.hits[lastTurn].AllHits;
+      return [];
+    },
+    allMissList() {
+      let lastTurn = Object.keys(this.hits).length;
+      if (this.hits[lastTurn]) return this.hits[lastTurn].AllMissed;
+      return [];
     }
   },
   mounted() {

@@ -27,7 +27,7 @@ export default new Vuex.Store({
     serverMessage: "",
     musicPlaying: true,
     soundEffects: new Howl({
-      src: [require("@/assets/sounds/game_sounds_sprite_3.mp3")],
+      src: [require("@/assets/sounds/game_sounds_sprite.mp3")],
       sprite: {
         abandonShip: [0, 1907],
         explosion: [1907, 5125],

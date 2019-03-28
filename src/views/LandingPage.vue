@@ -233,9 +233,10 @@
               >
                 <v-flex shrink>
                   <v-flex
+                    py-2
                     text-xs-center
-                    class="subheading white black--text"
-                  >Identify yourself before playing in multiplayer mode</v-flex>
+                    class=" title white black--text"
+                  ><span>Identify yourself before playing in multiplayer mode</span></v-flex>
                   <Registration @loginSuccess="closeModal" />
                 </v-flex>
               </v-dialog>
