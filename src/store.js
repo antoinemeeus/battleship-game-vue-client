@@ -238,7 +238,6 @@ export default new Vuex.Store({
         method: "POST",
         data: qs.stringify(payload.data),
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        timeout: 25000,
         withCredentials: true,
         url: requestUrl
       };
@@ -254,6 +253,13 @@ export default new Vuex.Store({
             resolve(res);
           })
           .catch(function(err) {
+            if (err.code === "ECONNABORTED") {
+              commit(
+                "setServerMessage",
+                "Connection timeout. Sorry the server is slow"
+              );
+              reject(err);
+            }
             commit("authError");
             commit("authLogOut");
             commit("setRestrictedAccess", true);
@@ -268,7 +274,6 @@ export default new Vuex.Store({
       const options = {
         method: "GET",
         withCredentials: true,
-        timeout: 15000,
         url: requestUrl
       };
       return new Promise((resolve, reject) => {
@@ -288,6 +293,7 @@ export default new Vuex.Store({
                 "setServerMessage",
                 "Connection timeout. Sorry the server is slow"
               );
+              reject(err);
             }
             if (err.response) {
               if (err.response.status == 401) {
@@ -308,7 +314,6 @@ export default new Vuex.Store({
       const options = {
         method: "POST",
         data: payload.data,
-        timeout: 15000,
         withCredentials: true,
         url: requestUrl
       };
@@ -321,6 +326,13 @@ export default new Vuex.Store({
           })
           .catch(function(err) {
             commit("setLoading", false);
+            if (err.code === "ECONNABORTED") {
+              commit(
+                "setServerMessage",
+                "Connection timeout. Sorry the server is slow"
+              );
+              reject(err);
+            }
             if (err.response) {
               commit("setServerMessage", err.response.data.error);
               if (err.response.status == 401) {
