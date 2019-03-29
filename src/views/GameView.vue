@@ -17,7 +17,7 @@
           transition="scale-transition"
           d-block
         >
-          <div class="title">Restricted Page, you don't have access</div>
+          <div class="title">Acces Denied</div>
           <div>{{ serverMessage }}</div>
         </v-alert>
       </v-flex>

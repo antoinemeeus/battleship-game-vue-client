@@ -238,7 +238,7 @@ export default new Vuex.Store({
         method: "POST",
         data: qs.stringify(payload.data),
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        timeout: 15000,
+        timeout: 25000,
         withCredentials: true,
         url: requestUrl
       };
@@ -283,15 +283,21 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit("dataIsReady");
-            commit("userUnauthorized");
+            if (err.code === "ECONNABORTED") {
+              commit(
+                "setServerMessage",
+                "Connection timeout. Sorry the server is slow"
+              );
+            }
             if (err.response) {
-              commit("setServerMessage", err.response.data.error);
-              commit("userUnauthorized");
               if (err.response.status == 401) {
                 commit("authLogOut");
               }
+              commit("setServerMessage", err.response.data.error);
+              commit("userUnauthorized");
               reject(err.response);
             }
+
             reject(err);
           });
       });
