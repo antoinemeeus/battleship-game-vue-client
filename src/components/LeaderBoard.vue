@@ -45,7 +45,7 @@
               {{ props.item.id }}
             </td>
             <td class="text-xs-right subheading font-weight-light">
-              {{ props.item.userName }} / {{ props.item.email }}
+              {{ props.item.userName }} - (<span class="body-1">{{ props.item.email }}</span>)
             </td>
             <td class="text-xs-center subheading font-weight-light">
               {{ props.item.total }}

@@ -3,6 +3,7 @@
     pa-0
     ma-0
     justify-center
+    column
   >
     <v-alert
       :value="alert"

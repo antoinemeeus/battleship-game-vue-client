@@ -794,8 +794,9 @@ export default {
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            console.log("Error", error.message);
+            console.log("Error message", error.message);
           }
+          console.log("Error config", error.config);
         }
       );
     },
@@ -889,11 +890,13 @@ export default {
     },
 
     setBoardFromServer() {
-      let playerSalvoesTurnsList = Object.keys(this.playerSalvoes);
-      this.salvoTurn = Math.max(
-        Math.max(...playerSalvoesTurnsList) + 1,
-        playerSalvoesTurnsList.length + 1
-      );
+      if (this.playerSalvoes != undefined) {
+        let playerSalvoesTurnsList = Object.keys(this.playerSalvoes);
+        this.salvoTurn = Math.max(
+          Math.max(...playerSalvoesTurnsList) + 1,
+          playerSalvoesTurnsList.length + 1
+        );
+      } else this.salvoTurn = 1;
       // this.salvoTurn = Object.keys(this.playerSalvoes).length + 1;
       if (this.gameDisplayed.ships) {
         for (let server_ship of this.gameDisplayed.ships) {

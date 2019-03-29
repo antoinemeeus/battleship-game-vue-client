@@ -253,12 +253,6 @@ export default new Vuex.Store({
             resolve(res);
           })
           .catch(function(err) {
-            if (err.code === "ECONNABORTED") {
-              commit(
-                "setServerMessage",
-                "Connection timeout. Sorry the server is slow"
-              );
-            }
             commit("authError");
             commit("authLogOut");
             commit("setRestrictedAccess", true);
@@ -287,12 +281,6 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit("dataIsReady");
-            if (err.code === "ECONNABORTED") {
-              commit(
-                "setServerMessage",
-                "Connection timeout. Sorry the server is slow"
-              );
-            }
             if (err.response) {
               if (err.response.status == 401) {
                 commit("authLogOut");
@@ -301,7 +289,6 @@ export default new Vuex.Store({
               commit("userUnauthorized");
               reject(err.response);
             }
-
             reject(err);
           });
       });
@@ -324,12 +311,6 @@ export default new Vuex.Store({
           })
           .catch(function(err) {
             commit("setLoading", false);
-            if (err.code === "ECONNABORTED") {
-              commit(
-                "setServerMessage",
-                "Connection timeout. Sorry the server is slow"
-              );
-            }
             if (err.response) {
               commit("setServerMessage", err.response.data.error);
               if (err.response.status == 401) {
@@ -337,7 +318,7 @@ export default new Vuex.Store({
                 commit("authLogOut");
               }
             }
-            reject(err);
+            reject(err.config);
           });
       });
     }
