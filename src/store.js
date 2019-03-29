@@ -258,7 +258,6 @@ export default new Vuex.Store({
                 "setServerMessage",
                 "Connection timeout. Sorry the server is slow"
               );
-              reject(err);
             }
             commit("authError");
             commit("authLogOut");
@@ -293,7 +292,6 @@ export default new Vuex.Store({
                 "setServerMessage",
                 "Connection timeout. Sorry the server is slow"
               );
-              reject(err);
             }
             if (err.response) {
               if (err.response.status == 401) {
@@ -331,7 +329,6 @@ export default new Vuex.Store({
                 "setServerMessage",
                 "Connection timeout. Sorry the server is slow"
               );
-              reject(err);
             }
             if (err.response) {
               commit("setServerMessage", err.response.data.error);

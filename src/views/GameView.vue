@@ -785,16 +785,16 @@ export default {
           let msg = "update status to offline";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            //console.log(error.response.data);
+            console.log(error.response.data);
             //console.log(error.response.status);
             //console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            //console.log(error.request);
+            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            //console.log("Error", error.message);
+            console.log("Error", error.message);
           }
         }
       );
@@ -1030,16 +1030,16 @@ export default {
           let msg = "post ship";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            //console.log(error.response.data);
+            console.log(error.response.data);
             //console.log(error.response.status);
             //console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            //console.log(error.request);
+            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            //console.log("Error", error.message);
+            console.log("Error", error.message);
           }
         }
       );
