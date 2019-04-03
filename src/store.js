@@ -76,56 +76,56 @@ export default new Vuex.Store({
     }),
     alreadyVisited: false,
     avatarComputer: {
-      src: require("./assets/avatars/computer_avatar.png"),
+      src: require("./assets/avatars/computer_avatar-min.png"),
       alt: "avatar computer",
       name: "Computer",
       id: 11
     },
     avatarList: [
       {
-        src: require("./assets/avatars/anonymous_male_captain.png"),
+        src: require("./assets/avatars/anonymous_male_captain-min.png"),
         alt: "avatar",
         name: "Anonymous",
         id: 1
       },
       {
-        src: require("./assets/avatars/anonymous_female_captain.png"),
+        src: require("./assets/avatars/anonymous_female_captain-min.png"),
         alt: "avatar",
         name: "Anonymous",
         id: 2
       },
       {
-        src: require("./assets/avatars/captain_crunch.png"),
+        src: require("./assets/avatars/captain_crunch-min.png"),
         alt: "avatar",
         name: "Crunch",
         id: 3
       },
       {
-        src: require("./assets/avatars/captain_haddock.png"),
+        src: require("./assets/avatars/captain_haddock-min.png"),
         alt: "avatar",
         name: "Haddock",
         id: 4
       },
       {
-        src: require("./assets/avatars/captain_hook_avatar.png"),
+        src: require("./assets/avatars/captain_hook_avatar-min.png"),
         alt: "avatar",
         name: "Hook",
         id: 5
       },
       {
-        src: require("./assets/avatars/captain-jack-sparrow.png"),
+        src: require("./assets/avatars/captain-jack-sparrow-min.png"),
         alt: "avatar",
         name: "Jack Sparrow",
         id: 6
       },
       {
-        src: require("./assets/avatars/popeye_avatar.png"),
+        src: require("./assets/avatars/popeye_avatar-min.png"),
         alt: "avatar",
         name: "Popeye",
         id: 7
       },
       {
-        src: require("./assets/avatars/simson_old_sea_avatar.png"),
+        src: require("./assets/avatars/simson_old_sea_avatar-min.png"),
         alt: "avatar",
         name: "Horatio McCallister",
         id: 8

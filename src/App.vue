@@ -81,8 +81,9 @@ export default {
 .background-image-fixed {
   min-height: 100vh;
   background-attachment: fixed;
-  background-image: url("./assets/battle_ship_background.jpg");
+  background-image: url("./assets/battle_ship_background.jpg");  
 }
+
 .refresh {
   animation: rotation 2s infinite linear reverse;
 }
