@@ -58,7 +58,7 @@ export default {
     };
   },
   mounted() {
-    this.bgMusic.fade(0.0, 1.0, 1500);
+    this.bgMusic.fade(0.0, 0.6, 1500);
     this.setAutoRefresh();
   },
   beforeRouteUpdate(to, from, next) {

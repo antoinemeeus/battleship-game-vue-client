@@ -11,7 +11,7 @@
     >
       <v-flex
         xs12
-        class="display-4"
+        :class="$vuetify.breakpoint.smAndDown? 'display-2':'display-4'"
         pa-4
         text-xs-center
       >
@@ -42,10 +42,11 @@
       <v-layout
         v-show="alreadyVisited"
         row
+        wrap
         justify-space-around
       >
         <v-flex
-          xs5
+          md5
           class="box"
         >
           <v-layout
@@ -79,6 +80,7 @@
               py-3
             ></v-divider>
             <v-flex
+              v-if="$vuetify.breakpoint.mdAndUp"
               py-3
               text-xs-center
             >
@@ -101,7 +103,7 @@
           </v-layout>
         </v-flex>
         <v-flex
-          xs5
+          md5
           class="box"
         >
           <v-layout
@@ -222,28 +224,30 @@
               ma-3
               xs8
             >
-              <!-- <Registration
-                v-if="!isAuthenticated"
-                class="card-box"
-              /> -->
-              <v-dialog
-                v-if="!isAuthenticated"
-                v-model="dialog"
-                max-width="500"
-              >
-                <v-flex shrink>
-                  <v-flex
-                    py-2
-                    text-xs-center
-                    class=" title white black--text"
-                  ><span>Identify yourself before playing in multiplayer mode</span></v-flex>
-                  <Registration @loginSuccess="closeModal" />
-                </v-flex>
-              </v-dialog>
-              <UserOverview
-                v-if="isAuthenticated"
-                :user="currentUser"
-              />
+              <v-layout justify-center>
+                <!-- <Registration
+                  v-if="!isAuthenticated"
+                  class="card-box"
+                /> -->
+                <v-dialog
+                  v-if="!isAuthenticated"
+                  v-model="dialog"
+                  max-width="500"
+                >
+                  <v-flex shrink>
+                    <v-flex
+                      py-2
+                      text-xs-center
+                      class=" title white black--text"
+                    ><span>Identify yourself before playing in multiplayer mode</span></v-flex>
+                    <Registration @loginSuccess="closeModal" />
+                  </v-flex>
+                </v-dialog>
+                <UserOverview
+                  v-if="isAuthenticated"
+                  :user="currentUser"
+                />
+              </v-layout>
             </v-flex>
           </v-layout>
         </v-flex>

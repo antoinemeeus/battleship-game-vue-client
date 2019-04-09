@@ -103,7 +103,7 @@
                           :src="playerAvatar(props.item.avatarP1).src"
                           :alt="playerAvatar(props.item.avatarP1).name"
                         />
-                      </v-avatar><span class="pl-2">{{ props.item.p1_.name }}</span>
+                      </v-avatar><span class="pl-2">{{ props.item.player1 }} - {{props.item.p1_.email}}</span>
                     </div>
                     <v-btn
                       v-if="props.item.p1_.isUser"

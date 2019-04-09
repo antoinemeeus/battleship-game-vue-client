@@ -6,7 +6,8 @@
   >
     <v-layout justify-space-between>
       <v-flex
-        xs6
+        xs12
+        sm6
         md5
         xl4
         class="user-bg-color"
@@ -14,7 +15,9 @@
         <UserOverview :user="currentUser" />
       </v-flex>
       <v-flex
-        xs6
+        v-if="$vuetify.breakpoint.mdAndUp"
+        xs12
+        sm6
         md5
         xl4
         class="user-bg-color"
@@ -26,22 +29,21 @@
       justify-space-between
       align-content-space-around
       row
+      :wrap="!placingShips"
       class="pa-3 elevation-8 game-box"
     >
       <!-- Ship Placement Grid -->
       <v-flex>
         <v-layout
           row
+          :wrap="placingShips"
           justify-center
         >
           <v-flex
-            v-if="!placingShips"
+            v-if="!placingShips && $vuetify.breakpoint.smAndUp"
             grow
           >
-            <v-layout
-              column
-              px-1
-            >
+            <v-layout px-1>
               <FleetStatus
                 :key="resetKey"
                 :fleet-state="homeFleetState"
@@ -81,7 +83,8 @@
           </v-flex>
           <v-flex
             v-if="placingShips"
-            xs6
+            xs12
+            sm6
             px-2
             mx-1
           >
@@ -538,9 +541,11 @@ export default {
     cellSize() {
       let innerWidth = window.innerWidth;
       if (this.$vuetify.breakpoint) innerWidth = this.$vuetify.breakpoint.width;
-      let newPixelValue = +((innerWidth * 0.28) / (this.gridSize + 1)).toFixed(
+      let newPixelValue = +((innerWidth * 0.3) / (this.gridSize + 1)).toFixed(
         0
       );
+      if (!this.$vuetify.breakpoint.smAndUp)
+        newPixelValue = +((innerWidth * 0.8) / (this.gridSize + 1)).toFixed(0);
       if (newPixelValue != NaN) return newPixelValue;
       return 40;
     },

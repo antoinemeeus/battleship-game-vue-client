@@ -97,7 +97,7 @@
             justify-center
           >
             <v-flex
-              v-show="!placingShips"
+              v-show="!placingShips && !$vuetify.breakpoint.smAndDown"
               grow
             >
               <v-layout
@@ -235,7 +235,9 @@
           </v-layout>
         </v-flex>
         <v-flex
-          v-show="!placingShips"
+          v-show="!placingShips "
+          xs1
+          sm2
           px-2
         >
           <v-layout

@@ -10,10 +10,7 @@ import "@fortawesome/fontawesome-free/css/all.css"; // Ensure you are using css-
 
 // Helpers
 import moment from "moment";
-import { Howl, Howler } from "howler";
 Vue.prototype.moment = moment;
-Vue.prototype.Howl = Howl;
-Vue.prototype.Howler = Howler;
 
 Vue.config.productionTip = false;
 
