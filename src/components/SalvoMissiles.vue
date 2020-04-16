@@ -1,6 +1,8 @@
 <template>
   <fieldset>
-    <legend class="missile-legend subheading text-xs-center">Missiles</legend>
+    <legend class="missile-legend subheading text-xs-center">
+      Missiles
+    </legend>
     <v-layout row>
       <v-flex
         v-for="m in missileNumber"
@@ -10,12 +12,12 @@
           v-if="m <= missileLeft"
           :src="require('../assets/missile_2.png')"
           class="image-missile-big"
-        ></v-img>
+        />
         <v-img
           v-else
           :src="require('../assets/missile_2_used.png')"
           class="image-missile-big"
-        ></v-img>
+        />
       </v-flex>
     </v-layout>
   </fieldset>

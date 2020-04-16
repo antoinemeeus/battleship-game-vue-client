@@ -12,14 +12,18 @@
           icon
           v-on="on"
         >
-          <v-icon large>help_outline</v-icon>
+          <v-icon large>
+            help_outline
+          </v-icon>
         </v-btn>
       </template>
       <v-card
         elevation="8"
         class="roundCorners"
       >
-        <v-card-title class="headline">How to play</v-card-title>
+        <v-card-title class="headline">
+          How to play
+        </v-card-title>
         <v-card-text>
           <v-flex>
             <ul>
@@ -37,7 +41,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/cursor_AimTarget.png"
-                  />. If you change your mind on a shot position, just click
+                  >. If you change your mind on a shot position, just click
                   again on the selected cell to cancel the selection.
                 </p>
               </li>
@@ -46,7 +50,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/launchBtnSB.png"
-                  />
+                  >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
                   middle or by pressing the spacebar of the keyboard. Of cours
@@ -61,12 +65,12 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/missedCell.png"
-                  />
+                  >
                   blue cell means you missed,
                   <img
                     class="aim-img px-2"
                     src="../assets/hitCell.png"
-                  /> red
+                  > red
                   cell means you hit a ship
                 </p>
               </li>
@@ -76,7 +80,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/hitCell.png"
-                  /> is
+                  > is
                   the round in which the salvo was fired.
                 </p>
               </li>
@@ -93,7 +97,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/timerImg.png"
-                  />The
+                  >The
                   time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in
                   the time allocated, the already placed shot will be fired
@@ -108,13 +112,15 @@
             v-model="showAgain"
             class="px-2"
             label="Don`t show me this next"
-          ></v-checkbox>
-          <v-spacer></v-spacer>
+          />
+          <v-spacer />
           <v-btn
             color="primary"
             flat
             @click="dialog = !dialog"
-          >Let's play</v-btn>
+          >
+            Let's play
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

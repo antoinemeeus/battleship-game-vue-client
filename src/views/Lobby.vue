@@ -15,7 +15,9 @@
         lg10
         pa-2
       >
-        <h2 class="display-2 text-xs-center">Game List</h2>
+        <h2 class="display-2 text-xs-center">
+          Game List
+        </h2>
       </v-flex>
       <v-flex
         xs12
@@ -29,7 +31,9 @@
         lg10
         pa-3
       >
-        <h2 class="display-2 text-xs-center">Leader Board</h2>
+        <h2 class="display-2 text-xs-center">
+          Leader Board
+        </h2>
       </v-flex>
       <v-flex
         xs12
@@ -57,6 +61,9 @@ export default {
       autorefresh: null
     };
   },
+  computed: {
+    ...mapState(["bgMusic"])
+  },
   mounted() {
     this.bgMusic.fade(0.0, 0.6, 1500);
     this.setAutoRefresh();
@@ -70,9 +77,6 @@ export default {
   },
   beforeDestroy() {
     this.stopAutoRefresh();
-  },
-  computed: {
-    ...mapState(["bgMusic"])
   },
   methods: {
     ...mapActions(["getData"]),

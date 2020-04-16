@@ -11,11 +11,13 @@
     >
       <v-flex
         xs12
-        :class="$vuetify.breakpoint.smAndDown? 'display-2':'display-4'"
+        :class="$vuetify.breakpoint.smAndDown ? 'display-2' : 'display-4'"
         pa-4
         text-xs-center
       >
-        <div class="game-title px-3 tex-carve">BattleWreck</div>
+        <div class="game-title px-3 tex-carve">
+          BattleWreck
+        </div>
       </v-flex>
     </v-layout>
     <v-expand-transition>
@@ -30,12 +32,11 @@
           large
           light
           color="orange"
-          @click.prevent="startPlaying()"
           class="btn-pulse"
+          @click.prevent="startPlaying()"
         >
           Start Playing!
         </v-btn>
-
       </v-layout>
     </v-expand-transition>
     <v-expand-transition>
@@ -78,13 +79,15 @@
             <v-divider
               dark
               py-3
-            ></v-divider>
+            />
             <v-flex
               v-if="$vuetify.breakpoint.mdAndUp"
               py-3
               text-xs-center
             >
-              <div class="py-3 title">Game screen shots</div>
+              <div class="py-3 title">
+                Game screen shots
+              </div>
               <VueperSlides
                 :visible-slides="2"
                 slide-multiple
@@ -95,9 +98,9 @@
                   v-for="i in 6"
                   :key="i"
                   :image="
-                  require(`../assets/landingImages/in_game_image00${i}.jpg`)
-                "
-                ></VueperSlide>
+                    require(`../assets/landingImages/in_game_image00${i}.jpg`)
+                  "
+                />
               </VueperSlides>
             </v-flex>
           </v-layout>
@@ -119,7 +122,9 @@
               text-xs-center
               pa-3
             >
-              <h3 class="display-1">Battle Mode:</h3>
+              <h3 class="display-1">
+                Battle Mode:
+              </h3>
             </v-flex>
             <v-flex
               xs12
@@ -162,7 +167,7 @@
                             :label="item.display"
                             :value="item"
                             :color="item.color"
-                          ></v-radio>
+                          />
                         </v-radio-group>
                       </v-flex>
                       <v-flex
@@ -172,10 +177,12 @@
                         <v-btn
                           :color="radios.color"
                           @click="gameVsComputer()"
-                        >{{
-                          $vuetify.breakpoint.mdAndDown ? "" : "Solo - "
+                        >
+                          {{
+                            $vuetify.breakpoint.mdAndDown ? "" : "Solo - "
                           }}
-                          PLAY</v-btn>
+                          PLAY
+                        </v-btn>
                       </v-flex>
                     </v-layout>
                   </v-flex>
@@ -205,8 +212,9 @@
                         <v-btn
                           color="#ffe241"
                           @click="multiplayerSelected()"
-                        >Multiplayer</v-btn>
-
+                        >
+                          Multiplayer
+                        </v-btn>
                       </v-flex>
                       <v-flex
                         v-if="!isAuthenticated"
@@ -239,7 +247,10 @@
                       py-2
                       text-xs-center
                       class=" title white black--text"
-                    ><span>Identify yourself before playing in multiplayer mode</span></v-flex>
+                    >
+                      <span>Identify yourself before playing in multiplayer
+                        mode</span>
+                    </v-flex>
                     <Registration @loginSuccess="closeModal" />
                   </v-flex>
                 </v-dialog>
@@ -283,13 +294,13 @@ export default {
       ]
     };
   },
-  mounted() {
-    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
-  },
   watch: {
     radios() {
       this.soundEffects.play("menuSelect");
     }
+  },
+  mounted() {
+    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
   },
   computed: {
     ...mapGetters(["currentUser", "isAuthenticated"]),

@@ -36,7 +36,7 @@
             v-slot:progress
             color="red"
             indeterminate
-          ></v-progress-linear>
+          />
           <template
             slot="items"
             slot-scope="props"
@@ -45,7 +45,9 @@
               {{ props.item.id }}
             </td>
             <td class="text-xs-right subheading font-weight-light">
-              {{ props.item.userName }} - (<span class="body-1">{{ props.item.email }}</span>)
+              {{ props.item.userName }} - (<span class="body-1">{{
+                props.item.email
+              }}</span>)
             </td>
             <td class="text-xs-center subheading font-weight-light">
               {{ props.item.total }}
@@ -68,7 +70,7 @@
             dark
             color="orange"
             :length="pages"
-          ></v-pagination>
+          />
         </div>
       </v-flex>
     </v-layout>

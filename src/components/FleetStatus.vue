@@ -31,7 +31,7 @@
                   :key="ship.type + '_' + i"
                   class="damage"
                   :style="explosionStyle(i, ship)"
-                ></div>
+                />
               </v-scale-transition>
             </v-img>
             <v-layout
@@ -42,14 +42,14 @@
             >
               <span class=" text-capitalize text-truncate white--text pl-2">{{
                 ship.type
-                }}</span>
+              }}</span>
               <span class=" white--text pr-2">
                 {{
-                fleetHasDamageInfo
-                ? getShipDamage(ship)
-                : getShipSunk(ship)
-                ? ship.length
-                : "?"
+                  fleetHasDamageInfo
+                    ? getShipDamage(ship)
+                    : getShipSunk(ship)
+                      ? ship.length
+                      : "?"
                 }}/{{ ship.length }}</span>
             </v-layout>
             <v-expand-transition>
@@ -57,7 +57,9 @@
                 v-if="getShipSunk(ship)"
                 class="overlay"
               >
-                <h3 class="headline">SUNKEN</h3>
+                <h3 class="headline">
+                  SUNKEN
+                </h3>
               </div>
             </v-expand-transition>
           </v-card>

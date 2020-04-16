@@ -6,7 +6,7 @@
     :style="gridDimensionObject"
   >
     <!-- Here is where the ships will be injected (HTML wise) -->
-    <slot></slot>
+    <slot />
     <!-- ----- -->
     <!-- Loader Overlay -->
     <div
@@ -22,7 +22,7 @@
           :size="(cellSize * gridSize) / 2"
           color="primary"
           indeterminate
-        ></v-progress-circular>
+        />
       </v-layout>
     </div>
     <div
@@ -63,7 +63,7 @@
         :data-type="null"
       >
         <span
-          v-if="isSalvoTarget.includes(getIdfromCoord(i, j)) "
+          v-if="isSalvoTarget.includes(getIdfromCoord(i, j))"
           class="numberOverEverything "
         >{{ getMissileCount(i, j) }}</span>
         <span
@@ -71,17 +71,17 @@
           class="targetLocked"
         >
           <v-progress-circular
-            :size="(cellSize) / 1.2"
-            :width="cellSize/8"
+            :size="cellSize / 1.2"
+            :width="cellSize / 8"
             indeterminate
-          ></v-progress-circular>
+          />
         </span>
         <span
           v-if="!cellisEmpty(i, j)"
           class="numberInCorner"
         >{{
           getTurnNumber(i, j)
-          }}</span>
+        }}</span>
       </div>
     </div>
   </div>
@@ -107,10 +107,6 @@ export default {
   },
   data() {
     return {};
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener("click", this.clickEvent);
   },
   watch: {
     allHitsList(newVal, oldVal) {
@@ -138,6 +134,10 @@ export default {
         this.soundEffects.play("waterSplash");
       }
     }
+  },
+
+  beforeDestroy() {
+    this.$el.removeEventListener("click", this.clickEvent);
   },
   computed: {
     ...mapState(["gameDisplayed", "soundEffects"]),

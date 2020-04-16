@@ -49,11 +49,13 @@
                 :fleet-state="homeFleetState"
                 :image-base-width="cellSize"
                 :fleet-name="'Your Fleet'"
-              ></FleetStatus>
+              />
             </v-layout>
           </v-flex>
           <v-flex shrink>
-            <h3 class="title">Your Grid</h3>
+            <h3 class="title">
+              Your Grid
+            </h3>
             <Grid
               :has-ship-list="homeShipsPositionList"
               :duplicate-location="getShipOverlappingPositions"
@@ -88,13 +90,17 @@
             px-2
             mx-1
           >
-            <h3 class="title">Your Fleet</h3>
+            <h3 class="title">
+              Your Fleet
+            </h3>
             <v-layout
               column
               fill-height
               justify-center
             >
-              <h4 class="subheading">Ship grid positions</h4>
+              <h4 class="subheading">
+                Ship grid positions
+              </h4>
               <table class="py-2">
                 <tr
                   v-for="(location, ship) in shipPositions"
@@ -118,7 +124,8 @@
                       :style="
                         getShipOverlappingPositions.includes(id)
                           ? { color: 'orange' }
-                          : { color: '' }"
+                          : { color: '' }
+                      "
                     >
                       {{ id }}
                     </div>
@@ -151,19 +158,26 @@
                   <p>
                     Arrange your ships by dragging them on your grid. To rotate
                     a ship, click on the
-                    <v-icon color="blue px-1">cached</v-icon>
-                    button.
+                    <v-icon color="blue px-1">
+                      cached
+                    </v-icon>button.
                   </p>
                   <p>
                     You can also decide to place all ships randomly by click the
-                    <v-icon class="px-1">fa-random</v-icon> random button.
+                    <v-icon class="px-1">
+                      fa-random
+                    </v-icon>random button.
                   </p>
                   <p>
                     When you are ready, go to battle by clicking the
-                    <v-icon class="px-1">fa-play</v-icon> start button.
+                    <v-icon class="px-1">
+                      fa-play
+                    </v-icon>start button.
                   </p>
                   <p>
-                    <v-icon color="red px-1">warning</v-icon> You will not be
+                    <v-icon color="red px-1">
+                      warning
+                    </v-icon>You will not be
                     able to rotate a ship if the the next position contains an
                     obstacle or is outside the grid.
                   </p>
@@ -183,10 +197,10 @@
           column
         >
           <SalvoMissiles
-            ref=""
+            ref
             :salvo-size="homeNextSalvoPositions.length"
             :missile-number="maxSalvoSize"
-          ></SalvoMissiles>
+          />
           <v-flex
             pa-1
             class="title font-weight-bold text-xs-center"
@@ -215,15 +229,17 @@
               :fab="$vuetify.breakpoint.smAndDown"
               @click="fireSalvo()"
             >
-              <span v-show="allMissilePlaced || !$vuetify.breakpoint.smAndDown">FIRE!</span>
+              <span
+                v-show="allMissilePlaced || !$vuetify.breakpoint.smAndDown"
+              >FIRE!</span>
             </v-btn>
           </v-flex>
           <v-flex
             class="text-xs-center spaceBar"
             :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length == 0 }"
           >
-            <span> or press</span>
-            <v-img :src="require('../assets/spaceBar.png')"></v-img>
+            <span>or press</span>
+            <v-img :src="require('../assets/spaceBar.png')" />
           </v-flex>
           <v-flex>
             <v-layout
@@ -245,12 +261,16 @@
                     v-show="pauseTimer"
                     large
                     color="white"
-                  >timer</v-icon>
+                  >
+                    timer
+                  </v-icon>
                   <v-icon
                     v-show="!pauseTimer"
                     large
                     color="white"
-                  >timer_off</v-icon>
+                  >
+                    timer_off
+                  </v-icon>
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -266,7 +286,7 @@
               <Grid
                 v-show="showSalvo"
                 ref="salvoGrid"
-                assignedID="salvoGrid"
+                assigned-i-d="salvoGrid"
                 :turn="salvoTurn"
                 :has-ship-list="gameFinished ? computerShipsPositionList : []"
                 :grid-size="gridSize"
@@ -275,8 +295,7 @@
                 :hits="opponentGridHits"
                 :can-fire="canFireSalvo && !gameFinished"
                 @salvoGridClicked="salvoTarget"
-              >
-              </Grid>
+              />
             </v-flex>
             <v-flex
               grow
@@ -287,7 +306,7 @@
                 :fleet-state="computerFleetState"
                 :fleet-name="'Enemy Fleet'"
                 :image-base-width="cellSize * 0.8"
-              ></FleetStatus>
+              />
             </v-flex>
           </v-layout>
         </v-flex>
@@ -296,7 +315,7 @@
 
     <v-layout
       v-show="gameFinished"
-      class="popup "
+      class="popup"
       column
     >
       <span
@@ -316,10 +335,13 @@
         class="display-3"
       >TEST PROGRESS</span>
       <v-flex>
-        <v-btn @click="forceResetComponent()"> Play again?</v-btn>
-        <v-btn @click="$router.push('/')">Back to Menu</v-btn>
+        <v-btn @click="forceResetComponent()">
+          Play again?
+        </v-btn>
+        <v-btn @click="$router.push('/')">
+          Back to Menu
+        </v-btn>
       </v-flex>
-
     </v-layout>
   </v-container>
 </template>
@@ -575,7 +597,6 @@ export default {
       //calculate probabilities for each ship
       for (let ship of this.homeShips) {
         //if ship is sunk, pass this ship
-        //console.log(ship);
         if (ship.hits.length >= ship.shipLength) continue;
 
         for (let i = 0; i < this.gridSize; i++) {
@@ -775,7 +796,6 @@ export default {
           },
           err => {
             //Was not logged in
-            console.error(err);
             this.$store.commit("authLogOut");
           }
         );
@@ -913,7 +933,6 @@ export default {
       let z = rotation ? x : y;
       let endOfShip = z + L;
       //ship is outside of grid
-      // console.log("DEBUG: endOfShip: " + endOfShip + " L: " + L + "");
       if (endOfShip > this.gridSize) return false;
 
       //check if ship position hit obstacle (hit)
@@ -921,7 +940,6 @@ export default {
         let idPos = rotation
           ? this.getIdfromCoord(i, y)
           : this.getIdfromCoord(x, i);
-        // console.log("Rotation: " + rotation + " idPOs: ", idPos);
         if (this.computerAllSalvoResult.missed.includes(idPos)) return false;
       }
 
@@ -942,24 +960,19 @@ export default {
       if (!this.canFireSalvo) {
         return;
       }
-      // console.log("CLICK EVENT TARGET", target);
       let newPosition =
         this.toRowName(target.dataset.row) + "" + target.dataset.col;
 
       if (!newPosition.match(/^[A-Z0-9]+$/)) {
         //Check if id of targets correspond to id regex A1 C4...
-        //console.log("Not matching a ID, return");
         return;
       }
       let playerSalvoes = this.homeSalvoPositions;
 
       if (playerSalvoes[this.salvoTurn] == undefined)
         playerSalvoes[this.salvoTurn] = [];
-
-      // console.log("playerSalvoes", playerSalvoes);
       //check if newPosition is not already fired at
       let alreadyFiredPosition = false;
-      // console.log("Current turn", this.salvoTurn);
       for (const key of Object.keys(playerSalvoes)) {
         if (playerSalvoes[key].includes(newPosition) && key != this.salvoTurn) {
           alreadyFiredPosition = true;
@@ -968,13 +981,10 @@ export default {
       }
 
       if (alreadyFiredPosition) {
-        //console.log("ALREADY FIRED AT THIS POSITION? IGNORE...");
         return;
       }
-      // console.log("Already fired at this position?", alreadyFiredPosition);
 
       let currentSalvoesPositions = this.homeNextSalvoPositions;
-      // console.log(currentSalvoesPositions);
 
       //Check if arrays of homeNextSalvoPositions doesn't contain already new position
       if (!currentSalvoesPositions.includes(newPosition)) {
@@ -993,10 +1003,6 @@ export default {
       this.soundEffects.play("targetSelect");
 
       this.homeNextSalvoPositions = currentSalvoesPositions;
-      // console.log(
-      //   "CurrentTurn: " + this.salvoTurn + " - Current salvoes: ",
-      //   currentSalvoesPositions
-      // );
     },
     objIsEmpty(obj) {
       return Object.keys(obj).length === 0 && obj.constructor === Object;

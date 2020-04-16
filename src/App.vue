@@ -2,13 +2,15 @@
   <v-app dark>
     <div class="background-image-fixed">
       <v-toolbar
-        v-show="this.$route.name!='landingPage' || alreadyVisited"
+        v-show="this.$route.name != 'landingPage' || alreadyVisited"
         dense
         dark
         pa-3
       >
         <v-toolbar-side-icon to="/">
-          <v-icon @click="soundEffects.play('registrationTick')">home</v-icon>
+          <v-icon @click="soundEffects.play('registrationTick')">
+            home
+          </v-icon>
         </v-toolbar-side-icon>
         <v-btn
           to="/lobby"
@@ -20,7 +22,7 @@
           <span class="px-3  font-weight-light">Battleship Game </span>
         </v-toolbar-title>
 
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-btn
           icon
           @click.prevent="soundOnOff()"
@@ -28,26 +30,28 @@
           <v-icon
             v-show="musicPlaying"
             color="white"
-          >volume_up</v-icon>
+          >
+            volume_up
+          </v-icon>
           <v-icon
             v-show="!musicPlaying"
             color="white"
-          >volume_off</v-icon>
+          >
+            volume_off
+          </v-icon>
         </v-btn>
         <AvatarButton class="px-2" />
         <v-icon
-          :class="{refresh:this.$store.state.loading}"
+          :class="{ refresh: this.$store.state.loading }"
           dark
           small
-        >sync</v-icon>
-
+        >
+          sync
+        </v-icon>
       </v-toolbar>
       <v-content>
-
         <router-view />
-
       </v-content>
-
     </div>
   </v-app>
 </template>
@@ -64,6 +68,7 @@ export default {
   computed: {
     ...mapState(["musicPlaying", "alreadyVisited", "soundEffects"])
   },
+  mounted() {},
   methods: {
     soundOnOff() {
       if (this.musicPlaying) {
@@ -72,8 +77,7 @@ export default {
         this.$store.commit("playMusic");
       }
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 
@@ -81,7 +85,7 @@ export default {
 .background-image-fixed {
   min-height: 100vh;
   background-attachment: fixed;
-  background-image: url("./assets/battle_ship_background.jpg");  
+  background-image: url("./assets/battle_ship_background.jpg");
 }
 
 .refresh {

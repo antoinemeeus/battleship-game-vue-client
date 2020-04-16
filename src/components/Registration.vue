@@ -26,17 +26,24 @@
         @click="
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
-          soundEffects.play('registrationTick')
+          soundEffects.play('registrationTick');
         "
-      >{{
-        $vuetify.breakpoint.smAndDown ? "Login" : "Already have an account?"
-        }}</v-btn>
+      >
+        {{
+          $vuetify.breakpoint.smAndDown ? "Login" : "Already have an account?"
+        }}
+      </v-btn>
       <v-btn
         v-if="!choiceSignIn"
         color="primary"
         small
-        @click="choiceSignIn = !choiceSignIn; soundEffects.play('registrationTick')"
-      >Create new account</v-btn>
+        @click="
+          choiceSignIn = !choiceSignIn;
+          soundEffects.play('registrationTick');
+        "
+      >
+        Create new account
+      </v-btn>
     </v-flex>
 
     <v-card-text>
@@ -72,7 +79,9 @@
                 align-center
               >
                 <AvatarsSelection v-model="avatarID" />
-                <div class="subheading">Select an avatar.</div>
+                <div class="subheading">
+                  Select an avatar.
+                </div>
               </v-layout>
               <v-flex
                 v-if="choiceSignIn"
@@ -86,7 +95,7 @@
                   :rules="nameRules"
                   :counter="15"
                   required
-                ></v-text-field>
+                />
               </v-flex>
               <v-flex
                 xs12
@@ -100,7 +109,7 @@
                   :error-messages="emailIsTaken ? 'E-mail already in use' : ''"
                   :append-icon="emailIsTaken ? 'warning' : ''"
                   required
-                ></v-text-field>
+                />
               </v-flex>
               <v-flex
                 xs12
@@ -113,7 +122,7 @@
                   :append-icon="showPwd ? 'visibility' : 'visibility_off'"
                   :type="showPwd ? 'text' : 'password'"
                   @click:append="showPwd = !showPwd"
-                ></v-text-field>
+                />
               </v-flex>
             </v-layout>
           </v-container>
@@ -137,7 +146,7 @@
           <v-btn
             color="red"
             type="submit"
-            :loading="status=='loading'"
+            :loading="status == 'loading'"
             @click="logOut"
           >
             <v-icon>exit_to_app</v-icon>
@@ -152,8 +161,8 @@
       >
         <v-btn
           v-if="!choiceSignIn && !isAuthenticated"
-          :loading="status=='loading'"
-          :disabled="status=='loading' || !valid"
+          :loading="status == 'loading'"
+          :disabled="status == 'loading' || !valid"
           color="success"
           type="submit"
           @click="logIn"
@@ -162,8 +171,8 @@
         </v-btn>
         <v-btn
           v-if="choiceSignIn && !isAuthenticated"
-          :loading="status=='loading'"
-          :disabled="!valid || status=='loading'"
+          :loading="status == 'loading'"
+          :disabled="!valid || status == 'loading'"
           color="primary"
           @click="signUp"
         >
@@ -220,14 +229,10 @@ export default {
     };
     this.authRequest(payload).then(
       res => {
-        console.log("Already logged in, in cookies");
-        console.log(res);
         let playerPayload = { url: "/player", mutation: "setUserInfo" };
         this.getData(playerPayload);
       },
       err => {
-        console.log("Not logged in");
-        console.log(err);
         this.$store.commit("authLogOut");
       }
     );
@@ -277,23 +282,17 @@ export default {
             this.alertMsg =
               requestType + " failed : " + error.response.data.error;
         }
-        // console.log(error.response.data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
         this.alertMsg = requestType + " failed : Request Error: Server is busy";
-        // console.log(error.request);
       } else {
         // Something happened in setting up the request that triggered an Error
         this.alertMsg =
           requestType + " failed : Settings error:" + error.message;
-        // console.log("Error", error.message);
       }
       this.alert = true;
-      console.log(error);
       this.$refs.form.validate();
       setTimeout(() => {
         this.alert = false;
@@ -311,13 +310,11 @@ export default {
         };
         this.authRequest(payload).then(
           res => {
-            console.log("response when login successfull", res);
             this.handleAuthSuccess("Login", res);
             let playerPayload = { url: "/player", mutation: "setUserInfo" };
             this.getData(playerPayload);
           },
           err => {
-            console.log(err);
             this.handleAuthErrors("Login", err);
           }
         );
@@ -332,19 +329,16 @@ export default {
       };
       this.authRequest(payload).then(
         res => {
-          console.log(res);
           this.handleAuthSuccess("Logout", res);
           this.$router.push("/");
         },
         err => {
-          console.log(err);
           this.handleAuthErrors("Logout", err);
         }
       );
       e.preventDefault();
     },
     signUp() {
-      console.log(this.$refs.form);
       if (this.$refs.form.validate()) {
         let payload = {
           data: {
@@ -357,13 +351,11 @@ export default {
         };
         this.authRequest(payload).then(
           res => {
-            console.log(res);
             this.logIn();
             this.handleAuthSuccess("SignUp", res);
             this.lastEmailTaken = "";
           },
           err => {
-            console.log(err);
             if (
               err.response &&
               err.response.data.error == "Email already taken"

@@ -19,7 +19,7 @@
             <img
               :src="selectedAvatar.src"
               :alt="selectedAvatar.name"
-            />
+            >
           </v-avatar>
         </v-btn>
       </template>
@@ -32,11 +32,15 @@
             tile
             :size="30"
           >
-            <v-icon color="green">fa-sign-in-alt</v-icon>
+            <v-icon color="green">
+              fa-sign-in-alt
+            </v-icon>
           </v-list-tile-avatar>
 
           <v-list-tile-content>
-            <v-list-tile-title pr-2>Connect</v-list-tile-title>
+            <v-list-tile-title pr-2>
+              Connect
+            </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -48,10 +52,14 @@
             tile
             :size="30"
           >
-            <v-icon color="red">fa-sign-out-alt</v-icon>
+            <v-icon color="red">
+              fa-sign-out-alt
+            </v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title pr-2>Log out</v-list-tile-title>
+            <v-list-tile-title pr-2>
+              Log out
+            </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -111,13 +119,10 @@ export default {
       };
       this.authRequest(payload).then(
         res => {
-          // console.log(res);
           this.menu = false;
           this.$router.push("/");
         },
-        err => {
-          // console.log(err);
-        }
+        err => {}
       );
       e.preventDefault();
     }

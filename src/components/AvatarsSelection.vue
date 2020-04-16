@@ -22,7 +22,7 @@
           <img
             :src="selectedAvatar.src"
             :alt="selectedAvatar.name"
-          />
+          >
         </v-avatar>
       </v-btn>
     </template>
@@ -52,7 +52,7 @@
             <img
               :src="avatar.src"
               :alt="avatar.name"
-            />
+            >
           </v-avatar>
 
           <!-- {{avatar.name}} -->

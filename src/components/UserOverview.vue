@@ -39,7 +39,7 @@
           :size="100"
           color="primary"
           indeterminate
-        ></v-progress-circular>
+        />
       </v-layout>
     </v-card-text>
     <v-card-text v-if="!waitingTojoin">
@@ -52,7 +52,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on }">
               <v-badge
-                :color="isUserConnected?'green':'red'"
+                :color="isUserConnected ? 'green' : 'red'"
                 left
                 overlap
               >
@@ -62,7 +62,7 @@
                     small
                     v-on="on"
                   >
-                    {{isUserConnected?'fa-user':'fa-user-alt-slash'}}
+                    {{ isUserConnected ? "fa-user" : "fa-user-alt-slash" }}
                   </v-icon>
                 </template>
                 <v-avatar
@@ -73,24 +73,33 @@
                   <img
                     :src="userAvatar.src"
                     :alt="userAvatar.name"
-                  />
+                  >
                 </v-avatar>
               </v-badge>
             </template>
-            <span>{{isUserConnected?'Player is connected':'Player is disconnected'}}</span>
+            <span>{{
+              isUserConnected ? "Player is connected" : "Player is disconnected"
+            }}</span>
           </v-tooltip>
           <v-btn
             v-if="isUser && !isUserDefaultAnonymous"
             color="red"
-            :loading="status=='loading'"
+            :loading="status == 'loading'"
             small
             :icon="$vuetify.breakpoint.mdAndDown"
             :round="$vuetify.breakpoint.mdAndDown"
             @click.stop="logOut()"
-          ><span v-if="!$vuetify.breakpoint.mdAndDown">Logout</span>
-            <v-icon v-if="$vuetify.breakpoint.mdAndDown">fa-sign-out-alt</v-icon>
+          >
+            <span v-if="!$vuetify.breakpoint.mdAndDown">Logout</span>
+            <v-icon
+              v-if="$vuetify.breakpoint.mdAndDown"
+            >
+              fa-sign-out-alt
+            </v-icon>
           </v-btn>
-          <div v-if="isUserDefaultAnonymous">Please Login</div>
+          <div v-if="isUserDefaultAnonymous">
+            Please Login
+          </div>
         </v-flex>
         <v-flex align-self-center>
           <v-flex class="subheading font-weight-bold">
@@ -119,17 +128,22 @@
                 </v-flex> -->
                 <v-flex v-if="!isComputerMode">
                   Last Connected:
-                  <span class="orange--text">{{ moment(user.lastConnectedDate).calendar() }}</span>
+                  <span class="orange--text">{{
+                    moment(user.lastConnectedDate).calendar()
+                  }}</span>
                 </v-flex>
                 <v-flex>
                   <div v-if="isUser && !isComputerMode">
-                    Last Status: <span class="orange--text"> {{ userActions }}</span>
+                    Last Status:
+                    <span class="orange--text"> {{ userActions }}</span>
                   </div>
                   <div v-if="!isUser && !isComputerMode">
-                    Last Status: <span class="orange--text"> {{ opponentActions }}</span>
+                    Last Status:
+                    <span class="orange--text"> {{ opponentActions }}</span>
                   </div>
                   <div v-if="isComputerMode">
-                    Last Status: <span class="orange--text"> Against computer</span>
+                    Last Status:
+                    <span class="orange--text"> Against computer</span>
                   </div>
                 </v-flex>
               </v-layout>

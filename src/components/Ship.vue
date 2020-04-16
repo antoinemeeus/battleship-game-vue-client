@@ -33,7 +33,7 @@
       class="ship "
       :class="{ selected: isShipSelected }"
       :src="getImage()"
-    />
+    >
   </VueDragResize>
 </template>
 

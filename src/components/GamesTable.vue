@@ -50,16 +50,16 @@
         xs12
         class="anchor"
       >
-        <div :class="[{'wrapper-abs-btn dark-bg':!isAuthenticated}]">
+        <div :class="[{ 'wrapper-abs-btn dark-bg': !isAuthenticated }]">
           <v-btn
+            v-if="!isAuthenticated"
             large
             depressed
             :loading="loading && dialog"
-            v-if="!isAuthenticated"
             dark
             color="green"
-            @click="openModal()"
             class="absolute-center"
+            @click="openModal()"
           >
             <v-icon>fa-sign-in-alt</v-icon><span class="px-2">Login to create New Game</span>
           </v-btn>
@@ -78,13 +78,15 @@
               v-slot:progress
               color="red"
               indeterminate
-            ></v-progress-linear>
+            />
             <template
               slot="items"
               slot-scope="props"
             >
               <tr :class="props.item.isFinished ? 'finished-row-bg' : ''">
-                <td class="text-xs-center px-1 table-bg">{{ props.item.id }}</td>
+                <td class="text-xs-center px-1 table-bg">
+                  {{ props.item.id }}
+                </td>
                 <td class="text-xs-center px-1 table-bg">
                   {{ moment(props.item.created).calendar() }}
                 </td>
@@ -102,20 +104,26 @@
                         <img
                           :src="playerAvatar(props.item.avatarP1).src"
                           :alt="playerAvatar(props.item.avatarP1).name"
-                        />
-                      </v-avatar><span class="pl-2">{{ props.item.player1 }} - {{props.item.p1_.email}}</span>
+                        >
+                      </v-avatar><span
+                        class="pl-2"
+                      >{{ props.item.player1 }} -
+                        {{ props.item.p1_.email }}</span>
                     </div>
                     <v-btn
                       v-if="props.item.p1_.isUser"
                       :color="btnEnterColor"
                       @click="toPlayerBoard(props.item.p1_.gp_id)"
-                    >Enter</v-btn>
+                    >
+                      Enter
+                    </v-btn>
                     <v-btn
                       v-else-if="!props.item.p1_.isJoined"
                       :color="btnJoinColor"
                       @click="joinGame(props.item.id)"
-                    >Join</v-btn>
-
+                    >
+                      Join
+                    </v-btn>
                   </v-layout>
                   <v-layout
                     v-else
@@ -130,19 +138,30 @@
                         <img
                           :src="playerAvatar(props.item.avatarP1).src"
                           :alt="playerAvatar(props.item.avatarP1).name"
-                        />
+                        >
                       </v-avatar><span class="pl-2">{{ props.item.p1_.name }}</span>
                     </div>
                     <v-chip
                       v-if="props.item.isFinished"
                       light
                       :color="
-                	    props.item.p1_.result == 'won' ? 'yellow' : props.item.p1_.result == 'tie' ?'cyan':'red lighten-3'"
+                        props.item.p1_.result == 'won'
+                          ? 'yellow'
+                          : props.item.p1_.result == 'tie'
+                            ? 'cyan'
+                            : 'red lighten-3'
+                      "
                       class="text-uppercase"
                     >
-                      <v-icon>{{
-                        props.item.p1_.result == "won" ? "star" : props.item.p1_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
-                        }}</v-icon>
+                      <v-icon>
+                        {{
+                          props.item.p1_.result == "won"
+                            ? "star"
+                            : props.item.p1_.result == "tie"
+                              ? "fa-equals"
+                              : "fa-skull-crossbones"
+                        }}
+                      </v-icon>
                       <span class="pl-2">{{ props.item.p1_.result }}</span>
                     </v-chip>
                   </v-layout>
@@ -161,23 +180,25 @@
                         <img
                           :src="playerAvatar(props.item.avatarP2).src"
                           :alt="playerAvatar(props.item.avatarP2).name"
-                        />
+                        >
                       </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-btn
                       v-if="props.item.p2_.isUser"
                       :color="btnEnterColor"
                       @click="toPlayerBoard(props.item.p2_.gp_id)"
-                    >Enter</v-btn>
+                    >
+                      Enter
+                    </v-btn>
                     <v-btn
                       v-else-if="
-                      !props.item.p2_.isJoined && !props.item.p1_.isUser
-                    "
+                        !props.item.p2_.isJoined && !props.item.p1_.isUser
+                      "
                       :color="btnJoinColor"
                       @click="joinGame(props.item.id)"
-                    >Join
+                    >
+                      Join
                     </v-btn>
-
                   </v-layout>
                   <v-layout
                     v-else
@@ -192,19 +213,30 @@
                         <img
                           :src="playerAvatar(props.item.avatarP2).src"
                           :alt="playerAvatar(props.item.avatarP2).name"
-                        />
+                        >
                       </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-chip
                       v-if="props.item.isFinished"
                       light
                       :color="
-                     props.item.p2_.result == 'won' ? 'yellow' : props.item.p2_.result == 'tie' ?'cyan':'red lighten-3'"
+                        props.item.p2_.result == 'won'
+                          ? 'yellow'
+                          : props.item.p2_.result == 'tie'
+                            ? 'cyan'
+                            : 'red lighten-3'
+                      "
                       class="text-uppercase"
                     >
-                      <v-icon>{{
-                        props.item.p2_.result == "won" ? "star" : props.item.p2_.result == "tie"?"fa-equals" :"fa-skull-crossbones"
-                        }}</v-icon>
+                      <v-icon>
+                        {{
+                          props.item.p2_.result == "won"
+                            ? "star"
+                            : props.item.p2_.result == "tie"
+                              ? "fa-equals"
+                              : "fa-skull-crossbones"
+                        }}
+                      </v-icon>
                       <span class="pl-2">{{ props.item.p2_.result }}</span>
                     </v-chip>
                   </v-layout>
@@ -223,7 +255,7 @@
             dark
             color="orange"
             :length="pages"
-          ></v-pagination>
+          />
         </div>
       </v-flex>
     </v-layout>
@@ -424,19 +456,13 @@ export default {
 
       if (error.response) {
         this.alertMsg = msg + " failed: " + error.response.data.error;
-        // console.log(error.response.data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
       } else if (error.request) {
         this.alertMsg = msg + " failed : Request Error: " + error.request;
-        // console.log(error.request);
       } else {
         this.alertMsg =
           requestType + msg + "failed : Settings error:" + error.message;
-        // console.log("Error", error.message);
       }
       this.alert = true;
-      // console.log(error.conig);
       setTimeout(() => {
         this.alert = false;
         this.alertMsg = "";
@@ -456,7 +482,6 @@ export default {
       this.clearGameView();
       this.postData(payload).then(
         res => {
-          // console.log(res);
           this.handleSuccessAlertMsgs(res, msgIntro);
           if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
           else {
@@ -469,7 +494,6 @@ export default {
           }
         },
         err => {
-          // console.log(err);
           this.handleErrorAlertMsgs(err, msgIntro);
         }
       );
@@ -487,7 +511,6 @@ export default {
       let msgIntro = "Game Joining";
       this.postData(payload).then(
         res => {
-          // console.log(res);
           this.handleSuccessAlertMsgs(res, msgIntro);
           if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
           else {
@@ -500,7 +523,6 @@ export default {
           }
         },
         err => {
-          // console.log(err);
           this.handleErrorAlertMsgs(err, msgIntro);
         }
       );
@@ -512,7 +534,6 @@ export default {
   },
   watch: {
     isAuthenticated() {
-      // console.log("Loggin sucess");
       this.getGames();
     }
   },
@@ -556,6 +577,3 @@ export default {
   height: 3px !important;
 }
 </style>
-
-
-

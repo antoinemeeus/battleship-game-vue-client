@@ -5,7 +5,7 @@
       :style="timerStyleObject"
     >{{
       prettyTime | prettify
-      }}</span>
+    }}</span>
   </div>
 </template>
 

@@ -17,7 +17,9 @@
           transition="scale-transition"
           d-block
         >
-          <div class="title">Acces Denied</div>
+          <div class="title">
+            Acces Denied
+          </div>
           <div>{{ serverMessage }}</div>
         </v-alert>
       </v-flex>
@@ -32,7 +34,9 @@
             vertical
           >
             <h4 class="title">
-              Player <span class="orange--text">{{ opponentPlayer.userName }}</span> has joined the battle!
+              Player
+              <span class="orange--text">{{ opponentPlayer.userName }}</span>
+              has joined the battle!
             </h4>
             <v-btn
               color="pink"
@@ -62,7 +66,7 @@
           <UserOverview
             :is-user="false"
             :user="opponentPlayer"
-            :isUserConnected="isOpponentConnected"
+            :is-user-connected="isOpponentConnected"
           />
         </v-flex>
       </v-layout>
@@ -80,7 +84,7 @@
             indeterminate
             :size="100"
             color="primary"
-          ></v-progress-circular>
+          />
         </v-flex>
       </v-layout>
       <v-layout
@@ -108,11 +112,13 @@
                   :fleet-state="lastUserFleet"
                   :image-base-width="cellSize"
                   :fleet-name="'Your Fleet'"
-                ></FleetStatus>
+                />
               </v-layout>
             </v-flex>
             <v-flex shrink>
-              <h3 class="title">Your Grid</h3>
+              <h3 class="title">
+                Your Grid
+              </h3>
               <Grid
                 :has-ship-list="userShipsPositionList"
                 :duplicate-location="getShipOverlappingPositions"
@@ -145,13 +151,17 @@
               px-2
               mx-1
             >
-              <h3 class="title">Your Fleet</h3>
+              <h3 class="title">
+                Your Fleet
+              </h3>
               <v-layout
                 column
                 fill-height
                 justify-center
               >
-                <h4 class="subheading">Ship grid positions</h4>
+                <h4 class="subheading">
+                  Ship grid positions
+                </h4>
                 <table class="py-2">
                   <tr
                     v-for="(location, ship) in shipPositions"
@@ -212,19 +222,27 @@
                     <p>
                       Arrange your ships by dragging them on your grid. To
                       rotate a ship, click on the
-                      <v-icon color="blue px-1">cached</v-icon>
+                      <v-icon color="blue px-1">
+                        cached
+                      </v-icon>
                       button.
                     </p>
                     <p>
                       You can also decide to place all ships randomly by click
-                      the <v-icon class="px-1">fa-random</v-icon> random button.
+                      the <v-icon class="px-1">
+                        fa-random
+                      </v-icon> random button.
                     </p>
                     <p>
                       When you are ready, go to battle by clicking the
-                      <v-icon class="px-1">fa-play</v-icon> start button.
+                      <v-icon class="px-1">
+                        fa-play
+                      </v-icon> start button.
                     </p>
                     <p>
-                      <v-icon color="red px-1">warning</v-icon> You will not be
+                      <v-icon color="red px-1">
+                        warning
+                      </v-icon> You will not be
                       able to rotate a ship if the the next position contains an
                       obstacle or is outside the grid.
                     </p>
@@ -235,7 +253,7 @@
           </v-layout>
         </v-flex>
         <v-flex
-          v-show="!placingShips "
+          v-show="!placingShips"
           xs1
           sm2
           px-2
@@ -248,7 +266,7 @@
             <SalvoMissiles
               :salvo-size="salvoPositions.length"
               :missile-number="maxSalvoSize"
-            ></SalvoMissiles>
+            />
             <v-flex
               pa-1
               pt-2
@@ -280,7 +298,9 @@
                 :fab="$vuetify.breakpoint.smAndDown"
                 @click="fireSalvo()"
               >
-                <span v-show="allMissilePlaced || !$vuetify.breakpoint.smAndDown">FIRE!</span>
+                <span
+                  v-show="allMissilePlaced || !$vuetify.breakpoint.smAndDown"
+                >FIRE!</span>
               </v-btn>
             </v-flex>
             <v-flex
@@ -288,7 +308,7 @@
               :class="{ 'spaceBar-opaque': salvoPositions.length == 0 }"
             >
               <span> or press</span>
-              <v-img :src="require('../assets/spaceBar.png')"></v-img>
+              <v-img :src="require('../assets/spaceBar.png')" />
             </v-flex>
             <v-flex>
               <v-layout
@@ -309,12 +329,16 @@
                       v-show="musicPlaying"
                       large
                       color="white"
-                    >volume_up</v-icon>
+                    >
+                      volume_up
+                    </v-icon>
                     <v-icon
                       v-show="!musicPlaying"
                       large
                       color="white"
-                    >volume_off</v-icon>
+                    >
+                      volume_off
+                    </v-icon>
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -329,19 +353,18 @@
                 <span class="title">Enemy Grid</span>
                 <Grid
                   ref="salvoGrid"
-                  :assignedID="'salvoGrid'"
+                  :assigned-i-d="'salvoGrid'"
                   :turn="salvoTurn"
                   :has-ship-list="isGameFinished ? [] : []"
                   :grid-size="gridSize"
                   :cell-size="cellSize"
                   :is-salvo-target="salvoPositions"
-                  :isSalvoLocked="lockedSalvo"
+                  :is-salvo-locked="lockedSalvo"
                   :hits="opponentGridHits"
                   :can-fire="canFireSalvo && !isGameFinished"
                   :waiting-for-opponent="waitingOpponent"
                   @salvoGridClicked="salvoTarget"
-                >
-                </Grid>
+                />
               </v-flex>
               <v-flex
                 grow
@@ -351,7 +374,7 @@
                   :fleet-state="lastOpponentFleet"
                   :fleet-name="'Enemy Fleet'"
                   :image-base-width="cellSize * 0.8"
-                ></FleetStatus>
+                />
               </v-flex>
             </v-layout>
           </v-flex>
@@ -366,7 +389,9 @@
         <span class="display-3">{{ gameResult }}</span>
         <span class="title"> {{ resultMsg }} </span>
         <v-flex>
-          <v-btn @click="$router.push('/lobby')">Back to Menu</v-btn>
+          <v-btn @click="$router.push('/lobby')">
+            Back to Menu
+          </v-btn>
         </v-flex>
       </v-layout>
     </div>
@@ -775,30 +800,21 @@ export default {
         data: "",
         rqUrl: "/games/players/" + this.gp + "/is_OFFLINE"
       };
-      //console.log("OFFLINE PAYLOAD: ", payload);
       this.postData(payload).then(
         res => {
-          //console.log(res);
           this.alertMsg = "You went inactive";
           //TODO: do something with t
         },
         error => {
-          //console.log(error);
           let msg = "update status to offline";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            console.log(error.response.data);
-            //console.log(error.response.status);
-            //console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            console.log("Error message", error.message);
           }
-          console.log("Error config", error.config);
         }
       );
     },
@@ -946,7 +962,6 @@ export default {
 
       if (!newPosition.match(/^[A-Z0-9]+$/)) {
         //Check if id of targets correspond to id regex A1 C4...
-        //console.log("Not matching a ID, return");
         return;
       }
 
@@ -993,7 +1008,6 @@ export default {
       let arrays = Object.values(shipsPos);
       let newFlattenArray = [];
       for (let arrayOfPos of arrays) {
-        //console.log(arrayOfPos);
         newFlattenArray.push(arrayOfPos);
       }
       newFlattenArray = newFlattenArray.flat();
@@ -1005,18 +1019,15 @@ export default {
       let entries = Object.entries(this.shipPositions);
       let listOfShip = [];
       for (let [key, value] of entries) {
-        //console.log(key, value);
         listOfShip.push({ type: key, locations: value });
       }
       let payload = {
         data: listOfShip,
         rqUrl: "/games/players/" + this.gp + "/ships"
       };
-      //console.log("Payload before sending: ", payload);
       // let msgIntro = "Sending ships positions";
       this.postData(payload).then(
         res => {
-          //console.log(res);
           this.getData({
             mutation: "setGameDisplayed",
             url: "/game_view/" + this.gp
@@ -1024,27 +1035,19 @@ export default {
             res => {
               this.sendingShips = false;
             },
-            reject => {
-              console.warn("Failed to getGames gameView", reject);
-            }
+            reject => {}
           );
           // this.handleSuccessAlertMsgs(res, msgIntro);
         },
         error => {
-          //console.log(error);
           let msg = "post ship";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            console.log(error.response.data);
-            //console.log(error.response.status);
-            //console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            console.log("Error", error.message);
           }
         }
       );
@@ -1062,7 +1065,6 @@ export default {
         data: currentSalvo,
         rqUrl: "/games/players/" + this.gp + "/salvos"
       };
-      //console.log("Payload before sending: ", payload);
       this.salvoPositions = [];
       this.postData(payload).then(
         res => {
@@ -1074,9 +1076,7 @@ export default {
               this.sendingSalvo = false;
               this.lockedSalvo = [];
             },
-            reject => {
-              console.warn("Failed to getGames gameView", reject);
-            }
+            reject => {}
           );
         },
         error => {
@@ -1084,16 +1084,11 @@ export default {
           let msg = "post salvo";
           if (error.response) {
             this.alertMsg = msg + " failed: " + error.response.data.error;
-            console.log(error.response.data);
-            // console.log(error.response.status);
-            // console.log(error.response.headers);
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
-            console.log(error.request);
           } else {
             this.alertMsg =
               requestType + msg + "failed : Settings error:" + error.message;
-            console.log(error.message);
           }
           // this.handleErrorAlertMsgs(err, msgIntro);
         }
@@ -1102,22 +1097,17 @@ export default {
 
     ready() {
       if (Object.keys(this.shipPositions).length < this.ships.length) {
-        //console.log("Ships positions missings");
         return;
       }
       if (this.overlappingShips()) {
-        //console.log("There is overlapping ships!");
         return;
       }
-      console.log("Starting game...");
       this.soundEffects.play("startGame");
       this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
       // this.$refs.timer.setTime({minutes:2,secondes:0});
       // this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
-
-      //console.log("READY! -> OK");
     },
     fireSalvo() {
       let randomNb = Math.floor(Math.random() * 3) + 1;
@@ -1134,8 +1124,7 @@ export default {
           this.setBoardFromServer();
         },
         reject => {
-          console.warn("Failed to getGames gameView", reject);
-          //console.log("Failed to getGames gameView", reject);
+          //console.warn("Failed to getGames gameView", reject);
         }
       );
     }
