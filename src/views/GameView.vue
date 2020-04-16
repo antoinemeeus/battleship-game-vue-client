@@ -403,7 +403,6 @@ import Ship from "../components/Ship.vue";
 import Grid from "../components/Grid.vue";
 import FleetStatus from "../components/FleetStatus.vue";
 import SalvoMissiles from "../components/SalvoMissiles.vue";
-import CountDownTimer from "../components/CountDownTimer.vue";
 import InstructionWizard from "../components/InstructionWizard.vue";
 import UserOverview from "../components/UserOverview.vue";
 import { mapState, mapGetters, mapActions } from "vuex";
@@ -415,7 +414,6 @@ export default {
     Ship,
     FleetStatus,
     SalvoMissiles,
-    CountDownTimer,
     InstructionWizard,
     UserOverview
   },
@@ -473,75 +471,6 @@ export default {
         }
       ]
     };
-  },
-  watch: {
-    isAuthenticated(newVal) {
-      if (newVal) {
-        this.getGame();
-      }
-    },
-    playerSalvoes(newObj, oldObj) {
-      if (Object.keys(newObj).length > Object.keys(oldObj).length)
-        this.lockedSalvo = [];
-    },
-    opponentPlayer(newOpponent, oldOpponent) {
-      if (newOpponent.id != null && oldOpponent.id == null) {
-        // alert(newOpponent.userName + " joined the game!");
-        this.snackbar = true;
-      }
-    },
-    gameResult(newVal, oldVal) {
-      if (newVal != oldVal) {
-        newVal == "WON"
-          ? this.soundEffects.play("winnerTheme")
-          : this.soundEffects.play("loserTheme");
-      }
-    },
-    gameState(newGameState, oldGameState) {
-      if (newGameState.Info) this.resultMsg = newGameState.Info;
-      if (newGameState.code > 1) {
-        this.userIsReady = true;
-      }
-      if (this.isGameFinished) {
-        this.stopAutoRefresh();
-      } else {
-        this.setAutoRefresh();
-      }
-    }
-  },
-  created() {
-    this.placeShipRandomly();
-  },
-  mounted() {
-    this.bgMusic.fade(0.6, 0.0, 1000);
-    this.bgEpicIntro.fade(0.0, 0.3, 1500);
-    if (!this.bgEpicIntro.playing()) {
-      this.bgEpicIntro.play();
-    }
-    this.sendingSalvo = false;
-    window.onkeydown = function(event) {
-      if (event.keyCode === 32) {
-        event.preventDefault();
-      }
-    };
-    // //Prevent text selection
-    // document.onselectstart = function() {
-    //   return false;
-    // };
-    this.$nextTick(() => {
-      this.getGame();
-      window.addEventListener("keydown", this.gameKeyDownEvent, false);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.3, 0.0, 1500);
-    this.stopAutoRefresh();
-    next();
-  },
-  beforeDestroy() {
-    this.stopAutoRefresh();
-    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
-    window.onkeydown = null;
   },
   computed: {
     ...mapState([
@@ -780,6 +709,75 @@ export default {
         return this.gameDisplayed.salvoes[this.opponentPlayer.id];
       return null;
     }
+  },
+  watch: {
+    isAuthenticated(newVal) {
+      if (newVal) {
+        this.getGame();
+      }
+    },
+    playerSalvoes(newObj, oldObj) {
+      if (Object.keys(newObj).length > Object.keys(oldObj).length)
+        this.lockedSalvo = [];
+    },
+    opponentPlayer(newOpponent, oldOpponent) {
+      if (newOpponent.id != null && oldOpponent.id == null) {
+        // alert(newOpponent.userName + " joined the game!");
+        this.snackbar = true;
+      }
+    },
+    gameResult(newVal, oldVal) {
+      if (newVal != oldVal) {
+        newVal == "WON"
+          ? this.soundEffects.play("winnerTheme")
+          : this.soundEffects.play("loserTheme");
+      }
+    },
+    gameState(newGameState, oldGameState) {
+      if (newGameState.Info) this.resultMsg = newGameState.Info;
+      if (newGameState.code > 1) {
+        this.userIsReady = true;
+      }
+      if (this.isGameFinished) {
+        this.stopAutoRefresh();
+      } else {
+        this.setAutoRefresh();
+      }
+    }
+  },
+  created() {
+    this.placeShipRandomly();
+  },
+  mounted() {
+    this.bgMusic.fade(0.6, 0.0, 1000);
+    this.bgEpicIntro.fade(0.0, 0.3, 1500);
+    if (!this.bgEpicIntro.playing()) {
+      this.bgEpicIntro.play();
+    }
+    this.sendingSalvo = false;
+    window.onkeydown = function(event) {
+      if (event.keyCode === 32) {
+        event.preventDefault();
+      }
+    };
+    // //Prevent text selection
+    // document.onselectstart = function() {
+    //   return false;
+    // };
+    this.$nextTick(() => {
+      this.getGame();
+      window.addEventListener("keydown", this.gameKeyDownEvent, false);
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    this.bgEpicIntro.fade(0.3, 0.0, 1500);
+    this.stopAutoRefresh();
+    next();
+  },
+  beforeDestroy() {
+    this.stopAutoRefresh();
+    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
+    window.onkeydown = null;
   },
   methods: {
     ...mapActions(["getData", "postData"]),

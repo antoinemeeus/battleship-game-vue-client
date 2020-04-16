@@ -87,6 +87,8 @@ export default {
           return "large";
         case "xl":
           return "large";
+        default:
+          return "large";
       }
     },
     avatarSize() {
@@ -101,6 +103,8 @@ export default {
           return "60";
         case "xl":
           return "70";
+        default:
+          return "55";
       }
     },
     selectedAvatar() {
@@ -114,7 +118,7 @@ export default {
 };
 </script>
 
-<style <style scoped>
+<style scoped>
 .avatar_hover {
   content: "";
 }

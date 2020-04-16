@@ -185,7 +185,6 @@
 
 <script>
 import AvatarsSelection from "../components/AvatarsSelection.vue";
-import UserOverview from "../components/UserOverview.vue";
 import axios from "axios";
 import { mapState, mapActions, mapGetters } from "vuex";
 import { reject } from "q";
@@ -193,7 +192,6 @@ const qs = require("querystring");
 export default {
   components: {
     AvatarsSelection,
-    UserOverview
   },
   data: () => ({
     showBtn: false,

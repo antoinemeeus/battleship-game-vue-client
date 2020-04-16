@@ -76,13 +76,11 @@
 </template>
 
 <script>
-import AvatarsSelection from "../components/AvatarsSelection.vue";
 import Registration from "../components/Registration.vue";
 import axios from "axios";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    AvatarsSelection,
     Registration
   },
   data: () => ({

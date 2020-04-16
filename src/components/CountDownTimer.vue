@@ -63,6 +63,8 @@ export default {
           return "60";
         case "xl":
           return "70";
+        default:
+          return "55";
       }
     }
   },

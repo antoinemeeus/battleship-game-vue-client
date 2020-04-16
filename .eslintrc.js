@@ -1,9 +1,11 @@
 module.exports = {
-    root: true,
+    extends: [
+        // add more generic rulesets here, such as:
+        // 'eslint:recommended',
+        'plugin:vue/recommended'
+    ],
     rules: {
-      'no-unused-vars': 'off'
+        'no-unused-vars': 'off',
+        'vue/no-side-effects-in-computed-properties': 'off'
     },
-    parserOptions: {
-      parser: 'babel-eslint'
-    }
-  };
+};
