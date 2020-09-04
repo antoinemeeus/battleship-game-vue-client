@@ -40,7 +40,7 @@
                   a salvo.
                   <img
                     class="aim-img px-2"
-                    src="../assets/cursor_AimTarget.png"
+                    src="../assets/tutorial/cursor_AimTarget.png"
                   >. If you change your mind on a shot position, just click
                   again on the selected cell to cancel the selection.
                 </p>
@@ -49,7 +49,7 @@
                 <p>
                   <img
                     class="aim-img px-2"
-                    src="../assets/launchBtnSB.png"
+                    src="../assets/tutorial/launchBtnSB.png"
                   >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
@@ -64,12 +64,12 @@
                   enemy grid.
                   <img
                     class="aim-img px-2"
-                    src="../assets/missedCell.png"
+                    src="../assets/tutorial/missedCell.png"
                   >
                   blue cell means you missed,
                   <img
                     class="aim-img px-2"
-                    src="../assets/hitCell.png"
+                    src="../assets/tutorial/hitCell.png"
                   > red
                   cell means you hit a ship
                 </p>
@@ -79,7 +79,7 @@
                   The number in the top left corner of a shot cell
                   <img
                     class="aim-img px-2"
-                    src="../assets/hitCell.png"
+                    src="../assets/tutorial/hitCell.png"
                   > is
                   the round in which the salvo was fired.
                 </p>
@@ -96,7 +96,7 @@
                 <p>
                   <img
                     class="aim-img px-2"
-                    src="../assets/timerImg.png"
+                    src="../assets/tutorial/timerImg.png"
                   >The
                   time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in

@@ -10,12 +10,12 @@
       >
         <v-img
           v-if="m <= missileLeft"
-          :src="require('../assets/missile_2.png')"
+          :src="require('../assets/missiles/missile_2.png')"
           class="image-missile-big"
         />
         <v-img
           v-else
-          :src="require('../assets/missile_2_used.png')"
+          :src="require('../assets/missiles/missile_2_used.png')"
           class="image-missile-big"
         />
       </v-flex>

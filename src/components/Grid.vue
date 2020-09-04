@@ -292,7 +292,7 @@ export default {
 
 .fire {
   /* cursor: url("http://www.gravatar.com/avatar/06ededb95f1c0b1f4f9d987e06d7d82b?s=32&d=identicon&r=PG"),auto; */
-  cursor: url("../assets/cursor_AimTarget.png") 25 25, auto;
+  cursor: url("../assets/tutorial/cursor_AimTarget.png") 25 25, auto;
 }
 
 .wait {

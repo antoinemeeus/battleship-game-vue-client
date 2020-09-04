@@ -312,7 +312,7 @@
               :class="{ 'spaceBar-opaque': salvoPositions.length === 0 }"
             >
               <span> or press</span>
-              <v-img :src="require('../assets/spaceBar.png')"/>
+              <v-img :src="require('../assets/tutorial/spaceBar.png')"/>
             </v-flex>
             <v-flex>
               <v-layout
@@ -447,31 +447,31 @@ export default {
           type: "carrier",
           shipLength: 5,
           initPosition: ["A2", "A3", "A4", "A5", "A6"],
-          imgSrc: "/Carrier/ShipCarrierHull"
+          imgSrc: "/ships/carrier/ShipCarrierHull"
         },
         {
           type: "battleship",
           shipLength: 4,
           initPosition: ["I5", "I6", "I7", "I8"],
-          imgSrc: "/Battleship/ShipBattleshipHull"
+          imgSrc: "/ships/battleship/ShipBattleshipHull"
         },
         {
           type: "destroyer",
           shipLength: 3,
           initPosition: ["C7", "C8", "C9"],
-          imgSrc: "/Destroyer/ShipDestroyerHull"
+          imgSrc: "/ships/destroyer/ShipDestroyerHull"
         },
         {
           type: "submarine",
           shipLength: 3,
           initPosition: ["D2", "E2", "F2"],
-          imgSrc: "/Submarine/ShipSubMarineHull"
+          imgSrc: "/submarine/ShipSubMarineHull"
         },
         {
           type: "patrolboat",
           shipLength: 2,
           initPosition: ["E5", "F5"],
-          imgSrc: "/PatrolBoat/ShipPatrolHull"
+          imgSrc: "/patrolBoat/ShipPatrolHull"
         }
       ]
     };

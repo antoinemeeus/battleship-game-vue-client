@@ -80,35 +80,35 @@ export default {
           length: 5,
           dmg: 0,
           sunk: false,
-          imgUrl: require("../assets/Carrier/Carrier_FrontView_2.png")
+          imgUrl: require("../assets/ships/carrier/Carrier_FrontView_2.png")
         },
         {
           type: "battleship",
           sunk: false,
           length: 4,
           dmg: 0,
-          imgUrl: require("../assets/Battleship/Battleship_FrontView_2.png")
+          imgUrl: require("../assets/ships/battleship/Battleship_FrontView_2.png")
         },
         {
           type: "destroyer",
           sunk: false,
           length: 3,
           dmg: 0,
-          imgUrl: require("../assets/Destroyer/Destroyer_FrontView_2.png")
+          imgUrl: require("../assets/ships/destroyer/Destroyer_FrontView_2.png")
         },
         {
           type: "submarine",
           sunk: false,
           length: 3,
           dmg: 0,
-          imgUrl: require("../assets/Submarine/Submarine_FrontView_2.png")
+          imgUrl: require("../assets/ships/submarine/Submarine_FrontView_2.png")
         },
         {
           type: "patrolboat",
           sunk: false,
           length: 2,
           dmg: 0,
-          imgUrl: require("../assets/PatrolBoat/PatrolBoat_FrontView_2.png")
+          imgUrl: require("../assets/ships/patrolBoat/PatrolBoat_FrontView_2.png")
         }
       ]
     };
