@@ -149,9 +149,9 @@
                         v-if="props.item.isFinished"
                         light
                         :color="
-                        props.item.p1_.result == 'won'
+                        props.item.p1_.result === 'won'
                           ? 'yellow'
-                          : props.item.p1_.result == 'tie'
+                          : props.item.p1_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
@@ -159,9 +159,9 @@
                     >
                       <v-icon>
                         {{
-                          props.item.p1_.result == "won"
+                          props.item.p1_.result === "won"
                               ? "star"
-                              : props.item.p1_.result == "tie"
+                              : props.item.p1_.result === "tie"
                               ? "fa-equals"
                               : "fa-skull-crossbones"
                         }}
@@ -228,7 +228,7 @@
                         :color="
                         props.item.p2_.result === 'won'
                           ? 'yellow'
-                          : props.item.p2_.result == 'tie'
+                          : props.item.p2_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
@@ -236,9 +236,9 @@
                     >
                       <v-icon>
                         {{
-                          props.item.p2_.result == "won"
+                          props.item.p2_.result === "won"
                               ? "star"
-                              : props.item.p2_.result == "tie"
+                              : props.item.p2_.result === "tie"
                               ? "fa-equals"
                               : "fa-skull-crossbones"
                         }}
@@ -385,10 +385,10 @@ export default {
             status =
                 "Finished - " + this.moment(game.scores[0].finishDate).calendar();
             game.scores.map(sc => {
-              if (sc.playerID == p1_.player_id) {
+              if (sc.playerID === p1_.player_id) {
                 p1_.score = sc.score;
               }
-              if (sc.playerID == p2_.player_id) {
+              if (sc.playerID === p2_.player_id) {
                 p2_.score = sc.score;
               }
             });
@@ -401,7 +401,7 @@ export default {
               p1_.result = "lost";
               p2_.result = "won";
             }
-            if (p1_.score == p2_.score) {
+            if (p1_.score === p2_.score) {
               p1_.result = "tie";
               p2_.result = "tie";
             }
@@ -439,7 +439,7 @@ export default {
     ...mapActions(["getData", "postData"]),
     playerAvatar(p_avatar) {
       if (p_avatar == null) return this.avatarList[0];
-      return this.avatarList.find(av => av.id == p_avatar);
+      return this.avatarList.find(av => av.id === p_avatar);
     },
     openModal() {
       this.dialog = true;

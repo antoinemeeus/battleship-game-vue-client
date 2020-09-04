@@ -125,7 +125,7 @@ export default {
       };
     },
     blockSalvoGrid() {
-      return this.gameStateCode === 0 && this.assignedID === "salvoGrid";
+      return this.gameStateCode === "0" && this.assignedID === "salvoGrid";
     },
     allHitsList() {
       let lastTurn = Object.keys(this.hits).length;
@@ -150,7 +150,7 @@ export default {
           this.soundEffects.play("explosion");
           let randomNb = Math.floor(Math.random() * 3) + 1;
           setTimeout(
-              () => this.soundEffects.play("underAttack" + randomNb),
+              () => this.soundEffects.play("underAttack" + randomNb,false),
               1000
           );
         }

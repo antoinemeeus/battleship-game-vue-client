@@ -146,7 +146,7 @@
           <v-btn
             color="red"
             type="submit"
-            :loading="status == 'loading'"
+            :loading="status === 'loading'"
             @click="logOut"
           >
             <v-icon>exit_to_app</v-icon>
@@ -161,8 +161,8 @@
       >
         <v-btn
           v-if="!choiceSignIn && !isAuthenticated"
-          :loading="status == 'loading'"
-          :disabled="status == 'loading' || !valid"
+          :loading="status === 'loading'"
+          :disabled="status === 'loading' || !valid"
           color="success"
           type="submit"
           @click="logIn"
@@ -171,8 +171,8 @@
         </v-btn>
         <v-btn
           v-if="choiceSignIn && !isAuthenticated"
-          :loading="status == 'loading'"
-          :disabled="!valid || status == 'loading'"
+          :loading="status === 'loading'"
+          :disabled="!valid || status === 'loading'"
           color="primary"
           @click="signUp"
         >
@@ -231,10 +231,10 @@ export default {
     ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
-      return this.avatarList.find(av => av.id == this.currentUser.avatarID);
+      return this.avatarList.find(av => av.id === this.currentUser.avatarID);
     },
     emailIsTaken() {
-      return this.email == this.lastEmailTaken && this.email != "";
+      return this.email === this.lastEmailTaken && this.email !== "";
     }
   },
   created() {
@@ -356,7 +356,7 @@ export default {
           err => {
             if (
               err.response &&
-              err.response.data.error == "Email already taken"
+              err.response.data.error === "Email already taken"
             ) {
               this.lastEmailTaken = this.email;
             } else this.handleAuthErrors("SignUp", err);
