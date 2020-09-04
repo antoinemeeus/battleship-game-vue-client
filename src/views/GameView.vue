@@ -1223,7 +1223,7 @@ export default {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 @keyframes bg-pan-left {
@@ -1231,7 +1231,7 @@ export default {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 .fillHeight {

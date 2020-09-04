@@ -388,7 +388,7 @@ export default {
     background-position: 4500%;
   }
   100% {
-    background-position: 0%;
+    background-position: 0;
   }
 }
 
@@ -412,7 +412,7 @@ export default {
     background-position-x: 900%;
   }
   100% {
-    background-position-x: 0%;
+    background-position-x: 0;
   }
 }
 @keyframes moveY {
@@ -420,7 +420,7 @@ export default {
     background-position-y: 900%;
   }
   100% {
-    background-position-y: 0%;
+    background-position-y: 0;
   }
 }
 
@@ -457,7 +457,7 @@ export default {
   height: 80%;
   margin: 1px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid;
   border-color: transparent #fff transparent #fff;
   animation: expand 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) 1;
   /* animation: rotate 1.8s linear infinite; */

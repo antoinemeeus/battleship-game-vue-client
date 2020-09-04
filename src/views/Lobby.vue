@@ -113,6 +113,6 @@ export default {
 .bg-box {
   background-color: #3a4e5ec2;
 
-  box-shadow: 0px 0px 53px 11px rgba(32, 46, 77, 0.8);
+  box-shadow: 0 0 53px 11px rgba(32, 46, 77, 0.8);
 }
 </style>

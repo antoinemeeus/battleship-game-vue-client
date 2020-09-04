@@ -344,7 +344,7 @@ export default {
   background-color: #3a4e5ec2;
   border: 2px solid #ffe241;
   border-radius: 0.5em;
-  box-shadow: 0px 0px 53px 11px rgba(102, 88, 51, 0.8);
+  box-shadow: 0 0 53px 11px rgba(102, 88, 51, 0.8);
 }
 .modebox {
   border: 1px solid #ffe241;

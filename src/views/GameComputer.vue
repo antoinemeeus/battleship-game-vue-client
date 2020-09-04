@@ -160,24 +160,28 @@
                     a ship, click on the
                     <v-icon color="blue px-1">
                       cached
-                    </v-icon>button.
+                    </v-icon>
+                    button.
                   </p>
                   <p>
                     You can also decide to place all ships randomly by click the
                     <v-icon class="px-1">
                       fa-random
-                    </v-icon>random button.
+                    </v-icon>
+                    random button.
                   </p>
                   <p>
                     When you are ready, go to battle by clicking the
                     <v-icon class="px-1">
                       fa-play
-                    </v-icon>start button.
+                    </v-icon>
+                    start button.
                   </p>
                   <p>
                     <v-icon color="red px-1">
                       warning
-                    </v-icon>You will not be
+                    </v-icon>
+                    You will not be
                     able to rotate a ship if the the next position contains an
                     obstacle or is outside the grid.
                   </p>
@@ -354,7 +358,7 @@ import SalvoMissiles from "../components/SalvoMissiles.vue";
 import CountDownTimer from "../components/CountDownTimer.vue";
 import InstructionWizard from "../components/InstructionWizard.vue";
 import UserOverview from "../components/UserOverview.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
 
 export default {
   name: "AgainstComputer",
@@ -370,7 +374,7 @@ export default {
   props: {
     difficulty: {
       type: Object,
-      default: () => ({ display: "Normal", diff: "normal", color: "green" })
+      default: () => ({display: "Normal", diff: "normal", color: "green"})
     }
   },
   data() {
@@ -477,7 +481,7 @@ export default {
       } else this.$refs.timer.stop();
     },
     gameState(newVal, oldVal) {
-      if (newVal != oldVal && oldVal != (undefined || null)) {
+      if (newVal !== oldVal && oldVal !== (undefined || null)) {
         if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
         if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
       }
@@ -498,13 +502,13 @@ export default {
     if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
     this.getUserData();
     //Prevent space default behavior
-    window.onkeydown = function(event) {
+    window.onkeydown = function (event) {
       if (event.keyCode === 32) {
         event.preventDefault();
       }
     };
     //Prevent text selection
-    document.onselectstart = function() {
+    document.onselectstart = function () {
       return false;
     };
     this.$nextTick(() => {
@@ -564,7 +568,7 @@ export default {
       let innerWidth = window.innerWidth;
       if (this.$vuetify.breakpoint) innerWidth = this.$vuetify.breakpoint.width;
       let newPixelValue = +((innerWidth * 0.3) / (this.gridSize + 1)).toFixed(
-        0
+          0
       );
       if (!this.$vuetify.breakpoint.smAndUp)
         newPixelValue = +((innerWidth * 0.8) / (this.gridSize + 1)).toFixed(0);
@@ -573,7 +577,7 @@ export default {
     },
     fireButtonColor() {
       if (this.allMissilePlaced)
-        // return "#3abc12";
+          // return "#3abc12";
         return "#dc3b3b";
       if (this.homeNextSalvoPositions.length > 0 && !this.allMissilePlaced)
         return "#ffe419";
@@ -583,7 +587,7 @@ export default {
       if (this.gamesInfo.player != null) {
         return this.gamesInfo.player;
       }
-      return { userName: "Anonymous" };
+      return {userName: "Anonymous"};
     },
     probabilityMap() {
       let map = [];
@@ -617,12 +621,12 @@ export default {
       let adjacentCells = [];
       for (let hitcell of this.computerCoordinatesHit) {
         adjacentCells = adjacentCells.concat(
-          this.getAdjacentPositions(hitcell.x, hitcell.y)
+            this.getAdjacentPositions(hitcell.x, hitcell.y)
         );
       }
       let uniquesAdjacentCells = adjacentCells.filter((obj, pos, arr) => {
         return (
-          arr.map(mapObj => mapObj["cellID"]).indexOf(obj["cellID"]) === pos
+            arr.map(mapObj => mapObj["cellID"]).indexOf(obj["cellID"]) === pos
         );
       });
       for (let uniqueAdjacentCell of uniquesAdjacentCells) {
@@ -637,7 +641,7 @@ export default {
       for (let i = 1; i <= this.gridSize; i++) {
         for (let j = 1; j <= this.gridSize; j++) {
           let prob = this.probabilityMap[i - 1][j - 1];
-          obj[this.getIdfromCoord(i, j)] = { prob: prob, x: i, y: j };
+          obj[this.getIdfromCoord(i, j)] = {prob: prob, x: i, y: j};
         }
       }
       return obj;
@@ -648,17 +652,17 @@ export default {
       if (!this.homeTurn) return "PROGRESS";
       //Check if allComputerShips are sunk
       let hitsOnComputerShips = this.homeAllSalvoesPositionsList.filter(pos =>
-        this.computerShipsPositionList.includes(pos)
+          this.computerShipsPositionList.includes(pos)
       );
       let hitsOnHomeShips = this.computerAllSalvoesPositionsList.filter(pos =>
-        this.homeShipsPositionList.includes(pos)
+          this.homeShipsPositionList.includes(pos)
       );
       let homeWins =
-        hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
-        hitsOnComputerShips.length != 0;
+          hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
+          hitsOnComputerShips.length != 0;
       let computerWins =
-        hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
-        hitsOnHomeShips.length != 0;
+          hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
+          hitsOnHomeShips.length != 0;
 
       if (homeWins || computerWins) {
         this.gameFinished = true;
@@ -681,7 +685,7 @@ export default {
       let obj = {};
       for (let ship of this.homeShips) {
         ship.hits = ship.initPosition.filter(pos =>
-          this.computerAllSalvoesPositionsList.includes(pos)
+            this.computerAllSalvoesPositionsList.includes(pos)
         );
         obj[ship.type] = {
           damage: ship.hits.length,
@@ -694,7 +698,7 @@ export default {
       let obj = {};
       for (let ship of this.computerShips) {
         ship.hits = ship.initPosition.filter(pos =>
-          this.homeAllSalvoesPositionsList.includes(pos)
+            this.homeAllSalvoesPositionsList.includes(pos)
         );
         obj[ship.type] = {
           // damage: ship.hits.length,
@@ -706,16 +710,16 @@ export default {
     userGridHits() {
       let obj = {};
       let allMissed = [],
-        allHit = [];
+          allHit = [];
       for (let i = 1; i <= this.salvoTurn; i++) {
         let hit = [];
         let missed = [];
         if (this.computerSalvoPositions[i]) {
           hit = this.homeShipsPositionList.filter(pos =>
-            this.computerSalvoPositions[i].includes(pos)
+              this.computerSalvoPositions[i].includes(pos)
           );
           missed = this.computerSalvoPositions[i].filter(
-            pos => !hit.includes(pos)
+              pos => !hit.includes(pos)
           );
           allHit = [...allHit, ...hit];
           allMissed = [...allMissed, ...missed];
@@ -732,20 +736,20 @@ export default {
       this.$set(this.computerAllSalvoResult, "missed", allMissed);
       this.$set(this.computerAllSalvoResult, "hit", allHit);
       this.computerCoordinatesHit = this.coordinatesComputerSalvo.filter(obj =>
-        allHit.includes(obj.cellID)
+          allHit.includes(obj.cellID)
       );
       return obj;
     },
     opponentGridHits() {
       let obj = {};
       let allMissed = [],
-        allHit = [];
+          allHit = [];
       for (let i = 1; i <= this.salvoTurn; i++) {
         let hit = [];
         let missed = [];
         if (this.homeSalvoPositions[i]) {
           hit = this.computerShipsPositionList.filter(pos =>
-            this.homeSalvoPositions[i].includes(pos)
+              this.homeSalvoPositions[i].includes(pos)
           );
           missed = this.homeSalvoPositions[i].filter(pos => !hit.includes(pos));
           allHit = [...allHit, ...hit];
@@ -790,14 +794,14 @@ export default {
           rqUrl: "/checkLog"
         };
         this.authRequest(payload).then(
-          res => {
-            //User has still has a valid session cookie.
-            this.getData({ url: "/player", mutation: "setUserInfo" });
-          },
-          err => {
-            //Was not logged in
-            this.$store.commit("authLogOut");
-          }
+            res => {
+              //User has still has a valid session cookie.
+              this.getData({url: "/player", mutation: "setUserInfo"});
+            },
+            err => {
+              //Was not logged in
+              this.$store.commit("authLogOut");
+            }
         );
       }
     },
@@ -825,7 +829,7 @@ export default {
       var object = {};
       var result = [];
 
-      arr.forEach(function(item) {
+      arr.forEach(function (item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
@@ -850,13 +854,13 @@ export default {
           let randomY = Math.floor(this.gridSize * Math.random()) + 1;
           let randomDirection = Math.random() >= 0.5;
           if (
-            this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
+              this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
           ) {
             let shipLocation = this.getShipIdList(
-              randomX,
-              randomY,
-              ship.shipLength,
-              randomDirection
+                randomX,
+                randomY,
+                ship.shipLength,
+                randomDirection
             );
             ship.initPosition = shipLocation;
             illegalPlacement = false;
@@ -880,11 +884,11 @@ export default {
       if (this.isWithinBounds(x, y, rotation, ship.shipLength)) {
         // ...then check to make sure it doesn't collide with another ship
         let otherShipLocationList = [].concat.apply(
-          [],
-          shipFleet.map(s => {
-            if (s.type != ship.type) return s.initPosition;
-            else return [];
-          })
+            [],
+            shipFleet.map(s => {
+              if (s.type != ship.type) return s.initPosition;
+              else return [];
+            })
         );
         let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
         if (otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0))
@@ -903,13 +907,13 @@ export default {
       let adj = [];
 
       if (y + 1 <= this.gridSize)
-        adj.push({ cellID: this.getIdfromCoord(x, y + 1), x: x, y: y + 1 });
+        adj.push({cellID: this.getIdfromCoord(x, y + 1), x: x, y: y + 1});
       if (y - 1 > 0)
-        adj.push({ cellID: this.getIdfromCoord(x, y - 1), x: x, y: y - 1 });
+        adj.push({cellID: this.getIdfromCoord(x, y - 1), x: x, y: y - 1});
       if (x + 1 <= this.gridSize)
-        adj.push({ cellID: this.getIdfromCoord(x + 1, y), x: x + 1, y: y });
+        adj.push({cellID: this.getIdfromCoord(x + 1, y), x: x + 1, y: y});
       if (x - 1 > 0)
-        adj.push({ cellID: this.getIdfromCoord(x - 1, y), x: x - 1, y: y });
+        adj.push({cellID: this.getIdfromCoord(x - 1, y), x: x - 1, y: y});
 
       return adj;
     },
@@ -938,8 +942,8 @@ export default {
       //check if ship position hit obstacle (hit)
       for (let i = z; i <= endOfShip; i++) {
         let idPos = rotation
-          ? this.getIdfromCoord(i, y)
-          : this.getIdfromCoord(x, i);
+            ? this.getIdfromCoord(i, y)
+            : this.getIdfromCoord(x, i);
         if (this.computerAllSalvoResult.missed.includes(idPos)) return false;
       }
 
@@ -961,7 +965,7 @@ export default {
         return;
       }
       let newPosition =
-        this.toRowName(target.dataset.row) + "" + target.dataset.col;
+          this.toRowName(target.dataset.row) + "" + target.dataset.col;
 
       if (!newPosition.match(/^[A-Z0-9]+$/)) {
         //Check if id of targets correspond to id regex A1 C4...
@@ -1045,16 +1049,16 @@ export default {
       this.showSalvo = true;
       this.canFireSalvo = true;
       this.selectedShip = "";
-      this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
+      this.$refs.timer.setTime({minutes: 0, secondes: this.countDownTime});
     },
     fireSalvo() {
       //Method to fireSalvo to computer ships.
       function applySalvo(self) {
         //Method to update salvoes positions and and force reactivity of Vue (as these are object value to update)
         self.$set(
-          self.homeSalvoPositions,
-          self.salvoTurn,
-          self.homeNextSalvoPositions
+            self.homeSalvoPositions,
+            self.salvoTurn,
+            self.homeNextSalvoPositions
         );
         self.homeAllSalvoesPositionsList = [
           ...self.homeAllSalvoesPositionsList,
@@ -1078,14 +1082,14 @@ export default {
           let self = this;
           this.soundEffects.rate(2.0, soundId);
           this.soundEffects.on(
-            "end",
-            function() {
-              applySalvo(self); //->funciton to update inside callback
-              setTimeout(() => {
-                self.computerTurn();
-              }, 1000);
-            },
-            soundId
+              "end",
+              function () {
+                applySalvo(self); //->funciton to update inside callback
+                setTimeout(() => {
+                  self.computerTurn();
+                }, 1000);
+              },
+              soundId
           );
         } else {
           //If music not enable, we don't have to wait for music to update salvo position.
@@ -1105,10 +1109,10 @@ export default {
 
       //If salvoList length is same size as all the grid positions, (sanity check but normally the game finishes).
       while (
-        list.length < size &&
-        this.computerAllSalvoesPositionsList.length <
+          list.length < size &&
+          this.computerAllSalvoesPositionsList.length <
           this.gridSize * this.gridSize
-      ) {
+          ) {
         let obj = {};
         let randomX = Math.floor(this.gridSize * Math.random()) + 1;
         let randomY = Math.floor(this.gridSize * Math.random()) + 1;
@@ -1123,8 +1127,8 @@ export default {
         }
         //check if cell isn't already included in list
         if (
-          !this.computerAllSalvoesPositionsList.includes(idpos) &&
-          !list.includes(idpos)
+            !this.computerAllSalvoesPositionsList.includes(idpos) &&
+            !list.includes(idpos)
         ) {
           list.push(idpos);
           obj["cellID"] = idpos;
@@ -1146,15 +1150,15 @@ export default {
     computerTurn() {
       //Get random positions. Usefull when no probabilies were calculated .
       this.computerNextSalvoPositions = this.getRandomPositions(
-        this.maxSalvoSize
+          this.maxSalvoSize
       );
       this.computerFireSalvo();
     },
     computerFireSalvo() {
       this.$set(
-        this.computerSalvoPositions,
-        this.salvoTurn,
-        this.computerNextSalvoPositions
+          this.computerSalvoPositions,
+          this.salvoTurn,
+          this.computerNextSalvoPositions
       );
       this.computerAllSalvoesPositionsList = [
         ...this.computerAllSalvoesPositionsList,
@@ -1162,7 +1166,7 @@ export default {
       ];
       //Reset timer and flags
       this.$refs.timer.reset();
-      this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
+      this.$refs.timer.setTime({minutes: 0, secondes: this.countDownTime});
       this.$refs.timer.start();
       this.pauseTimer = true;
       this.canFireSalvo = true;
@@ -1176,20 +1180,24 @@ export default {
 .user-bg-color {
   background-color: #373d5598;
 }
+
 .game-box {
   background-color: #373d5598;
   border: 2px #363a49 solid;
   border-radius: 0 1em;
 }
+
 .instruction-box {
   max-width: 700px;
   background-color: rgba(73, 69, 69, 0.61);
   border-radius: 1em;
   border: 2px white solid;
 }
+
 .id-indv {
   width: 3em;
 }
+
 .id-row {
   display: flex;
   justify-content: flex-start;
@@ -1198,25 +1206,29 @@ export default {
 .middle-flex {
   width: 10vw;
 }
+
 .fire-button {
   align-self: center;
   justify-self: center;
 }
+
 .spaceBar {
   align-self: center;
   justify-self: center;
   width: 60%;
 }
+
 .spaceBar-opaque {
   opacity: 0.4;
 }
+
 .popup {
   background: rgb(2, 0, 36);
   background: linear-gradient(
-    153deg,
-    rgba(2, 0, 36, 0.9248074229691877) 0%,
-    rgba(156, 10, 10, 0.7707457983193278) 44%,
-    rgba(255, 29, 0, 1) 100%
+      153deg,
+      rgba(2, 0, 36, 0.9248074229691877) 0%,
+      rgba(156, 10, 10, 0.7707457983193278) 44%,
+      rgba(255, 29, 0, 1) 100%
   );
   background-size: 300%;
   position: fixed;
@@ -1227,10 +1239,9 @@ export default {
   height: 25vh;
   top: 40%;
   left: 0;
-  -webkit-animation: slide-in-fwd-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: scale-in-hor-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both,
-    bg-pan-left 2s infinite both alternate;
+  bg-pan-left 2s infinite both alternate;
 }
 
 @-webkit-keyframes scale-in-hor-center {
@@ -1245,6 +1256,7 @@ export default {
     opacity: 1;
   }
 }
+
 @keyframes scale-in-hor-center {
   0% {
     -webkit-transform: scaleX(0);
@@ -1257,24 +1269,27 @@ export default {
     opacity: 1;
   }
 }
+
 .bg-pan {
   -webkit-animation: bg-pan-left infinite both;
   animation: bg-pan-left infinite both;
 }
+
 @-webkit-keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
+
 @keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 </style>
