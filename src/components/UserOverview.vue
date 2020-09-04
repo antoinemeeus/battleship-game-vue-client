@@ -237,14 +237,14 @@ export default {
     },
     userAvatar() {
       let avatarFound = this.avatarList.find(
-        avatar => avatar.id == this.user.avatarID
+        avatar => avatar.id === this.user.avatarID
       );
-      if (avatarFound != undefined && avatarFound != null) return avatarFound;
+      if (avatarFound !== undefined && avatarFound != null) return avatarFound;
       if (this.user.id === "AI") return this.avatarComputer;
       return this.avatarList[0];
     },
     waitingToJoin() {
-      return this.gameStateCode == "0" && !this.isUser;
+      return this.gameStateCode === "0" && !this.isUser;
     },
     userActions() {
       switch (this.gameStateCode) {

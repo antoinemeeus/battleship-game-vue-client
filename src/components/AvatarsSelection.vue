@@ -109,7 +109,7 @@ export default {
     },
     selectedAvatar() {
       let avatarFound = this.avatarList.find(avatar => avatar.id == this.value);
-      if (avatarFound != undefined && avatarFound != null) return avatarFound;
+      if (avatarFound !== undefined && avatarFound != null) return avatarFound;
       return this.avatarList[0];
     }
   },

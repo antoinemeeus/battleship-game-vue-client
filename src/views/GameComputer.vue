@@ -481,7 +481,7 @@ export default {
       } else this.$refs.timer.stop();
     },
     gameState(newVal, oldVal) {
-      if (newVal !== oldVal && oldVal !== (undefined || null)) {
+      if (newVal !== oldVal && oldVal !== null) {
         if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
         if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
       }
@@ -561,7 +561,7 @@ export default {
     },
     showHelp() {
       let showHelp = localStorage.getItem("showHelp");
-      if (showHelp == "true") return true;
+      if (showHelp === "true") return true;
       else return false;
     },
     cellSize() {
@@ -572,7 +572,7 @@ export default {
       );
       if (!this.$vuetify.breakpoint.smAndUp)
         newPixelValue = +((innerWidth * 0.8) / (this.gridSize + 1)).toFixed(0);
-      if (newPixelValue != NaN) return newPixelValue;
+      if (!isNaN(newPixelValue)) return newPixelValue;
       return 40;
     },
     fireButtonColor() {
@@ -826,15 +826,15 @@ export default {
       }
     },
     getDuplicates(arr) {
-      var object = {};
-      var result = [];
+      let object = {};
+      let result = [];
 
       arr.forEach(function (item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
 
-      for (var prop in object) {
+      for (let prop in object) {
         if (object[prop] >= 2) {
           result.push(prop);
         }
@@ -890,9 +890,7 @@ export default {
             })
         );
         let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
-        if (otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0))
-          return false;
-        else return true;
+        return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
       } else return false;
     },
     increaseProbability(i, j, rotation, ship, map) {
@@ -1024,7 +1022,8 @@ export default {
     },
     toRowName(num) {
       //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+      let ret = "", a = 1, b = 26;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
       }
       return ret;

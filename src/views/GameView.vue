@@ -540,18 +540,14 @@ export default {
     waitingOpToJoin() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        if (stateCode == "0") {
-          return true;
-        } else return false;
+        return stateCode == "0";
       }
       return true;
     },
     waitingOpponent() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        if (stateCode == "0" || stateCode == "1" || stateCode == "2") {
-          return true;
-        } else return false;
+        return stateCode == "0" || stateCode == "1" || stateCode == "2";
       }
       return true;
     },
@@ -634,19 +630,15 @@ export default {
     },
     placingShips() {
       //Check if user has finished placing ships. Get info from server, no from local.
-      if (
-        this.gameDisplayed.ships &&
-        this.gameDisplayed.ships.length <= 0 &&
-        this.gameDisplayed.gameState.code <= 1
-      ) {
-        return true;
-      }
-      return false;
+      return this.gameDisplayed.ships &&
+          this.gameDisplayed.ships.length <= 0 &&
+          this.gameDisplayed.gameState.code <= 1;
+
     },
     canFireSalvo() {
       //Check if user can fire a salvo.
       if (this.gameState != null) {
-        return this.gameState.code == "4" && !this.sendingSalvo;
+        return this.gameState.code === "4" && !this.sendingSalvo;
       }
       return false;
     },
@@ -704,7 +696,7 @@ export default {
       return {};
     },
     opponentSalvoes() {
-      if (this.opponentPlayer.id != undefined && this.opponentPlayer.id != null)
+      if (this.opponentPlayer.id !== undefined && this.opponentPlayer.id != null)
         return this.gameDisplayed.salvoes[this.opponentPlayer.id];
       return null;
     }
@@ -816,15 +808,15 @@ export default {
       );
     },
     getDuplicates(arr) {
-      var object = {};
-      var result = [];
+      let object = {};
+      let result = [];
 
       arr.forEach(function(item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
 
-      for (var prop in object) {
+      for (let prop in object) {
         if (object[prop] >= 2) {
           result.push(prop);
         }
@@ -879,17 +871,16 @@ export default {
           })
         );
         let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
-        if (otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0))
-          return false;
-        else return true;
+        return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
       } else return false;
     },
     getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
+      let ret, b, a;
       //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+      for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
       }
       return ret;
@@ -904,7 +895,7 @@ export default {
     },
 
     setBoardFromServer() {
-      if (this.playerSalvoes != undefined) {
+      if (this.playerSalvoes !== undefined) {
         let playerSalvoesTurnsList = Object.keys(this.playerSalvoes);
         this.salvoTurn = Math.max(
           Math.max(...playerSalvoesTurnsList) + 1,
@@ -914,13 +905,13 @@ export default {
       // this.salvoTurn = Object.keys(this.playerSalvoes).length + 1;
       if (this.gameDisplayed.ships) {
         for (let server_ship of this.gameDisplayed.ships) {
-          let gridShip = this.ships.find(ship => ship.type == server_ship.type);
+          let gridShip = this.ships.find(ship => ship.type === server_ship.type);
           gridShip.initPosition = server_ship.locations;
         }
       }
     },
     setAutoRefresh() {
-      var self = this;
+      let self = this;
       if (this.autoRefresh == null && !this.isGameFinished) {
         this.autoRefresh = setInterval(
           function() {

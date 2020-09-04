@@ -2,7 +2,7 @@
   <v-app dark>
     <div class="background-image-fixed">
       <v-toolbar
-        v-show="this.$route.name != 'landingPage' || alreadyVisited"
+        v-show="this.$route.name !== 'landingPage' || alreadyVisited"
         dense
         dark
         pa-3

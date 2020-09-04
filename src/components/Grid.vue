@@ -247,8 +247,8 @@ export default {
       let id = this.getIdFromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
       let hasLockedClass = this.isSalvoLocked.includes(id);
-      if (hitTp.turnNumber && !hasLockedClass) return false;
-      return true;
+      return !(hitTp.turnNumber && !hasLockedClass);
+
     },
     getMissileCount(i, j) {
       let id = this.getIdFromCoord(i, j);
@@ -263,8 +263,9 @@ export default {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
-      //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+      let ret, a, b;
+//Get String value for a number. Excel's style.
+      for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
       }
       return ret;

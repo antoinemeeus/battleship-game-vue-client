@@ -89,7 +89,7 @@ export default {
       this.getData(payload);
     },
     setAutoRefresh() {
-      var self = this;
+      let self = this;
       if (this.autoRefresh == null) {
         this.autoRefresh = setInterval(
           function() {

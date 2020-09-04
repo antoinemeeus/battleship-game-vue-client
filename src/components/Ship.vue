@@ -316,8 +316,7 @@ export default {
       this.shipPositionBeforeMoving.rotation = rotation;
     },
     resetShipPosLastValid() {
-      if (this.shipPositionBeforeMoving.rotation === "V") this.rotate = true;
-      else this.rotate = false;
+      this.rotate = this.shipPositionBeforeMoving.rotation === "V";
       this.snapShipToGrid(this.shipPositionBeforeMoving);
     },
     shipBoardLimits() {
@@ -346,13 +345,15 @@ export default {
      * @return {string}  The column name.
      */
     toRowName(num) {
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+      let ret, b, a;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
       }
       return ret;
     },
     nameRowToNumber(letters) {
-      for (var p = 0, n = 0; p < letters.length; p++) {
+      let n, p;
+      for (; p < letters.length; p++) {
         n = letters[p].charCodeAt() - 64 + n * 26;
       }
       return n;

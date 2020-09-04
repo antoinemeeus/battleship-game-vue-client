@@ -118,11 +118,11 @@ export default {
   watch: {
     //Sound logic
     fleetState(newVal, oldVal) {
-      if (newVal != undefined && newVal != null && oldVal != undefined) {
+      if (newVal !== undefined && newVal !== null && oldVal !== undefined) {
         for (let ship of this.ships) {
           if (newVal[ship.type].sunk && !oldVal[ship.type].sunk) {
             //On opponent sound
-            if (newVal[ship.type].damage == undefined)
+            if (newVal[ship.type].damage === undefined)
               setTimeout(() => this.soundEffects.play("targetDestroyed"), 1000);
             //On current sound
             else {
@@ -152,9 +152,8 @@ export default {
       }
     },
     fleetHasDamageInfo() {
-      if (this.fleetState && this.fleetState.carrier.hasOwnProperty("damage"))
-        return true;
-      return false;
+      return !!(this.fleetState && this.fleetState.carrier.hasOwnProperty("damage"));
+
     }
   },
   methods: {
