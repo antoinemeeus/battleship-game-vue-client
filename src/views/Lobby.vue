@@ -93,7 +93,7 @@ export default {
       if (this.autoRefresh == null) {
         this.autoRefresh = setInterval(
           function() {
-            if (this.$route.name === "lobby") {
+            if (this.$route.name == "lobby") {
               self.getGames();
               self.getPlayers();
             } else this.stopAutoRefresh();

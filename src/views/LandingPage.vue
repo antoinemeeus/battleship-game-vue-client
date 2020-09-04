@@ -294,6 +294,10 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["currentUser", "isAuthenticated"]),
+    ...mapState(["musicPlaying", "soundEffects", "bgMusic", "alreadyVisited"])
+  },
   watch: {
     radios() {
       this.soundEffects.play("menuSelect");
@@ -301,10 +305,6 @@ export default {
   },
   mounted() {
     if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
-  },
-  computed: {
-    ...mapGetters(["currentUser", "isAuthenticated"]),
-    ...mapState(["musicPlaying", "soundEffects", "bgMusic", "alreadyVisited"])
   },
   methods: {
     multiplayerSelected() {

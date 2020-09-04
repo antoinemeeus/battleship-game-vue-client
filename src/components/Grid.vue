@@ -1,143 +1,113 @@
 <template>
   <div
-    :id="assignedID"
-    :ref="assignedID"
-    class="grid"
-    :style="gridDimensionObject"
+      :id="assignedID"
+      :ref="assignedID"
+      class="grid"
+      :style="gridDimensionObject"
   >
     <!-- Here is where the ships will be injected (HTML wise) -->
-    <slot />
+    <slot/>
     <!-- ----- -->
     <!-- Loader Overlay -->
     <div
-      v-if="blockSalvoGrid"
-      class="loading"
+        v-if="blockSalvoGrid"
+        class="loading"
     >
       <v-layout
-        justify-center
-        align-center
-        fill-height
+          justify-center
+          align-center
+          fill-height
       >
         <v-progress-circular
-          :size="(cellSize * gridSize) / 2"
-          color="primary"
-          indeterminate
+            :size="(cellSize * gridSize) / 2"
+            color="primary"
+            indeterminate
         />
       </v-layout>
     </div>
     <div
-      class="grid-cell cell-header top-header left-header"
-      :style="cellSizeStyleObject"
+        class="grid-cell cell-header top-header left-header"
+        :style="cellSizeStyleObject"
     >
       \
     </div>
     <div
-      v-for="x in gridSize"
-      :key="'H-' + x"
-      class="grid-cell cell-header top-header"
-      :style="cellSizeStyleObject"
+        v-for="x in gridSize"
+        :key="'H-' + x"
+        class="grid-cell cell-header top-header"
+        :style="cellSizeStyleObject"
     >
       {{ x }}
     </div>
 
     <div
-      v-for="i in gridSize"
-      :key="'R-' + i"
+        v-for="i in gridSize"
+        :key="'R-' + i"
     >
       <div
-        class="grid-cell cell-header left-header"
-        :style="cellSizeStyleObject"
+          class="grid-cell cell-header left-header"
+          :style="cellSizeStyleObject"
       >
         {{ toRowName(i) }}
       </div>
       <div
-        v-for="j in gridSize"
-        :id="getIdFromCoord(i, j)"
-        :key="j"
-        :ref="getIdFromCoord(i, j)"
-        class="grid-cell effect droppable"
-        :class="cellPropertyObject(getIdFromCoord(i, j)).class"
-        :style="cellPropertyObject(getIdFromCoord(i, j)).style"
-        :data-row="i"
-        :data-col="j"
-        :data-type="null"
+          v-for="j in gridSize"
+          :id="getIdFromCoord(i, j)"
+          :key="j"
+          :ref="getIdFromCoord(i, j)"
+          class="grid-cell effect droppable"
+          :class="cellPropertyObject(getIdFromCoord(i, j)).class"
+          :style="cellPropertyObject(getIdFromCoord(i, j)).style"
+          :data-row="i"
+          :data-col="j"
+          :data-type="null"
       >
         <span
-          v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
-          class="numberOverEverything "
+            v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
+            class="numberOverEverything "
         >{{ getMissileCount(i, j) }}</span>
         <span
-          v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
-          class="targetLocked"
+            v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
+            class="targetLocked"
         >
           <v-progress-circular
-            :size="cellSize / 1.2"
-            :width="cellSize / 8"
-            indeterminate
+              :size="cellSize / 1.2"
+              :width="cellSize / 8"
+              indeterminate
           />
         </span>
         <span
-          v-if="!cellIsEmpty(i, j)"
-          class="numberInCorner"
+            v-if="!cellIsEmpty(i, j)"
+            class="numberInCorner"
         >{{
-          getTurnNumber(i, j)
-        }}</span>
+            getTurnNumber(i, j)
+          }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
+import {mapState, mapActions, mapGetters} from "vuex";
+
 export default {
   components: {},
   props: {
-    assignedID: { type: String, default: "shipGrid" },
-    canFire: { type: Boolean, default: false },
-    turn: { type: Number, default: 1 },
-    gridSize: { type: Number, default: 10 },
-    cellSize: { type: Number, default: 40 },
-    hasShipList: { type: Array, default: () => [] },
-    duplicateLocation: { type: Array, default: () => [] },
-    isSalvoTarget: { type: Array, default: () => [] },
-    isSalvoLocked: { type: Array, default: () => [] },
-    hits: { type: Object, default: () => ({}) },
-    probabilities: { type: Object, default: () => ({}) },
-    waitingForOpponent: { type: Boolean, default: false }
+    assignedID: {type: String, default: "shipGrid"},
+    canFire: {type: Boolean, default: false},
+    turn: {type: Number, default: 1},
+    gridSize: {type: Number, default: 10},
+    cellSize: {type: Number, default: 40},
+    hasShipList: {type: Array, default: () => []},
+    duplicateLocation: {type: Array, default: () => []},
+    isSalvoTarget: {type: Array, default: () => []},
+    isSalvoLocked: {type: Array, default: () => []},
+    hits: {type: Object, default: () => ({})},
+    probabilities: {type: Object, default: () => ({})},
+    waitingForOpponent: {type: Boolean, default: false}
   },
   data() {
     return {};
-  },
-  watch: {
-    allHitsList(newVal, oldVal) {
-      if (
-        (oldVal === undefined && newVal.length > 0) ||
-        newVal.length > oldVal.length
-      ) {
-        if (this.assignedID === "salvoGrid") {
-          this.soundEffects.play("farAwayShot");
-        } else {
-          this.soundEffects.play("explosion");
-          let randomNb = Math.floor(Math.random() * 3) + 1;
-          setTimeout(
-            () => this.soundEffects.play("underAttack" + randomNb),
-            1000
-          );
-        }
-      }
-    },
-    allMissList(newVal, oldVal) {
-      if (
-        (oldVal === undefined && newVal.length > 0) ||
-        newVal.length > (oldVal.length || 0)
-      ) {
-        this.soundEffects.play("waterSplash");
-      }
-    }
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener("click", this.clickEvent);
   },
   computed: {
     ...mapState(["gameDisplayed", "soundEffects"]),
@@ -167,6 +137,36 @@ export default {
       if (this.hits[lastTurn]) return this.hits[lastTurn].AllMissed;
       return [];
     }
+  },
+  watch: {
+    allHitsList(newVal, oldVal) {
+      if (
+          (oldVal === undefined && newVal.length > 0) ||
+          newVal.length > oldVal.length
+      ) {
+        if (this.assignedID === "salvoGrid") {
+          this.soundEffects.play("farAwayShot");
+        } else {
+          this.soundEffects.play("explosion");
+          let randomNb = Math.floor(Math.random() * 3) + 1;
+          setTimeout(
+              () => this.soundEffects.play("underAttack" + randomNb),
+              1000
+          );
+        }
+      }
+    },
+    allMissList(newVal, oldVal) {
+      if (
+          (oldVal === undefined && newVal.length > 0) ||
+          newVal.length > (oldVal.length || 0)
+      ) {
+        this.soundEffects.play("waterSplash");
+      }
+    }
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener("click", this.clickEvent);
   },
   mounted() {
     if (this.assignedID === "salvoGrid") {
@@ -233,7 +233,7 @@ export default {
           };
         }
       }
-      return { locType: null, turnNumber: null };
+      return {locType: null, turnNumber: null};
     },
     getTurnNumber(i, j) {
       let id = this.getIdFromCoord(i, j);
@@ -263,7 +263,7 @@ export default {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
-      let ret, a, b;
+      let ret = "", a = 1, b = 26;
 //Get String value for a number. Excel's style.
       for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
@@ -282,6 +282,7 @@ export default {
 .numberOverEverything {
   position: absolute;
 }
+
 .numberInCorner {
   position: relative;
   width: inherit;
@@ -295,9 +296,11 @@ export default {
   /* cursor: url("http://www.gravatar.com/avatar/06ededb95f1c0b1f4f9d987e06d7d82b?s=32&d=identicon&r=PG"),auto; */
   cursor: url("../assets/cursor_AimTarget.png") 25 25, auto;
 }
+
 .wait {
   cursor: wait;
 }
+
 .loading {
   cursor: wait;
   width: inherit;
@@ -306,6 +309,7 @@ export default {
   top: 0;
   left: 0;
 }
+
 .loading:before {
   position: absolute;
   content: " ";
@@ -315,6 +319,7 @@ export default {
   opacity: 0.8;
   background-color: grey;
 }
+
 .grid {
   white-space: nowrap;
   display: block;
@@ -325,6 +330,7 @@ export default {
   /* background-image: url("../assets/ocean_top_view.jpg");
   background-size: fill; */
 }
+
 .grid:before {
   content: " ";
   display: block;
@@ -339,9 +345,11 @@ export default {
   background-repeat: repeat;
   background-size: 100% 100%;
 }
+
 .gameGrid {
   position: relative;
 }
+
 .grid-cell {
   display: inline-flex;
   border: 1px solid rgba(9, 9, 10, 0.3);
@@ -349,24 +357,31 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .cell-header {
   background-color: grey;
 }
+
 .top-header {
   border-top: 0;
 }
+
 .left-header {
   border-left: 0;
 }
+
 .hit {
   background-color: crimson !important;
 }
+
 .hasShip {
   background-color: green;
 }
+
 .isOverlapping {
   background-color: orange;
 }
+
 .missed {
   content: " ";
   background-color: #64b5f6 !important;
@@ -374,6 +389,7 @@ export default {
   height: inherit;
   z-index: 2;
 }
+
 .missed::before {
   position: absolute;
   content: " ";
@@ -384,6 +400,7 @@ export default {
   animation-fill-mode: forwards;
   animation: runWater 2s 1 steps(45);
 }
+
 @keyframes runWater {
   0% {
     background-position: 4500%;
@@ -399,6 +416,7 @@ export default {
   height: inherit;
   z-index: 2;
 }
+
 .explosion::before {
   position: absolute;
   content: " ";
@@ -408,6 +426,7 @@ export default {
   background-size: 900% 900%;
   animation: moveX 0.15s steps(9) 1, moveY 1.35s steps(9) 1;
 }
+
 @keyframes moveX {
   0% {
     background-position-x: 900%;
@@ -416,6 +435,7 @@ export default {
     background-position-x: 0;
   }
 }
+
 @keyframes moveY {
   0% {
     background-position-y: 900%;
@@ -436,20 +456,24 @@ export default {
   background-size: 100%;
   /* animation: run-x-2 0.4s infinite steps(8), run-y-2 1.6s infinite steps(4); */
 }
+
 /* Salvo Locked*/
 .targetLocked {
   background-color: blueviolet;
   z-index: 0;
 }
+
 /*SalvoTarget*/
 .targetHover:hover {
   background-color: blueviolet;
 }
+
 .isSalvoTarget {
   position: relative;
   content: " ";
   background-color: blueviolet;
 }
+
 .isSalvoTarget:after {
   position: absolute;
   content: " ";
@@ -463,6 +487,7 @@ export default {
   animation: expand 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) 1;
   /* animation: rotate 1.8s linear infinite; */
 }
+
 @keyframes expand {
   0% {
     transform: scale(0.4);
@@ -471,6 +496,7 @@ export default {
     transform: scale(1);
   }
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg) scale(1);
@@ -488,9 +514,11 @@ export default {
     transform: rotate(360deg) scale(1);
   }
 }
+
 .pulse {
   content: "";
 }
+
 .pulse::before {
   content: " ";
   height: 100%;

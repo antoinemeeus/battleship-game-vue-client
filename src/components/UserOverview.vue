@@ -84,7 +84,7 @@
           <v-btn
             v-if="isUser && !isUserDefaultAnonymous"
             color="red"
-            :loading="status === 'loading'"
+            :loading="status == 'loading'"
             small
             :icon="$vuetify.breakpoint.mdAndDown"
             :round="$vuetify.breakpoint.mdAndDown"
@@ -206,38 +206,18 @@ export default {
     isUserConnected: { type: Boolean, default: true }
   },
   data: () => ({}),
-  methods: {
-    ...mapActions(["authRequest"]),
-    logOut() {
-      let payload = {
-        data: {},
-        rqUrl: "/logout"
-      };
-      this.authRequest(payload).then(
-        res => {
-          this.$router.push("/");
-        },
-        err => {
-          console.log(
-            "Error login out with userOverview",
-            err.response || err.request
-          );
-        }
-      );
-    }
-  },
   computed: {
     ...mapState(["avatarList", "avatarComputer", "status"]),
     ...mapGetters(["gameStateCode"]),
     isComputerMode() {
-      return this.$route.name === "computer";
+      return this.$route.name == "computer";
     },
     isUserDefaultAnonymous() {
       return this.user.id == null;
     },
     userAvatar() {
       let avatarFound = this.avatarList.find(
-        avatar => avatar.id === this.user.avatarID
+          avatar => avatar.id === this.user.avatarID
       );
       if (avatarFound !== undefined && avatarFound != null) return avatarFound;
       if (this.user.id === "AI") return this.avatarComputer;
@@ -277,6 +257,26 @@ export default {
         default:
           return "Waiting for opponent...";
       }
+    }
+  },
+  methods: {
+    ...mapActions(["authRequest"]),
+    logOut() {
+      let payload = {
+        data: {},
+        rqUrl: "/logout"
+      };
+      this.authRequest(payload).then(
+        res => {
+          this.$router.push("/");
+        },
+        err => {
+          console.log(
+            "Error login out with userOverview",
+            err.response || err.request
+          );
+        }
+      );
     }
   }
 };

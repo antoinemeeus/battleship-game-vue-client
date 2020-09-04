@@ -114,11 +114,6 @@ export default {
     ],
     fetchedGames: []
   }),
-  watch: {
-    presentPlayers(newPPlayers) {
-      this.pagination.totalItems = newPPlayers.length;
-    }
-  },
   computed: {
     ...mapState(["players", "loading"]),
     presentPlayers() {
@@ -135,15 +130,23 @@ export default {
     },
     pages() {
       if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
+          this.pagination.rowsPerPage == null ||
+          this.pagination.totalItems == null
       )
         return 0;
 
       return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
+          this.pagination.totalItems / this.pagination.rowsPerPage
       );
     }
+  },
+  watch: {
+    presentPlayers(newPPlayers) {
+      this.pagination.totalItems = newPPlayers.length;
+    }
+  },
+  created() {
+    this.getPlayers();
   },
   methods: {
     ...mapActions(["getData"]),
@@ -154,9 +157,6 @@ export default {
     toPlayerBoard(id) {
       this.$router.push("/game?gp=" + id);
     }
-  },
-  created() {
-    this.getPlayers();
   }
 };
 </script>

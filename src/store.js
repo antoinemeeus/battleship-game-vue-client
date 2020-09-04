@@ -140,7 +140,7 @@ export default new Vuex.Store({
       return "-2";
     },
     currentUser(state) {
-      if (state.userInfo && state.userInfo != null && state.userInfo != null) {
+      if (state.userInfo) {
         return state.userInfo;
       } else if (state.gamesInfo && state.gamesInfo.player != null) {
         return state.gamesInfo.player;
@@ -272,7 +272,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios(options)
           .then(res => {
-            if (state.status === "success") commit("userIsLoggedIn");
+            if (state.status == "success") commit("userIsLoggedIn");
             commit(payload.mutation, res.data);
             commit("dataIsReady");
             commit("userAuthorized");
@@ -282,7 +282,7 @@ export default new Vuex.Store({
           .catch(err => {
             commit("dataIsReady");
             if (err.response) {
-              if (err.response.status === 401) {
+              if (err.response.status == 401) {
                 commit("authLogOut");
               }
               commit("setServerMessage", err.response.data.error);
@@ -313,7 +313,7 @@ export default new Vuex.Store({
             commit("setLoading", false);
             if (err.response) {
               commit("setServerMessage", err.response.data.error);
-              if (err.response.status === 401) {
+              if (err.response.status == 401) {
                 commit("userUnauthorized");
                 commit("authLogOut");
               }

@@ -172,7 +172,7 @@
                   >
                     <td
                       class="text-capitalize pr-2"
-                      :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
+                      :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
                     >
                       <span>{{ ship }}</span>
                     </td>
@@ -182,7 +182,7 @@
                         :key="ship + id"
                         class="px-2 id-indv"
                         :class="
-                          ship === selectedShip ? 'blue-grey darken-1' : ''
+                          ship == selectedShip ? 'blue-grey darken-1' : ''
                         "
                         :style="
                           getShipOverlappingPositions.includes(id)
@@ -305,7 +305,7 @@
             </v-flex>
             <v-flex
               class="text-xs-center spaceBar"
-              :class="{ 'spaceBar-opaque': salvoPositions.length === 0 }"
+              :class="{ 'spaceBar-opaque': salvoPositions.length == 0 }"
             >
               <span> or press</span>
               <v-img :src="require('../assets/spaceBar.png')" />
@@ -540,14 +540,14 @@ export default {
     waitingOpToJoin() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        return stateCode === "0";
+        return stateCode == "0";
       }
       return true;
     },
     waitingOpponent() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        return stateCode === "0" || stateCode === "1" || stateCode === "2";
+        return stateCode == "0" || stateCode == "1" || stateCode == "2";
       }
       return true;
     },
@@ -561,7 +561,7 @@ export default {
     },
     isGameFinished() {
       if (this.gameState != null) {
-        if (this.gameState.code === "5") {
+        if (this.gameState.code == "5") {
           this.stopAutoRefresh();
           return true;
         }
@@ -649,7 +649,7 @@ export default {
       // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id === this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id == this.gp);
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -680,7 +680,7 @@ export default {
       // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id !== this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id != this.gp);
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -718,8 +718,8 @@ export default {
       }
     },
     gameResult(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        newVal === "WON"
+      if (newVal != oldVal) {
+        newVal == "WON"
           ? this.soundEffects.play("winnerTheme")
           : this.soundEffects.play("loserTheme");
       }
@@ -780,7 +780,7 @@ export default {
       }
     },
     gameKeyDownEvent(event) {
-      if (event.keyCode === 32) {
+      if (event.keyCode == 32) {
         if (!this.placingShips && this.canFireSalvo) this.fireSalvo();
       }
     },
@@ -866,7 +866,7 @@ export default {
         let otherShipLocationList = [].concat.apply(
           [],
           this.ships.map(s => {
-            if (s.type !== ship.type) return s.initPosition;
+            if (s.type != ship.type) return s.initPosition;
             else return [];
           })
         );
@@ -915,7 +915,7 @@ export default {
       if (this.autoRefresh == null && !this.isGameFinished) {
         this.autoRefresh = setInterval(
           function() {
-            if (this.$route.name === "game") self.getGame();
+            if (this.$route.name == "game") self.getGame();
             else this.stopAutoRefresh();
           }.bind(this),
           5000
@@ -933,7 +933,7 @@ export default {
     },
     updateInitPositions(value) {
       for (let ship of this.ships) {
-        if (value.type === ship.type) {
+        if (value.type == ship.type) {
           ship.initPosition = value.initPosition;
         }
       }
@@ -954,13 +954,13 @@ export default {
 
       let gameD = this.gameDisplayed;
       let playerSalvoes = this.playerSalvoes;
-      if (playerSalvoes[this.salvoTurn] === undefined)
+      if (playerSalvoes[this.salvoTurn] == undefined)
         playerSalvoes[this.salvoTurn] = [];
 
       //check if newPosition is not already fired at
       let alreadyFiredPosition = false;
       for (const key of Object.keys(playerSalvoes)) {
-        if (playerSalvoes[key].includes(newPosition) && key !== this.salvoTurn) {
+        if (playerSalvoes[key].includes(newPosition) && key != this.salvoTurn) {
           alreadyFiredPosition = true;
           break;
         }

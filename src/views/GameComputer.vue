@@ -516,8 +516,7 @@ export default {
     },
     showHelp() {
       let showHelp = localStorage.getItem("showHelp");
-      if (showHelp === "true") return true;
-      else return false;
+      return showHelp === "true";
     },
     cellSize() {
       let innerWidth = window.innerWidth;
