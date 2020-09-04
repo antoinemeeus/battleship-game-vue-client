@@ -495,9 +495,8 @@ export default {
     timeLeftToPlayInSec() {
       let now = this.moment.utc();
       let timeSinceLastUpdate = now.diff(this.lastUpdate, "seconds");
-      let timeLeftInSec = this.countDownTime - timeSinceLastUpdate;
 
-      return timeLeftInSec;
+      return this.countDownTime - timeSinceLastUpdate;
     },
     allMissilePlaced() {
       return this.salvoPositions.length >= this.maxSalvoSize;
@@ -846,15 +845,14 @@ export default {
           let randomY = Math.floor(this.gridSize * Math.random()) + 1;
           let randomDirection = Math.random() >= 0.5;
           if (this.isLegal(randomX, randomY, randomDirection, ship)) {
-            let shipLocation = this.getShipIdList(
-              randomX,
-              randomY,
-              ship.shipLength,
-              randomDirection
+            ship.initPosition = this.getShipIdList(
+                randomX,
+                randomY,
+                ship.shipLength,
+                randomDirection
             );
-            ship.initPosition = shipLocation;
             illegalPlacement = false;
-          } else continue;
+          }
         }
       }
     },

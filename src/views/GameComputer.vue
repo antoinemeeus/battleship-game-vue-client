@@ -856,15 +856,14 @@ export default {
           if (
               this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
           ) {
-            let shipLocation = this.getShipIdList(
+            ship.initPosition = this.getShipIdList(
                 randomX,
                 randomY,
                 ship.shipLength,
                 randomDirection
             );
-            ship.initPosition = shipLocation;
             illegalPlacement = false;
-          } else continue;
+          }
         }
       }
     },
