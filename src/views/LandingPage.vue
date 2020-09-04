@@ -7,7 +7,7 @@
     <v-layout
       justify-space-around
       align-center
-      columnv-
+      column
     >
       <v-flex
         xs12

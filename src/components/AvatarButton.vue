@@ -120,8 +120,7 @@ export default {
           this.menu = false;
           this.$router.push("/");
         },
-        err => {
-        }
+        err => {}
       );
       e.preventDefault();
     }

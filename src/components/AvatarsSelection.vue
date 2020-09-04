@@ -114,9 +114,6 @@ export default {
       return this.avatarList[0];
     }
   },
-  created() {
-  },
-  methods: {}
 };
 </script>
 

@@ -363,7 +363,7 @@ export default {
           if (game.gamePlayers[1]) {
             p2_.name = formatPlayer(game.gamePlayers[1].player);
             p2_.avatarID = game.gamePlayers[1].player.avatarID;
-            p2_.player_id = game.gamePlayers[1].player.id
+            p2_.player_id = game.gamePlayers[1].player.id;
             p2_.gp_id = game.gamePlayers[1].id;
             p2_.isJoined = true;
             if (this.currentUser.id === p2_.player_id) {

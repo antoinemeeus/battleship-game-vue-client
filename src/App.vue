@@ -70,8 +70,6 @@ export default {
   computed: {
     ...mapState(["musicPlaying", "alreadyVisited", "soundEffects"])
   },
-  mounted() {
-  },
   methods: {
     soundOnOff() {
       if (this.musicPlaying) {
