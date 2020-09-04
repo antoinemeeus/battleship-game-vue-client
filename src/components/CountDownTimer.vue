@@ -17,21 +17,21 @@ export default {
     prettify: function(value) {
       let data = value.split(":");
       let minutes = data[0];
-      let secondes = data[1];
+      let seconds = data[1];
       if (minutes < 10) {
         minutes = "0" + minutes;
       }
-      if (secondes < 10) {
-        secondes = "0" + secondes;
+      if (seconds < 10) {
+        seconds = "0" + seconds;
       }
-      return minutes + ":" + secondes;
+      return minutes + ":" + seconds;
     }
   },
   data() {
     return {
       isRunning: false,
       minutes: 0,
-      secondes: 0,
+      seconds: 0,
       time: 0,
       timer: null
     };
@@ -41,8 +41,8 @@ export default {
     prettyTime() {
       let time = this.time / 60;
       let minutes = parseInt(time);
-      let secondes = Math.round((time - minutes) * 60);
-      return minutes + ":" + secondes;
+      let seconds = Math.round((time - minutes) * 60);
+      return minutes + ":" + seconds;
     },
     timerStyleObject() {
       if (this.time <= 0) {
@@ -97,14 +97,14 @@ export default {
     reset() {
       this.stop();
       this.time = 0;
-      this.secondes = 0;
+      this.seconds = 0;
       this.minutes = 0;
     },
     setTime(payload) {
       let m = 2,
         s = 0;
       if (payload && payload.minutes != undefined) m = payload.minutes;
-      if (payload && payload.secondes != undefined) s = payload.secondes;
+      if (payload && payload.seconds !== undefined) s = payload.seconds;
       this.time = m * 60 + s;
     }
   }

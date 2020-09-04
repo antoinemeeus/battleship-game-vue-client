@@ -53,7 +53,7 @@
                   >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
-                  middle or by pressing the spacebar of the keyboard. Of cours
+                  middle or by pressing the space key of the keyboard. Of course, it
                   is better if you place all available missiles on the enemy
                   grid to increase the chance to hit a ship.
                 </p>

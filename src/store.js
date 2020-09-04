@@ -160,7 +160,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    setalreadyVisited(state, payload) {
+    setAlreadyVisited(state, payload) {
       state.alreadyVisited = payload;
     },
     playMusic(state) {

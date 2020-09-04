@@ -1,4 +1,4 @@
-//Vuejs
+//VueJs
 import Vue from "vue";
 import "./plugins/vuetify";
 import Vuetify from "vuetify";

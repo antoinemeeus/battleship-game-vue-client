@@ -58,7 +58,7 @@ export default {
   },
   data() {
     return {
-      autorefresh: null
+      autoRefresh: null
     };
   },
   computed: {

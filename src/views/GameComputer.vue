@@ -641,7 +641,7 @@ export default {
       for (let i = 1; i <= this.gridSize; i++) {
         for (let j = 1; j <= this.gridSize; j++) {
           let prob = this.probabilityMap[i - 1][j - 1];
-          obj[this.getIdfromCoord(i, j)] = {prob: prob, x: i, y: j};
+          obj[this.getIdFromCoord(i, j)] = {prob: prob, x: i, y: j};
         }
       }
       return obj;
@@ -732,7 +732,7 @@ export default {
           missLoc: missed
         };
       }
-      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of opponent info in the same vue $tick.
+      //Bad practice to update data inside computed()! This is a hacky way of forcing update of opponent info in the same vue $tick.
       this.$set(this.computerAllSalvoResult, "missed", allMissed);
       this.$set(this.computerAllSalvoResult, "hit", allHit);
       this.computerCoordinatesHit = this.coordinatesComputerSalvo.filter(obj =>
@@ -763,7 +763,7 @@ export default {
           missLoc: missed
         };
       }
-      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of user info in the same vue $tick.
+      //Bad practice to update data inside computed()! This is a hacky way of forcing update of user info in the same vue $tick.
       this.$set(this.homeAllSalvoResult, "missed", allMissed);
       this.$set(this.homeAllSalvoResult, "hit", allHit);
       return obj;
@@ -806,7 +806,7 @@ export default {
       }
     },
     wizardUnpausedTimer(val) {
-      //Event triggered when user finished to read the intruction. Start countdown timer when first salvo is fired.
+      //Event triggered when user finished to read the instruction. Start countdown timer when first salvo is fired.
       this.pauseTimer = val;
     },
     timerEnd() {
@@ -842,7 +842,7 @@ export default {
       return result;
     },
     placeShipRandomly(shipFleet) {
-      //reinit gameShipFleet positions.
+      //init gameShipFleet positions.
       this.soundEffects.play("registrationTick");
       shipFleet.forEach(ship => {
         ship.initPosition = [];
@@ -872,9 +872,9 @@ export default {
       let listLoc = [];
       for (let i = 0; i < length; i++) {
         if (rotation) {
-          listLoc.push(this.getIdfromCoord(x + i, y));
+          listLoc.push(this.getIdFromCoord(x + i, y));
         } else {
-          listLoc.push(this.getIdfromCoord(x, y + i));
+          listLoc.push(this.getIdFromCoord(x, y + i));
         }
       }
       return listLoc;
@@ -907,13 +907,13 @@ export default {
       let adj = [];
 
       if (y + 1 <= this.gridSize)
-        adj.push({cellID: this.getIdfromCoord(x, y + 1), x: x, y: y + 1});
+        adj.push({cellID: this.getIdFromCoord(x, y + 1), x: x, y: y + 1});
       if (y - 1 > 0)
-        adj.push({cellID: this.getIdfromCoord(x, y - 1), x: x, y: y - 1});
+        adj.push({cellID: this.getIdFromCoord(x, y - 1), x: x, y: y - 1});
       if (x + 1 <= this.gridSize)
-        adj.push({cellID: this.getIdfromCoord(x + 1, y), x: x + 1, y: y});
+        adj.push({cellID: this.getIdFromCoord(x + 1, y), x: x + 1, y: y});
       if (x - 1 > 0)
-        adj.push({cellID: this.getIdfromCoord(x - 1, y), x: x - 1, y: y});
+        adj.push({cellID: this.getIdFromCoord(x - 1, y), x: x - 1, y: y});
 
       return adj;
     },
@@ -923,7 +923,7 @@ export default {
       let max = Math.max(...arr.map(obj => obj.prob));
       return Object.keys(obj).find(key => obj[key].prob === max);
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     isWithinBounds(x, y, rotation, L) {
@@ -942,8 +942,8 @@ export default {
       //check if ship position hit obstacle (hit)
       for (let i = z; i <= endOfShip; i++) {
         let idPos = rotation
-            ? this.getIdfromCoord(i, y)
-            : this.getIdfromCoord(x, i);
+            ? this.getIdFromCoord(i, y)
+            : this.getIdFromCoord(x, i);
         if (this.computerAllSalvoResult.missed.includes(idPos)) return false;
       }
 
@@ -1039,7 +1039,7 @@ export default {
         return;
       }
       if (this.overlappingShips()) {
-        //Ships are ovelapping
+        //Ships are overlapping
         this.placingShips = true;
         this.showSalvo = false;
         return;
@@ -1049,7 +1049,7 @@ export default {
       this.showSalvo = true;
       this.canFireSalvo = true;
       this.selectedShip = "";
-      this.$refs.timer.setTime({minutes: 0, secondes: this.countDownTime});
+      this.$refs.timer.setTime({minutes: 0, seconds: this.countDownTime});
     },
     fireSalvo() {
       //Method to fireSalvo to computer ships.
@@ -1084,7 +1084,7 @@ export default {
           this.soundEffects.on(
               "end",
               function () {
-                applySalvo(self); //->funciton to update inside callback
+                applySalvo(self); //->function to update inside callback
                 setTimeout(() => {
                   self.computerTurn();
                 }, 1000);
@@ -1117,27 +1117,27 @@ export default {
         let randomX = Math.floor(this.gridSize * Math.random()) + 1;
         let randomY = Math.floor(this.gridSize * Math.random()) + 1;
         //if position already in salvo list, generate new one.
-        let idpos = this.getIdfromCoord(randomX, randomY);
+        let idPos = this.getIdFromCoord(randomX, randomY);
 
-        //get cell with max probabilies of having a ship
+        //get cell with max probabilities of having a ship
         if (this.salvoTurn > 1) {
-          idpos = this.getMaxProbCellID(this.makeProbabilitiesDTO);
-          randomX = this.makeProbabilitiesDTO[idpos].x;
-          randomY = this.makeProbabilitiesDTO[idpos].y;
+          idPos = this.getMaxProbCellID(this.makeProbabilitiesDTO);
+          randomX = this.makeProbabilitiesDTO[idPos].x;
+          randomY = this.makeProbabilitiesDTO[idPos].y;
         }
         //check if cell isn't already included in list
         if (
-            !this.computerAllSalvoesPositionsList.includes(idpos) &&
-            !list.includes(idpos)
+            !this.computerAllSalvoesPositionsList.includes(idPos) &&
+            !list.includes(idPos)
         ) {
-          list.push(idpos);
-          obj["cellID"] = idpos;
+          list.push(idPos);
+          obj["cellID"] = idPos;
           obj["x"] = randomX;
           obj["y"] = randomY;
           coordList.push(obj);
         }
         //delete from probability stack the cell that was jut included
-        delete this.makeProbabilitiesDTO[idpos];
+        delete this.makeProbabilitiesDTO[idPos];
       }
       //Concat new list to array of position
       this.coordinatesComputerSalvo = [
@@ -1148,7 +1148,7 @@ export default {
       return list;
     },
     computerTurn() {
-      //Get random positions. Usefull when no probabilies were calculated .
+      //Get random positions. Useful when no probabilities were calculated .
       this.computerNextSalvoPositions = this.getRandomPositions(
           this.maxSalvoSize
       );
@@ -1166,7 +1166,7 @@ export default {
       ];
       //Reset timer and flags
       this.$refs.timer.reset();
-      this.$refs.timer.setTime({minutes: 0, secondes: this.countDownTime});
+      this.$refs.timer.setTime({minutes: 0, seconds: this.countDownTime});
       this.$refs.timer.start();
       this.pauseTimer = true;
       this.canFireSalvo = true;

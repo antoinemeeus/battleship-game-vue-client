@@ -18,7 +18,7 @@
           d-block
         >
           <div class="title">
-            Acces Denied
+            Access Denied
           </div>
           <div>{{ serverMessage }}</div>
         </v-alert>
@@ -655,7 +655,7 @@ export default {
       //Return the current player from server info
       //Add 2 properties from gamePlayer server info:
       // -LastPlayedDate
-      // -LastConenctedDate
+      // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
         let cur_gp = gamePlayers.find(gameP => gameP.id == this.gp);
@@ -670,7 +670,7 @@ export default {
     },
     isOpponentConnected() {
       //Return the opponent connection status for visual info to the user
-      //False if opponent didn't execute a action (like firing a salvo) since an arbitrary amounnt of time (300s)
+      //False if opponent didn't execute a action (like firing a salvo) since an arbitrary amount of time (300s)
       //True if opponent is considered connected
       if (this.opponentPlayer.lastConnectedDate) {
         let now = this.moment();
@@ -686,7 +686,7 @@ export default {
       //Return the opponent player from server info
       //Add 2 properties from gamePlayer server info:
       // -LastPlayedDate
-      // -LastConenctedDate
+      // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
         let cur_gp = gamePlayers.find(gameP => gameP.id != this.gp);
@@ -835,7 +835,7 @@ export default {
     placeShipRandomly() {
       this.soundEffects.play("registrationTick");
       let shipCoord;
-      //reinit ships positions.
+      //init ships positions.
       this.ships.forEach(ship => {
         ship.initPosition = [];
       });
@@ -862,9 +862,9 @@ export default {
       let listLoc = [];
       for (let i = 1; i <= length; i++) {
         if (rotation) {
-          listLoc.push(this.getIdfromCoord(x + i, y));
+          listLoc.push(this.getIdFromCoord(x + i, y));
         } else {
-          listLoc.push(this.getIdfromCoord(x, y + i));
+          listLoc.push(this.getIdFromCoord(x, y + i));
         }
       }
       return listLoc;
@@ -886,7 +886,7 @@ export default {
         else return true;
       } else return false;
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
@@ -1104,8 +1104,6 @@ export default {
       this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
-      // this.$refs.timer.setTime({minutes:2,secondes:0});
-      // this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
     },
     fireSalvo() {
       let randomNb = Math.floor(Math.random() * 3) + 1;

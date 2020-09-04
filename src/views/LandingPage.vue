@@ -318,7 +318,7 @@ export default {
     },
     startPlaying() {
       if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
-      this.$store.commit("setalreadyVisited", true);
+      this.$store.commit("setAlreadyVisited", true);
     },
     gameVsComputer() {
       this.soundEffects.play("menuEnter");

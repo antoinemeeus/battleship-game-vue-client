@@ -166,15 +166,15 @@ export default {
     isShipOverlapping() {
       //flatten all the ships positions to an array
       this.overlapping = false;
-      let allshipsPos = this.allShipsPositions;
-      let keys = Object.keys(allshipsPos);
+      let allShipsPositions = this.allShipsPositions;
+      let keys = Object.keys(allShipsPositions);
       for (let key of keys) {
         if (key != this.type) {
-          let found = allshipsPos[key].some(pos =>
+          let found = allShipsPositions[key].some(pos =>
             this.shipPositions.includes(pos)
           );
           if (found) {
-            //Forbiden position placement
+            //Forbidden position placement
             this.overlapping = true;
             return true;
           }
@@ -187,7 +187,7 @@ export default {
       this.rotate = !this.rotate;
       this.getElementBelowBow(bowPos);
       if (this.outOfBounds == true || this.isShipOverlapping()) {
-        //Forbiden position placement
+        //Forbidden position placement
         this.shakeImage();
         this.resetShipPosLastValid();
       } else {
@@ -195,7 +195,7 @@ export default {
         this.passPositionToParent();
       }
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     getPositionOfShip(bowElement) {
@@ -204,7 +204,7 @@ export default {
       //Arrays of grid indexes representatives of ship position
       let shipIndexArray = [{ row: rowIdx, col: colIdx }];
       this.outOfBounds = false;
-      //Infer  position of Ship base on lenght, rotation and bowPosition and checks if OutOfBounds
+      //Infer  position of Ship base on length, rotation and bowPosition and checks if OutOfBounds
       for (let i = 1; i < this.shipLength; i++) {
         if (this.rotate) {
           if (colIdx + i > this.gridSize) {
@@ -222,7 +222,7 @@ export default {
       }
       //Format array of grid indexes to array of position string LetterNumber (A1,B1..) and save it
       this.shipPositions = shipIndexArray.map(idx =>
-        this.getIdfromCoord(idx.row, idx.col)
+        this.getIdFromCoord(idx.row, idx.col)
       );
     },
     getElementBelowBow(bowPos) {
@@ -269,8 +269,8 @@ export default {
         this.passPositionToParent();
         this.passStopPositionToParent();
         if (this.canMove) {
-          let idsound = this.soundEffects.play("shipMoving");
-          this.soundEffects.volume(0.4, idsound);
+          let idSound = this.soundEffects.play("shipMoving");
+          this.soundEffects.volume(0.4, idSound);
         }
       }
     },

@@ -17,19 +17,19 @@
         {{ user.userName }}!
       </div>
       <div
-        v-if="!isUser && !waitingTojoin"
+        v-if="!isUser && !waitingToJoin"
         class="px-2 title font-weight-light"
       >
         Your opponent: {{ user.userName }} !
       </div>
       <div
-        v-if="!isUser && waitingTojoin"
+        v-if="!isUser && waitingToJoin"
         class="px-2 title font-weight-light"
       >
         Waiting for opponent to join
       </div>
     </v-card-title>
-    <v-card-text v-if="waitingTojoin">
+    <v-card-text v-if="waitingToJoin">
       <v-layout
         justify-center
         align-center
@@ -42,7 +42,7 @@
         />
       </v-layout>
     </v-card-text>
-    <v-card-text v-if="!waitingTojoin">
+    <v-card-text v-if="!waitingToJoin">
       <v-layout row>
         <v-flex
           xs3
@@ -103,8 +103,8 @@
         </v-flex>
         <v-flex align-self-center>
           <v-flex class="subheading font-weight-bold">
-            <span v-if="isUser">Your informations & Statistics :</span>
-            <span v-if="!isUser">Enemy informations & Statistics :</span>
+            <span v-if="isUser">Your information & Statistics :</span>
+            <span v-if="!isUser">Enemy information & Statistics :</span>
           </v-flex>
           <v-layout
             row
@@ -243,7 +243,7 @@ export default {
       if (this.user.id === "AI") return this.avatarComputer;
       return this.avatarList[0];
     },
-    waitingTojoin() {
+    waitingToJoin() {
       return this.gameStateCode == "0" && !this.isUser;
     },
     userActions() {

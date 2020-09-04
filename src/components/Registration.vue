@@ -105,7 +105,7 @@
                   v-model="email"
                   clearable
                   :rules="emailRules"
-                  label="Email adress"
+                  label="Email address"
                   :error-messages="emailIsTaken ? 'E-mail already in use' : ''"
                   :append-icon="emailIsTaken ? 'warning' : ''"
                   required
@@ -260,7 +260,7 @@ export default {
     handleAuthSuccess(requestType, response) {
       this.alert = true;
       this.alertType = "success";
-      this.alertMsg = requestType + " successfull";
+      this.alertMsg = requestType + " successful";
       this.$emit("loginSuccess", true);
       setTimeout(() => {
         this.alert = false;

@@ -52,22 +52,22 @@
       </div>
       <div
         v-for="j in gridSize"
-        :id="getIdfromCoord(i, j)"
+        :id="getIdFromCoord(i, j)"
         :key="j"
-        :ref="getIdfromCoord(i, j)"
+        :ref="getIdFromCoord(i, j)"
         class="grid-cell effect droppable"
-        :class="cellPropertyObject(getIdfromCoord(i, j)).class"
-        :style="cellPropertyObject(getIdfromCoord(i, j)).style"
+        :class="cellPropertyObject(getIdFromCoord(i, j)).class"
+        :style="cellPropertyObject(getIdFromCoord(i, j)).style"
         :data-row="i"
         :data-col="j"
         :data-type="null"
       >
         <span
-          v-if="isSalvoTarget.includes(getIdfromCoord(i, j))"
+          v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
           class="numberOverEverything "
         >{{ getMissileCount(i, j) }}</span>
         <span
-          v-if="isSalvoLocked.includes(getIdfromCoord(i, j))"
+          v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
           class="targetLocked"
         >
           <v-progress-circular
@@ -77,7 +77,7 @@
           />
         </span>
         <span
-          v-if="!cellisEmpty(i, j)"
+          v-if="!cellIsEmpty(i, j)"
           class="numberInCorner"
         >{{
           getTurnNumber(i, j)
@@ -184,7 +184,7 @@ export default {
       let hitTp = this.isInObject(this.hits, id);
 
       let hasMissed = hitTp.locType == "missed";
-      let hashit = hitTp.locType == "hit";
+      let hasHit = hitTp.locType == "hit";
       let isCellTargeted = this.isSalvoTarget.includes(id);
       let isCellLockedTarget = this.isSalvoLocked.includes(id);
       let isCellContainingShip = this.hasShipList.includes(id);
@@ -193,17 +193,17 @@ export default {
       let idClass = {
         pulse: isCellTargeted,
         isSalvoTarget: isCellTargeted,
-        targetLocked: isCellLockedTarget && !hashit && !hasMissed,
+        targetLocked: isCellLockedTarget && !hasHit && !hasMissed,
         target: isCellTargeted,
         hasShip: isCellContainingShip,
-        isOverlaping: isOverlappingCell,
+        isOverlapping: isOverlappingCell,
         fire: this.canFire && this.assignedID == "salvoGrid",
         wait: !this.canFire && this.assignedID == "salvoGrid",
         targetHover: this.canFire && this.assignedID == "salvoGrid",
 
         missed: hasMissed,
-        hit: hashit,
-        explosion: hashit
+        hit: hasHit,
+        explosion: hasHit
       };
       let idStyle = {
         width: this.cellSize + "px",
@@ -236,22 +236,22 @@ export default {
       return { locType: null, turnNumber: null };
     },
     getTurnNumber(i, j) {
-      let id = this.getIdfromCoord(i, j);
+      let id = this.getIdFromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
 
       //When in display mode, display round number.
       if (hitTp.turnNumber) return hitTp.turnNumber;
       return "";
     },
-    cellisEmpty(i, j) {
-      let id = this.getIdfromCoord(i, j);
+    cellIsEmpty(i, j) {
+      let id = this.getIdFromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
       let hasLockedClass = this.isSalvoLocked.includes(id);
       if (hitTp.turnNumber && !hasLockedClass) return false;
       return true;
     },
     getMissileCount(i, j) {
-      let id = this.getIdfromCoord(i, j);
+      let id = this.getIdFromCoord(i, j);
 
       let targetTp = this.isSalvoTarget.includes(id);
 
@@ -259,7 +259,7 @@ export default {
       if (targetTp) return this.isSalvoTarget.indexOf(id) + 1;
       return "";
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
@@ -363,7 +363,7 @@ export default {
 .hasShip {
   background-color: green;
 }
-.isOverlaping {
+.isOverlapping {
   background-color: orange;
 }
 .missed {
