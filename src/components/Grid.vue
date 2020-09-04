@@ -111,10 +111,10 @@ export default {
   watch: {
     allHitsList(newVal, oldVal) {
       if (
-        (oldVal == undefined && newVal.length > 0) ||
+        (oldVal === undefined && newVal.length > 0) ||
         newVal.length > oldVal.length
       ) {
-        if (this.assignedID == "salvoGrid") {
+        if (this.assignedID === "salvoGrid") {
           this.soundEffects.play("farAwayShot");
         } else {
           this.soundEffects.play("explosion");
@@ -128,7 +128,7 @@ export default {
     },
     allMissList(newVal, oldVal) {
       if (
-        (oldVal == undefined && newVal.length > 0) ||
+        (oldVal === undefined && newVal.length > 0) ||
         newVal.length > (oldVal.length || 0)
       ) {
         this.soundEffects.play("waterSplash");
@@ -155,7 +155,7 @@ export default {
       };
     },
     blockSalvoGrid() {
-      return this.gameStateCode == 0 && this.assignedID == "salvoGrid";
+      return this.gameStateCode === 0 && this.assignedID === "salvoGrid";
     },
     allHitsList() {
       let lastTurn = Object.keys(this.hits).length;
@@ -169,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    if (this.assignedID == "salvoGrid") {
+    if (this.assignedID === "salvoGrid") {
       this.$nextTick(() => {
         this.$el.addEventListener("click", this.clickEvent);
       });
@@ -183,8 +183,8 @@ export default {
     cellPropertyObject(id) {
       let hitTp = this.isInObject(this.hits, id);
 
-      let hasMissed = hitTp.locType == "missed";
-      let hasHit = hitTp.locType == "hit";
+      let hasMissed = hitTp.locType === "missed";
+      let hasHit = hitTp.locType === "hit";
       let isCellTargeted = this.isSalvoTarget.includes(id);
       let isCellLockedTarget = this.isSalvoLocked.includes(id);
       let isCellContainingShip = this.hasShipList.includes(id);
@@ -197,9 +197,9 @@ export default {
         target: isCellTargeted,
         hasShip: isCellContainingShip,
         isOverlapping: isOverlappingCell,
-        fire: this.canFire && this.assignedID == "salvoGrid",
-        wait: !this.canFire && this.assignedID == "salvoGrid",
-        targetHover: this.canFire && this.assignedID == "salvoGrid",
+        fire: this.canFire && this.assignedID === "salvoGrid",
+        wait: !this.canFire && this.assignedID === "salvoGrid",
+        targetHover: this.canFire && this.assignedID === "salvoGrid",
 
         missed: hasMissed,
         hit: hasHit,

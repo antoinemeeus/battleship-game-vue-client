@@ -139,7 +139,7 @@ export default {
   },
   watch: {
     dialog(newVal) {
-      if (newVal == false) {
+      if (newVal === false) {
         localStorage.setItem("showHelp", !this.showAgain);
         this.$emit("pauseTimer", false);
       }
@@ -151,7 +151,7 @@ export default {
   methods: {
     getShowHelp() {
       let showHelpBool = localStorage.getItem("showHelp");
-      if (showHelpBool == "false") {
+      if (showHelpBool === "false") {
         this.dialog = false;
         this.showAgain = true;
         this.$emit("pauseTimer", false);

@@ -111,7 +111,7 @@
                 >
                   <td
                     class="text-capitalize pr-2"
-                    :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
+                    :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
                   >
                     <span>{{ ship }}</span>
                   </td>
@@ -120,7 +120,7 @@
                       v-for="id in location"
                       :key="ship + id"
                       class="px-2 id-indv"
-                      :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
+                      :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
                       :style="
                         getShipOverlappingPositions.includes(id)
                           ? { color: 'orange' }
@@ -240,7 +240,7 @@
           </v-flex>
           <v-flex
             class="text-xs-center spaceBar"
-            :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length == 0 }"
+            :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length === 0 }"
           >
             <span>or press</span>
             <v-img :src="require('../assets/spaceBar.png')" />
@@ -323,19 +323,19 @@
       column
     >
       <span
-        v-if="gameState == 'TIE'"
+        v-if="gameState === 'TIE'"
         class="display-3"
       >YOU TIED</span>
       <span
-        v-if="gameState == 'HOME_WINS'"
+        v-if="gameState === 'HOME_WINS'"
         class="display-3"
       >YOU WIN!</span>
       <span
-        v-if="gameState == 'COMPUTER_WINS'"
+        v-if="gameState === 'COMPUTER_WINS'"
         class="display-3"
       >YOU LOSE</span>
       <span
-        v-if="gameState == 'PROGRESS'"
+        v-if="gameState === 'PROGRESS'"
         class="display-3"
       >TEST PROGRESS</span>
       <v-flex>
@@ -473,51 +473,6 @@ export default {
         }
       ]
     };
-  },
-  watch: {
-    pauseTimer(newVal) {
-      if (newVal && this.gameStart) {
-        this.$refs.timer.start();
-      } else this.$refs.timer.stop();
-    },
-    gameState(newVal, oldVal) {
-      if (newVal !== oldVal && oldVal !== null) {
-        if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
-        if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
-      }
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.3, 0.0, 1500);
-    next();
-  },
-  created() {
-    this.placeShipRandomly(this.homeShips);
-    this.placeShipRandomly(this.computerShips);
-  },
-
-  mounted() {
-    this.bgMusic.fade(0.6, 0.0, 1000);
-    this.bgEpicIntro.fade(0.0, 0.3, 1500);
-    if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
-    this.getUserData();
-    //Prevent space default behavior
-    window.onkeydown = function (event) {
-      if (event.keyCode === 32) {
-        event.preventDefault();
-      }
-    };
-    //Prevent text selection
-    document.onselectstart = function () {
-      return false;
-    };
-    this.$nextTick(() => {
-      window.addEventListener("keydown", this.gameKeyDownEvent, false);
-    });
-  },
-  beforeDestroy() {
-    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
-    window.onkeydown = null;
   },
   computed: {
     ...mapState([
@@ -659,10 +614,10 @@ export default {
       );
       let homeWins =
           hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
-          hitsOnComputerShips.length != 0;
+          hitsOnComputerShips.length !== 0;
       let computerWins =
           hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
-          hitsOnHomeShips.length != 0;
+          hitsOnHomeShips.length !== 0;
 
       if (homeWins || computerWins) {
         this.gameFinished = true;
@@ -783,6 +738,50 @@ export default {
       return this.getDuplicates(this.homeShipsPositionList);
     }
   },
+  watch: {
+    pauseTimer(newVal) {
+      if (newVal && this.gameStart) {
+        this.$refs.timer.start();
+      } else this.$refs.timer.stop();
+    },
+    gameState(newVal, oldVal) {
+      if (newVal !== oldVal && oldVal !== null) {
+        if (newVal === "HOME_WINS") this.soundEffects.play("winnerTheme");
+        if (newVal === "COMPUTER_WINS") this.soundEffects.play("loserTheme");
+      }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.bgEpicIntro.fade(0.3, 0.0, 1500);
+    next();
+  },
+  created() {
+    this.placeShipRandomly(this.homeShips);
+    this.placeShipRandomly(this.computerShips);
+  },
+  mounted() {
+    this.bgMusic.fade(0.6, 0.0, 1000);
+    this.bgEpicIntro.fade(0.0, 0.3, 1500);
+    if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
+    this.getUserData();
+    //Prevent space default behavior
+    window.onkeydown = function (event) {
+      if (event.keyCode === 32) {
+        event.preventDefault();
+      }
+    };
+    //Prevent text selection
+    document.onselectstart = function () {
+      return false;
+    };
+    this.$nextTick(() => {
+      window.addEventListener("keydown", this.gameKeyDownEvent, false);
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
+    window.onkeydown = null;
+  },
   methods: {
     ...mapActions(["authRequest", "getData", "postData"]),
     getUserData() {
@@ -821,7 +820,7 @@ export default {
     },
     gameKeyDownEvent(event) {
       //Fire salvo when space is pressed and we are in placing ship mode.
-      if (!this.placingShips && event.keyCode == 32) {
+      if (!this.placingShips && event.keyCode === 32) {
         this.fireSalvo();
       }
     },
@@ -885,7 +884,7 @@ export default {
         let otherShipLocationList = [].concat.apply(
             [],
             shipFleet.map(s => {
-              if (s.type != ship.type) return s.initPosition;
+              if (s.type !== ship.type) return s.initPosition;
               else return [];
             })
         );
@@ -952,7 +951,7 @@ export default {
     },
     updateInitPositions(value) {
       for (let ship of this.homeShips) {
-        if (value.type == ship.type) {
+        if (value.type === ship.type) {
           ship.initPosition = value.initPosition;
         }
       }
@@ -970,12 +969,12 @@ export default {
       }
       let playerSalvoes = this.homeSalvoPositions;
 
-      if (playerSalvoes[this.salvoTurn] == undefined)
+      if (playerSalvoes[this.salvoTurn] === undefined)
         playerSalvoes[this.salvoTurn] = [];
       //check if newPosition is not already fired at
       let alreadyFiredPosition = false;
       for (const key of Object.keys(playerSalvoes)) {
-        if (playerSalvoes[key].includes(newPosition) && key != this.salvoTurn) {
+        if (playerSalvoes[key].includes(newPosition) && key !== this.salvoTurn) {
           alreadyFiredPosition = true;
           break;
         }

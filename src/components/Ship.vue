@@ -83,7 +83,7 @@ export default {
       return { h: _h, w: _w, _ph: _parent_square_dim, _pw: _parent_square_dim };
     },
     isShipSelected() {
-      return this.type == this.shipSelected && this.canMove;
+      return this.type === this.shipSelected && this.canMove;
     },
     initShipPosition() {
       //Method that takes in the list of string of locations type A1,B1...
@@ -169,7 +169,7 @@ export default {
       let allShipsPositions = this.allShipsPositions;
       let keys = Object.keys(allShipsPositions);
       for (let key of keys) {
-        if (key != this.type) {
+        if (key !== this.type) {
           let found = allShipsPositions[key].some(pos =>
             this.shipPositions.includes(pos)
           );
@@ -186,7 +186,7 @@ export default {
       let bowPos = { left: this.$refs.ship.left, top: this.$refs.ship.top };
       this.rotate = !this.rotate;
       this.getElementBelowBow(bowPos);
-      if (this.outOfBounds == true || this.isShipOverlapping()) {
+      if (this.outOfBounds === true || this.isShipOverlapping()) {
         //Forbidden position placement
         this.shakeImage();
         this.resetShipPosLastValid();

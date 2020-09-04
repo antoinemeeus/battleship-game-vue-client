@@ -131,7 +131,7 @@ export default {
         return player;
       });
 
-      return pPlayers.filter(player => player.total != 0);
+      return pPlayers.filter(player => player.total !== 0);
     },
     pages() {
       if (

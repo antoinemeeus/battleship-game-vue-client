@@ -88,16 +88,15 @@ export default {
     dialog: false,
     avatarID: 1
   }),
-  created() {},
-  mounted() {
-    this.valid = false;
-  },
   computed: {
     ...mapState(["loading", "avatarList"]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
-      return this.avatarList.find(av => av.id == this.currentUser.avatarID);
+      return this.avatarList.find(av => av.id === this.currentUser.avatarID);
     }
+  },
+  mounted() {
+    this.valid = false;
   },
   methods: {
     ...mapActions(["authRequest", "postData", "getData"]),

@@ -103,7 +103,7 @@ export default {
     setTime(payload) {
       let m = 2,
         s = 0;
-      if (payload && payload.minutes != undefined) m = payload.minutes;
+      if (payload && payload.minutes !== undefined) m = payload.minutes;
       if (payload && payload.seconds !== undefined) s = payload.seconds;
       this.time = m * 60 + s;
     }

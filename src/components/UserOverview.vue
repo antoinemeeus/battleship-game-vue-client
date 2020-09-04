@@ -84,7 +84,7 @@
           <v-btn
             v-if="isUser && !isUserDefaultAnonymous"
             color="red"
-            :loading="status == 'loading'"
+            :loading="status === 'loading'"
             small
             :icon="$vuetify.breakpoint.mdAndDown"
             :round="$vuetify.breakpoint.mdAndDown"
@@ -230,7 +230,7 @@ export default {
     ...mapState(["avatarList", "avatarComputer", "status"]),
     ...mapGetters(["gameStateCode"]),
     isComputerMode() {
-      return this.$route.name == "computer";
+      return this.$route.name === "computer";
     },
     isUserDefaultAnonymous() {
       return this.user.id == null;
