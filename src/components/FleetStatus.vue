@@ -1,61 +1,58 @@
 <template>
   <v-container
-      pa-0
-      ma-0
-      fluid
+    pa-0
+    ma-0
+    fluid
   >
     <fieldset class="fleet-box">
       <legend class="legend-box title text-xs-center">
         {{ fleetName }}
       </legend>
       <v-layout
-          column
-          px-1
-          class="metal-bg"
+        column
+        px-1
+        class="metal-bg"
       >
         <v-flex
-            v-for="ship in ships"
-            :key="ship.type"
-            py-2
+          v-for="ship in ships"
+          :key="ship.type"
+          py-2
         >
           <v-card class="card-style">
             <v-img
-                :src="ship.imgUrl"
-                :width="(ship.length / 5) * 100 + '%'"
-                :top="getShipSunk(ship) ? '-50px' : ''"
-                class="background-boat-image"
+              :src="ship.imgUrl"
+              :width="(ship.length / 5) * 100 + '%'"
+              :top="getShipSunk(ship) ? '-50px' : ''"
+              class="background-boat-image"
             >
               <v-scale-transition group>
                 <div
-                    v-for="i in getShipDamage(ship)"
-                    :key="ship.type + '_' + i"
-                    class="damage"
-                    :style="explosionStyle(i, ship)"
+                  v-for="i in getShipDamage(ship)"
+                  :key="ship.type + '_' + i"
+                  class="damage"
+                  :style="explosionStyle(i, ship)"
                 />
               </v-scale-transition>
             </v-img>
             <v-layout
-                justify-space-between
-                align-baseline
-                class="water-line"
-                :style="{ fontSize: fontSize }"
+              justify-space-between
+              align-baseline
+              class="water-line"
+              :style="{ fontSize: fontSize }"
             >
-              <span class=" text-capitalize text-truncate white--text pl-2">{{
-                  ship.type
-                }}</span>
+              <span class=" text-capitalize text-truncate white--text pl-2">{{ ship.type }}</span>
               <span class=" white--text pr-2">
                 {{
-                  fleetHasDamageInfo
-                      ? getShipDamage(ship)
-                      : getShipSunk(ship)
-                      ? ship.length
-                      : "?"
-                }}/{{ ship.length }}</span>
+                  fleetHasDamageInfo ? getShipDamage(ship) : getShipSunk(ship) ? ship.length : "?"
+                }}/{{
+                  ship.length
+                }}
+              </span>
             </v-layout>
             <v-expand-transition>
               <div
-                  v-if="getShipSunk(ship)"
-                  class="overlay"
+                v-if="getShipSunk(ship)"
+                class="overlay"
               >
                 <h3 class="headline">
                   SUNKEN
@@ -143,13 +140,13 @@ export default {
           if (newVal[ship.type].sunk && !oldVal[ship.type].sunk) {
             //On opponent sound
             if (newVal[ship.type].damage === undefined)
-              setTimeout(() => this.soundEffects.play("targetDestroyed"), 1000);
+              setTimeout(() => this.soundEffects.play("targetDestroyed", true), 1000);
             //On current sound
             else {
               let randomNb = Math.floor(Math.random() * 3) + 1;
               setTimeout(
-                  () => this.soundEffects.play("userShipDestroyed" + randomNb),
-                  2000
+                () => this.soundEffects.play("userShipDestroyed" + randomNb, true),
+                2000
               );
             }
           }
@@ -228,14 +225,14 @@ export default {
   /* background-color: #203a58; */
   background: #373b44; /* fallback for old browsers */
   background: -webkit-linear-gradient(
-      to bottom,
-      #4286f4,
-      #373b44
+    to bottom,
+    #4286f4,
+    #373b44
   ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
-      to bottom,
-      #4286f4,
-      #373b44
+    to bottom,
+    #4286f4,
+    #373b44
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   width: inherit;

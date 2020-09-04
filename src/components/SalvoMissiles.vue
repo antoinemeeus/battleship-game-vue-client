@@ -30,13 +30,15 @@ export default {
   data() {
     return {};
   },
-  create() {},
+  create() {
+  },
   computed: {
     missileLeft() {
       return this.missileNumber - this.salvoSize;
     }
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+  },
   methods: {}
 };
 </script>
@@ -45,9 +47,11 @@ export default {
 .missile-legend {
   border: 2px grey solid;
 }
+
 .image-missile-big {
   width: inherit;
 }
+
 .image-missile-small {
   width: 20px;
 }

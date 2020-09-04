@@ -72,7 +72,6 @@ export default new Vuex.Store({
     bgEpicIntro: new Howl({
       src: [require("@/assets/sounds/epic_music_intro.mp3")],
       loop: true
-      // autoplay: true,
     }),
     alreadyVisited: false,
     avatarComputer: {

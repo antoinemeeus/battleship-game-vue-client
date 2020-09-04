@@ -3,18 +3,17 @@
     <span
       class="headline"
       :style="timerStyleObject"
-    >{{
-      prettyTime | prettify
-    }}</span>
+    >{{ prettyTime | prettify }}</span>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   components: {},
   filters: {
-    prettify: function(value) {
+    prettify: function (value) {
       let data = value.split(":");
       let minutes = data[0];
       let seconds = data[1];
@@ -39,16 +38,15 @@ export default {
   computed: {
     ...mapState(["soundEffects"]),
     prettyTime() {
-      let time = this.time / 60;
-      let minutes = parseInt(time);
-      let seconds = Math.round((time - minutes) * 60);
+      let minutes = Math.floor(this.time / 60);
+      let seconds = this.time - minutes * 60;
       return minutes + ":" + seconds;
     },
     timerStyleObject() {
       if (this.time <= 0) {
-        return { color: "#db143c" };
+        return {color: "#db143c"};
       } else if (this.time < 20) {
-        return { color: "#ffa500" };
+        return {color: "#ffa500"};
       } else return {};
     },
     classObject() {
@@ -79,11 +77,11 @@ export default {
         this.timer = setInterval(() => {
           if (this.time > 1) {
             this.time--;
-            this.time < 6 ? this.soundEffects.play("timerTick") : null;
+            this.time < 6 ? this.soundEffects.play("timerTick", true) : null;
           } else {
             clearInterval(this.timer);
             this.$emit("timerFinish");
-            this.soundEffects.play("timerEnd");
+            this.soundEffects.play("timerEnd", true);
             this.reset();
           }
         }, 1000);
@@ -115,6 +113,7 @@ export default {
 .finished {
   color: #db143c;
 }
+
 .warning {
   color: #ffa500;
 }

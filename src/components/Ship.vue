@@ -1,38 +1,39 @@
 <template>
   <VueDragResize
-      ref="ship"
-      :class="{ grabbable: canMove }"
-      :h="battleShipDim.h"
-      :w="battleShipDim.w"
-      :parent-w="battleShipDim._pw"
-      :parent-h="battleShipDim._ph"
-      :is-resizable="false"
-      :x="initShipPosition.posX"
-      :y="initShipPosition.posY"
-      :is-draggable="canMove"
-      :prevent-active-behavior="!canMove"
-      @dragging="onDragging"
-      @clicked="onActivated"
-      @dragstop="onDragStop"
+    ref="ship"
+    :class="{ grabbable: canMove }"
+    :h="battleShipDim.h"
+    :w="battleShipDim.w"
+    :parent-w="battleShipDim._pw"
+    :parent-h="battleShipDim._ph"
+    :is-resizable="false"
+    :x="initShipPosition.posX"
+    :y="initShipPosition.posY"
+    :is-draggable="canMove"
+    :prevent-active-behavior="!canMove"
+    @dragging="onDragging"
+    @clicked="onActivated"
+    @dragstop="onDragStop"
   >
     <v-btn
-        v-show="canMove"
-        flat
-        icon
-        color="blue lighten-2"
-        absolute
-        left
-        top
-        small
-        class="buttonPos"
-        @click="rotateShip()"
+      v-show="canMove"
+      flat
+      icon
+      color="blue lighten-2"
+      absolute
+      left
+      top
+      small
+      class="buttonPos"
+      @click="rotateShip()"
     >
       <v-icon>cached</v-icon>
     </v-btn>
     <img
-        class="ship "
-        :class="{ selected: isShipSelected }"
-        :src="getImage()"
+      class="ship "
+      :class="{ selected: isShipSelected }"
+      :src="getImage()"
+      alt="Selected ship"
     >
   </VueDragResize>
 </template>
@@ -73,7 +74,7 @@ export default {
       let _h = this.gridCellSize * this.shipLength;
       let _w = this.gridCellSize;
       let _parent_square_dim =
-          this.gridCellSize * this.gridSize + this.gridCellSize;
+        this.gridCellSize * this.gridSize + this.gridCellSize;
 
       if (this.rotate) {
         _h = this.gridCellSize;
@@ -155,7 +156,7 @@ export default {
       return url;
     },
     shakeImage() {
-      this.soundEffects.play("errorIllegalPos");
+      this.soundEffects.play("errorIllegalPos", true);
       let element = this.$refs.ship.$el;
       element.classList.add("shake");
       setTimeout(function () {
@@ -171,7 +172,7 @@ export default {
       for (let key of keys) {
         if (key !== this.type) {
           let found = allShipsPositions[key].some(pos =>
-              this.shipPositions.includes(pos)
+            this.shipPositions.includes(pos)
           );
           if (found) {
             //Forbidden position placement
@@ -222,14 +223,14 @@ export default {
       }
       //Format array of grid indexes to array of position string LetterNumber (A1,B1..) and save it
       this.shipPositions = shipIndexArray.map(idx =>
-          this.getIdFromCoord(idx.row, idx.col)
+        this.getIdFromCoord(idx.row, idx.col)
       );
     },
     getElementBelowBow(bowPos) {
       let parentElem = this.$refs.ship.parentElement.getBoundingClientRect();
       let elemBelow = document.elementsFromPoint(
-          bowPos.left + parentElem.left + this.gridCellSize / 2,
-          bowPos.top + parentElem.top + this.gridCellSize / 2
+        bowPos.left + parentElem.left + this.gridCellSize / 2,
+        bowPos.top + parentElem.top + this.gridCellSize / 2
       );
       let closestCellBelowBow = elemBelow.find(el => el.closest(".droppable"));
       if (closestCellBelowBow) {
@@ -238,9 +239,9 @@ export default {
     },
     getNearestGridPos(bowPos) {
       bowPos.left =
-          Math.round(bowPos.left / this.gridCellSize) * this.gridCellSize;
+        Math.round(bowPos.left / this.gridCellSize) * this.gridCellSize;
       bowPos.top =
-          Math.round(bowPos.top / this.gridCellSize) * this.gridCellSize;
+        Math.round(bowPos.top / this.gridCellSize) * this.gridCellSize;
       return bowPos;
     },
     onActivated(event) {
@@ -269,7 +270,7 @@ export default {
         this.passPositionToParent();
         this.passStopPositionToParent();
         if (this.canMove) {
-          let idSound = this.soundEffects.play("shipMoving");
+          let idSound = this.soundEffects.play("shipMoving", true);
           this.soundEffects.volume(0.4, idSound);
         }
       }
@@ -280,15 +281,15 @@ export default {
       shipDragged.rawLeft = nearestGridPos.left;
       shipDragged.rawTop = nearestGridPos.top;
       shipDragged.rawRight =
-          this.gridCellSize * this.gridSize -
-          this.battleShipDim.w -
-          nearestGridPos.left +
-          this.gridCellSize;
+        this.gridCellSize * this.gridSize -
+        this.battleShipDim.w -
+        nearestGridPos.left +
+        this.gridCellSize;
       shipDragged.rawBottom =
-          this.gridCellSize * this.gridSize -
-          this.battleShipDim.h -
-          nearestGridPos.top +
-          this.gridCellSize;
+        this.gridCellSize * this.gridSize -
+        this.battleShipDim.h -
+        nearestGridPos.top +
+        this.gridCellSize;
 
       this.getElementBelowBow({
         left: nearestGridPos.left,

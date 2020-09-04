@@ -47,7 +47,7 @@
             :size="avatarSize"
             color="grey lighten-4"
             class="avatar_hover"
-            @mouseenter="soundEffects.play('registrationTick')"
+            @mouseenter="soundEffects.play('registrationTick', true)"
           >
             <img
               :src="avatar.src"
@@ -63,11 +63,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   props: {
-    value: { type: Number, default: 1 },
-    fixed: { type: Boolean, default: false }
+    value: {type: Number, default: 1},
+    fixed: {type: Boolean, default: false}
   },
   data: () => ({
     menu: false
@@ -113,7 +114,8 @@ export default {
       return this.avatarList[0];
     }
   },
-  created() {},
+  created() {
+  },
   methods: {}
 };
 </script>
@@ -122,6 +124,7 @@ export default {
 .avatar_hover {
   content: "";
 }
+
 .avatar_hover:hover {
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
   cursor: pointer;

@@ -79,7 +79,8 @@
 
 <script>
 import axios from "axios";
-import { mapState, mapActions } from "vuex";
+import {mapState, mapActions} from "vuex";
+
 export default {
   data: () => ({
     pagination: {
@@ -108,9 +109,9 @@ export default {
         value: "total",
         class: "text-xs-center"
       },
-      { text: "Won", align: "center", value: "won" },
-      { text: "Lost", align: "center", value: "lost" },
-      { text: "Tied", align: "center", value: "tied" }
+      {text: "Won", align: "center", value: "won"},
+      {text: "Lost", align: "center", value: "lost"},
+      {text: "Tied", align: "center", value: "tied"}
     ],
     fetchedGames: []
   }),
@@ -130,13 +131,13 @@ export default {
     },
     pages() {
       if (
-          this.pagination.rowsPerPage == null ||
-          this.pagination.totalItems == null
+        this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
       )
         return 0;
 
       return Math.ceil(
-          this.pagination.totalItems / this.pagination.rowsPerPage
+        this.pagination.totalItems / this.pagination.rowsPerPage
       );
     }
   },
@@ -151,7 +152,7 @@ export default {
   methods: {
     ...mapActions(["getData"]),
     getPlayers() {
-      let payload = { mutation: "setPlayers", url: "/players" };
+      let payload = {mutation: "setPlayers", url: "/players"};
       this.getData(payload);
     },
     toPlayerBoard(id) {
@@ -165,6 +166,7 @@ export default {
 .dark-bg {
   background-color: rgba(68, 69, 70, 0.822);
 }
+
 .table-height {
   max-height: 50vh;
   overflow-y: auto;

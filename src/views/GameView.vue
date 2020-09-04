@@ -55,7 +55,7 @@
           xl4
           class="user-bg-color"
         >
-          <UserOverview :user="currentPlayer" />
+          <UserOverview :user="currentPlayer"/>
         </v-flex>
         <v-flex
           xs6
@@ -229,20 +229,24 @@
                     </p>
                     <p>
                       You can also decide to place all ships randomly by click
-                      the <v-icon class="px-1">
+                      the
+                      <v-icon class="px-1">
                         fa-random
-                      </v-icon> random button.
+                      </v-icon>
+                      random button.
                     </p>
                     <p>
                       When you are ready, go to battle by clicking the
                       <v-icon class="px-1">
                         fa-play
-                      </v-icon> start button.
+                      </v-icon>
+                      start button.
                     </p>
                     <p>
                       <v-icon color="red px-1">
                         warning
-                      </v-icon> You will not be
+                      </v-icon>
+                      You will not be
                       able to rotate a ship if the the next position contains an
                       obstacle or is outside the grid.
                     </p>
@@ -308,7 +312,7 @@
               :class="{ 'spaceBar-opaque': salvoPositions.length === 0 }"
             >
               <span> or press</span>
-              <v-img :src="require('../assets/spaceBar.png')" />
+              <v-img :src="require('../assets/spaceBar.png')"/>
             </v-flex>
             <v-flex>
               <v-layout
@@ -405,7 +409,7 @@ import FleetStatus from "../components/FleetStatus.vue";
 import SalvoMissiles from "../components/SalvoMissiles.vue";
 import InstructionWizard from "../components/InstructionWizard.vue";
 import UserOverview from "../components/UserOverview.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
 
 export default {
   name: "GameView",
@@ -631,8 +635,8 @@ export default {
     placingShips() {
       //Check if user has finished placing ships. Get info from server, no from local.
       return this.gameDisplayed.ships &&
-          this.gameDisplayed.ships.length <= 0 &&
-          this.gameDisplayed.gameState.code <= 1;
+        this.gameDisplayed.ships.length <= 0 &&
+        this.gameDisplayed.gameState.code <= 1;
 
     },
     canFireSalvo() {
@@ -720,8 +724,8 @@ export default {
     gameResult(newVal, oldVal) {
       if (newVal !== oldVal) {
         newVal === "WON"
-          ? this.soundEffects.play("winnerTheme")
-          : this.soundEffects.play("loserTheme");
+          ? this.soundEffects.play("winnerTheme", true)
+          : this.soundEffects.play("loserTheme", true);
       }
     },
     gameState(newGameState, oldGameState) {
@@ -740,13 +744,13 @@ export default {
     this.placeShipRandomly();
   },
   mounted() {
-    this.bgMusic.fade(0.6, 0.0, 1000);
-    this.bgEpicIntro.fade(0.0, 0.3, 1500);
+    this.bgMusic.fade(0.6, 0.0, 1000, null);
+    this.bgEpicIntro.fade(0.0, 0.3, 1500, null);
     if (!this.bgEpicIntro.playing()) {
       this.bgEpicIntro.play();
     }
     this.sendingSalvo = false;
-    window.onkeydown = function(event) {
+    window.onkeydown = function (event) {
       if (event.keyCode === 32) {
         event.preventDefault();
       }
@@ -761,7 +765,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.3, 0.0, 1500);
+    this.bgEpicIntro.fade(0.3, 0.0, 1500, null);
     this.stopAutoRefresh();
     next();
   },
@@ -811,7 +815,7 @@ export default {
       let object = {};
       let result = [];
 
-      arr.forEach(function(item) {
+      arr.forEach(function (item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
@@ -824,7 +828,7 @@ export default {
       return result;
     },
     placeShipRandomly() {
-      this.soundEffects.play("registrationTick");
+      this.soundEffects.play("registrationTick", true);
       let shipCoord;
       //init ships positions.
       this.ships.forEach(ship => {
@@ -838,10 +842,10 @@ export default {
           let randomDirection = Math.random() >= 0.5;
           if (this.isLegal(randomX, randomY, randomDirection, ship)) {
             ship.initPosition = this.getShipIdList(
-                randomX,
-                randomY,
-                ship.shipLength,
-                randomDirection
+              randomX,
+              randomY,
+              ship.shipLength,
+              randomDirection
             );
             illegalPlacement = false;
           }
@@ -881,7 +885,7 @@ export default {
       let ret, b, a;
       //Get String value for a number. Excel's style.
       for (; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
@@ -914,7 +918,7 @@ export default {
       let self = this;
       if (this.autoRefresh == null && !this.isGameFinished) {
         this.autoRefresh = setInterval(
-          function() {
+          function () {
             if (this.$route.name === "game") self.getGame();
             else this.stopAutoRefresh();
           }.bind(this),
@@ -969,7 +973,7 @@ export default {
         return;
       }
       //CanFire
-      this.soundEffects.play("targetSelect");
+      this.soundEffects.play("targetSelect", true);
       let currentSalvoesPositions = this.salvoPositions;
       //Check if arrays of salvoPositions doesn't contain duplicates
       if (!currentSalvoesPositions.includes(newPosition)) {
@@ -1006,7 +1010,7 @@ export default {
       let entries = Object.entries(this.shipPositions);
       let listOfShip = [];
       for (let [key, value] of entries) {
-        listOfShip.push({ type: key, locations: value });
+        listOfShip.push({type: key, locations: value});
       }
       let payload = {
         data: listOfShip,
@@ -1022,7 +1026,8 @@ export default {
             res => {
               this.sendingShips = false;
             },
-            reject => {}
+            reject => {
+            }
           );
           // this.handleSuccessAlertMsgs(res, msgIntro);
         },
@@ -1063,7 +1068,8 @@ export default {
               this.sendingSalvo = false;
               this.lockedSalvo = [];
             },
-            reject => {}
+            reject => {
+            }
           );
         },
         error => {
@@ -1089,14 +1095,14 @@ export default {
       if (this.overlappingShips()) {
         return;
       }
-      this.soundEffects.play("startGame");
+      this.soundEffects.play("startGame", true);
       this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
     },
     fireSalvo() {
       let randomNb = Math.floor(Math.random() * 3) + 1;
-      let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+      let soundId = this.soundEffects.play("loadAndFire" + randomNb, true);
       this.soundEffects.rate(2.0, soundId);
       this.sendSalvoToServer();
     },
@@ -1123,15 +1129,18 @@ export default {
   border: 2px #363a49 solid;
   border-radius: 0 0 1em 1em;
 }
+
 .instruction-box {
   max-width: 700px;
   background-color: rgba(73, 69, 69, 0.61);
   border-radius: 1em;
   border: 2px white solid;
 }
+
 .id-indv {
   width: 3em;
 }
+
 .id-row {
   display: flex;
   justify-content: flex-start;
@@ -1140,19 +1149,23 @@ export default {
 .middle-flex {
   width: 10vw;
 }
+
 .fire-button {
   align-self: center;
   justify-self: center;
   /* width: inherit; */
 }
+
 .spaceBar {
   align-self: center;
   justify-self: center;
   width: 60%;
 }
+
 .spaceBar-opaque {
   opacity: 0.4;
 }
+
 .popup {
   background: rgb(2, 0, 36);
   background: linear-gradient(
@@ -1171,10 +1184,9 @@ export default {
   min-height: 150px;
   top: 40%;
   left: 0;
-  -webkit-animation: slide-in-fwd-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: scale-in-hor-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both,
-    bg-pan-left 2s infinite both alternate;
+  bg-pan-left 2s infinite both alternate;
 }
 
 @-webkit-keyframes scale-in-hor-center {
@@ -1189,6 +1201,7 @@ export default {
     opacity: 1;
   }
 }
+
 @keyframes scale-in-hor-center {
   0% {
     -webkit-transform: scaleX(0);
@@ -1201,10 +1214,12 @@ export default {
     opacity: 1;
   }
 }
+
 .bg-pan {
   -webkit-animation: bg-pan-left infinite both;
   animation: bg-pan-left infinite both;
 }
+
 @-webkit-keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
@@ -1213,6 +1228,7 @@ export default {
     background-position: 0 50%;
   }
 }
+
 @keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
@@ -1221,6 +1237,7 @@ export default {
     background-position: 0 50%;
   }
 }
+
 .fillHeight {
   height: 100vh;
 }

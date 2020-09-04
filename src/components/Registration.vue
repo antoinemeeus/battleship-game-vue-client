@@ -26,7 +26,7 @@
         @click="
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
-          soundEffects.play('registrationTick');
+          soundEffects.play('registrationTick',true);
         "
       >
         {{
@@ -39,7 +39,7 @@
         small
         @click="
           choiceSignIn = !choiceSignIn;
-          soundEffects.play('registrationTick');
+          soundEffects.play('registrationTick',true);
         "
       >
         Create new account
@@ -78,7 +78,7 @@
                 row
                 align-center
               >
-                <AvatarsSelection v-model="avatarID" />
+                <AvatarsSelection v-model="avatarID"/>
                 <div class="subheading">
                   Select an avatar.
                 </div>
@@ -186,8 +186,9 @@
 <script>
 import AvatarsSelection from "../components/AvatarsSelection.vue";
 import axios from "axios";
-import { mapState, mapActions, mapGetters } from "vuex";
-import { reject } from "q";
+import {mapState, mapActions, mapGetters} from "vuex";
+import {reject} from "q";
+
 const qs = require("querystring");
 export default {
   components: {
@@ -244,7 +245,7 @@ export default {
     };
     this.authRequest(payload).then(
       res => {
-        let playerPayload = { url: "/player", mutation: "setUserInfo" };
+        let playerPayload = {url: "/player", mutation: "setUserInfo"};
         this.getData(playerPayload);
       },
       err => {
@@ -309,7 +310,7 @@ export default {
         this.authRequest(payload).then(
           res => {
             this.handleAuthSuccess("Login", res);
-            let playerPayload = { url: "/player", mutation: "setUserInfo" };
+            let playerPayload = {url: "/player", mutation: "setUserInfo"};
             this.getData(playerPayload);
           },
           err => {
@@ -374,6 +375,7 @@ export default {
 .bg-col {
   background-color: rgb(250, 252, 255);
 }
+
 .bg-transparent {
   background-color: rgba(58, 82, 110, 0.11);
 }

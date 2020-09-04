@@ -1,45 +1,45 @@
 <template>
   <v-layout
-      pa-0
-      ma-0
-      justify-center
-      column
+    pa-0
+    ma-0
+    justify-center
+    column
   >
     <v-alert
-        :value="alert"
-        :type="alertType"
-        transition="scale-transition"
+      :value="alert"
+      :type="alertType"
+      transition="scale-transition"
     >
       {{ alertMsg }}
     </v-alert>
     <v-layout
-        row
-        wrap
-        justify-center
+      row
+      wrap
+      justify-center
     >
       <v-flex
-          xs12
-          class="dark-bg"
+        xs12
+        class="dark-bg"
       >
         <v-btn
-            dark
-            icon
-            @click="getGames()"
+          dark
+          icon
+          @click="getGames()"
         >
           <v-icon>fa-redo-alt</v-icon>
         </v-btn>
         <v-btn
-            v-if="isAuthenticated"
-            dark
-            color="green"
-            @click="createGame()"
+          v-if="isAuthenticated"
+          dark
+          color="green"
+          @click="createGame()"
         >
           <v-icon>fa-plus</v-icon>
           <span class="px-2">Create New Game</span>
         </v-btn>
         <v-dialog
-            v-model="dialog"
-            max-width="500"
+          v-model="dialog"
+          max-width="500"
         >
           <v-flex shrink>
             <Registration @loginSuccess="closeModal"/>
@@ -48,19 +48,19 @@
         <!-- <v-btn @click="playAgainstComputer()">Play Against Computer</v-btn> -->
       </v-flex>
       <v-flex
-          xs12
-          class="anchor"
+        xs12
+        class="anchor"
       >
         <div :class="[{ 'wrapper-abs-btn dark-bg': !isAuthenticated }]">
           <v-btn
-              v-if="!isAuthenticated"
-              large
-              depressed
-              :loading="loading && dialog"
-              dark
-              color="green"
-              class="absolute-center"
-              @click="openModal()"
+            v-if="!isAuthenticated"
+            large
+            depressed
+            :loading="loading && dialog"
+            dark
+            color="green"
+            class="absolute-center"
+            @click="openModal()"
           >
             <v-icon>fa-sign-in-alt</v-icon>
             <span class="px-2">Login to create New Game</span>
@@ -68,22 +68,22 @@
         </div>
         <div>
           <v-data-table
-              :headers="headers"
-              :items="presentGames"
-              :pagination.sync="pagination"
-              class="table-height"
-              dark
-              hide-actions
-              :loading="loading"
+            :headers="headers"
+            :items="presentGames"
+            :pagination.sync="pagination"
+            class="table-height"
+            dark
+            hide-actions
+            :loading="loading"
           >
             <v-progress-linear
-                v-slot:progress
-                color="red"
-                indeterminate
+              v-slot:progress
+              color="red"
+              indeterminate
             />
             <template
-                slot="items"
-                slot-scope="props"
+              slot="items"
+              slot-scope="props"
             >
               <tr :class="props.item.isFinished ? 'finished-row-bg' : ''">
                 <td class="text-xs-center px-1 table-bg">
@@ -94,76 +94,72 @@
                 </td>
                 <td class="table-bg">
                   <v-layout
-                      v-if="isAuthenticated && !props.item.isFinished"
-                      align-center
-                      justify-space-between
+                    v-if="isAuthenticated && !props.item.isFinished"
+                    align-center
+                    justify-space-between
                   >
                     <div>
                       <v-avatar
-                          :size="22"
-                          color="grey lighten-4"
+                        :size="22"
+                        color="grey lighten-4"
                       >
                         <img
-                            :src="playerAvatar(props.item.avatarP1).src"
-                            :alt="playerAvatar(props.item.avatarP1).name"
+                          :src="playerAvatar(props.item.avatarP1).src"
+                          :alt="playerAvatar(props.item.avatarP1).name"
                         >
                       </v-avatar>
                       <span
-                          class="pl-2"
+                        class="pl-2"
                       >{{ props.item.player1 }} -
                         {{ props.item.p1_.email }}</span>
                     </div>
                     <v-btn
-                        v-if="props.item.p1_.isUser"
-                        :color="btnEnterColor"
-                        @click="toPlayerBoard(props.item.p1_.gp_id)"
+                      v-if="props.item.p1_.isUser"
+                      :color="btnEnterColor"
+                      @click="toPlayerBoard(props.item.p1_.gp_id)"
                     >
                       Enter
                     </v-btn>
                     <v-btn
-                        v-else-if="!props.item.p1_.isJoined"
-                        :color="btnJoinColor"
-                        @click="joinGame(props.item.id)"
+                      v-else-if="!props.item.p1_.isJoined"
+                      :color="btnJoinColor"
+                      @click="joinGame(props.item.id)"
                     >
                       Join
                     </v-btn>
                   </v-layout>
                   <v-layout
-                      v-else
-                      justify-space-between
-                      align-center
+                    v-else
+                    justify-space-between
+                    align-center
                   >
                     <div>
                       <v-avatar
-                          :size="22"
-                          color="grey lighten-4"
+                        :size="22"
+                        color="grey lighten-4"
                       >
                         <img
-                            :src="playerAvatar(props.item.avatarP1).src"
-                            :alt="playerAvatar(props.item.avatarP1).name"
+                          :src="playerAvatar(props.item.avatarP1).src"
+                          :alt="playerAvatar(props.item.avatarP1).name"
                         >
                       </v-avatar>
                       <span class="pl-2">{{ props.item.p1_.name }}</span>
                     </div>
                     <v-chip
-                        v-if="props.item.isFinished"
-                        light
-                        :color="
+                      v-if="props.item.isFinished"
+                      light
+                      :color="
                         props.item.p1_.result === 'won'
                           ? 'yellow'
                           : props.item.p1_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
-                        class="text-uppercase"
+                      class="text-uppercase"
                     >
                       <v-icon>
                         {{
-                          props.item.p1_.result === "won"
-                              ? "star"
-                              : props.item.p1_.result === "tie"
-                              ? "fa-equals"
-                              : "fa-skull-crossbones"
+                          props.item.p1_.result === "won" ? "star" : props.item.p1_.result === "tie" ? "fa-equals" : "fa-skull-crossbones"
                         }}
                       </v-icon>
                       <span class="pl-2">{{ props.item.p1_.result }}</span>
@@ -172,75 +168,71 @@
                 </td>
                 <td class=" table-bg">
                   <v-layout
-                      v-if="isAuthenticated && !props.item.isFinished"
-                      align-center
-                      justify-space-between
+                    v-if="isAuthenticated && !props.item.isFinished"
+                    align-center
+                    justify-space-between
                   >
                     <div>
                       <v-avatar
-                          :size="20"
-                          color="grey lighten-4"
+                        :size="20"
+                        color="grey lighten-4"
                       >
                         <img
-                            :src="playerAvatar(props.item.avatarP2).src"
-                            :alt="playerAvatar(props.item.avatarP2).name"
+                          :src="playerAvatar(props.item.avatarP2).src"
+                          :alt="playerAvatar(props.item.avatarP2).name"
                         >
                       </v-avatar>
                       <span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-btn
-                        v-if="props.item.p2_.isUser"
-                        :color="btnEnterColor"
-                        @click="toPlayerBoard(props.item.p2_.gp_id)"
+                      v-if="props.item.p2_.isUser"
+                      :color="btnEnterColor"
+                      @click="toPlayerBoard(props.item.p2_.gp_id)"
                     >
                       Enter
                     </v-btn>
                     <v-btn
-                        v-else-if="
+                      v-else-if="
                         !props.item.p2_.isJoined && !props.item.p1_.isUser
                       "
-                        :color="btnJoinColor"
-                        @click="joinGame(props.item.id)"
+                      :color="btnJoinColor"
+                      @click="joinGame(props.item.id)"
                     >
                       Join
                     </v-btn>
                   </v-layout>
                   <v-layout
-                      v-else
-                      justify-space-between
-                      align-center
+                    v-else
+                    justify-space-between
+                    align-center
                   >
                     <div>
                       <v-avatar
-                          :size="20"
-                          color="grey lighten-4"
+                        :size="20"
+                        color="grey lighten-4"
                       >
                         <img
-                            :src="playerAvatar(props.item.avatarP2).src"
-                            :alt="playerAvatar(props.item.avatarP2).name"
+                          :src="playerAvatar(props.item.avatarP2).src"
+                          :alt="playerAvatar(props.item.avatarP2).name"
                         >
                       </v-avatar>
                       <span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-chip
-                        v-if="props.item.isFinished"
-                        light
-                        :color="
+                      v-if="props.item.isFinished"
+                      light
+                      :color="
                         props.item.p2_.result === 'won'
                           ? 'yellow'
                           : props.item.p2_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
-                        class="text-uppercase"
+                      class="text-uppercase"
                     >
                       <v-icon>
                         {{
-                          props.item.p2_.result === "won"
-                              ? "star"
-                              : props.item.p2_.result === "tie"
-                              ? "fa-equals"
-                              : "fa-skull-crossbones"
+                          props.item.p2_.result === "won" ? "star" : props.item.p2_.result === "tie" ? "fa-equals" : "fa-skull-crossbones"
                         }}
                       </v-icon>
                       <span class="pl-2">{{ props.item.p2_.result }}</span>
@@ -256,11 +248,11 @@
         </div>
         <div class="text-xs-center pt-2">
           <v-pagination
-              v-show="pagination.totalItems > pagination.rowsPerPage"
-              v-model="pagination.page"
-              dark
-              color="orange"
-              :length="pages"
+            v-show="pagination.totalItems > pagination.rowsPerPage"
+            v-model="pagination.page"
+            dark
+            color="orange"
+            :length="pages"
           />
         </div>
       </v-flex>
@@ -315,13 +307,13 @@ export default {
     ...mapGetters(["currentUser", "isAuthenticated"]),
     pages() {
       if (
-          this.pagination.rowsPerPage == null ||
-          this.pagination.totalItems == null
+        this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
       )
         return 0;
 
       return Math.ceil(
-          this.pagination.totalItems / this.pagination.rowsPerPage
+        this.pagination.totalItems / this.pagination.rowsPerPage
       );
     },
 
@@ -383,7 +375,7 @@ export default {
           if (game.scores.length >= 2) {
             isFinished = true;
             status =
-                "Finished - " + this.moment(game.scores[0].finishDate).calendar();
+              "Finished - " + this.moment(game.scores[0].finishDate).calendar();
             game.scores.map(sc => {
               if (sc.playerID === p1_.player_id) {
                 p1_.score = sc.score;
@@ -435,6 +427,14 @@ export default {
       return newGameList;
     }
   },
+  watch: {
+    isAuthenticated() {
+      this.getGames();
+    }
+  },
+  created() {
+    this.getGames();
+  },
   methods: {
     ...mapActions(["getData", "postData"]),
     playerAvatar(p_avatar) {
@@ -468,7 +468,7 @@ export default {
         this.alertMsg = msg + " failed : Request Error: " + error.request;
       } else {
         this.alertMsg =
-            requestType + msg + "failed : Settings error:" + error.message;
+          requestType + msg + "failed : Settings error:" + error.message;
       }
       this.alert = true;
       setTimeout(() => {
@@ -489,21 +489,21 @@ export default {
       //Erase memory in store:
       this.clearGameView();
       this.postData(payload).then(
-          res => {
-            this.handleSuccessAlertMsgs(res, msgIntro);
-            if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
-            else {
-              this.handleErrorAlertMsgs(
-                  {
-                    message: "Couldn't find gpid in Server response"
-                  },
-                  msgIntro
-              );
-            }
-          },
-          err => {
-            this.handleErrorAlertMsgs(err, msgIntro);
+        res => {
+          this.handleSuccessAlertMsgs(res, msgIntro);
+          if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
+          else {
+            this.handleErrorAlertMsgs(
+              {
+                message: "Couldn't find gpid in Server response"
+              },
+              msgIntro
+            );
           }
+        },
+        err => {
+          this.handleErrorAlertMsgs(err, msgIntro);
+        }
       );
     },
     playAgainstComputer() {
@@ -518,35 +518,27 @@ export default {
       };
       let msgIntro = "Game Joining";
       this.postData(payload).then(
-          res => {
-            this.handleSuccessAlertMsgs(res, msgIntro);
-            if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
-            else {
-              this.handleErrorAlertMsgs(
-                  {
-                    message: "Couldn't find gpid in Server Response!"
-                  },
-                  msgIntro
-              );
-            }
-          },
-          err => {
-            this.handleErrorAlertMsgs(err, msgIntro);
+        res => {
+          this.handleSuccessAlertMsgs(res, msgIntro);
+          if (res.data.gpid) this.toPlayerBoard(res.data.gpid);
+          else {
+            this.handleErrorAlertMsgs(
+              {
+                message: "Couldn't find gpid in Server Response!"
+              },
+              msgIntro
+            );
           }
+        },
+        err => {
+          this.handleErrorAlertMsgs(err, msgIntro);
+        }
       );
     },
     toPlayerBoard(id) {
       this.clearGameView();
       this.$router.push("/game?gp=" + id);
     }
-  },
-  watch: {
-    isAuthenticated() {
-      this.getGames();
-    }
-  },
-  created() {
-    this.getGames();
   }
 };
 </script>

@@ -69,7 +69,7 @@
       max-width="500"
     >
       <v-flex shrink>
-        <Registration @loginSuccess="closeModal" />
+        <Registration @loginSuccess="closeModal"/>
       </v-flex>
     </v-dialog>
   </div>
@@ -78,7 +78,8 @@
 <script>
 import Registration from "../components/Registration.vue";
 import axios from "axios";
-import { mapState, mapActions, mapGetters } from "vuex";
+import {mapState, mapActions, mapGetters} from "vuex";
+
 export default {
   components: {
     Registration
@@ -119,7 +120,8 @@ export default {
           this.menu = false;
           this.$router.push("/");
         },
-        err => {}
+        err => {
+        }
       );
       e.preventDefault();
     }

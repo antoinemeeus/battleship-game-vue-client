@@ -113,7 +113,7 @@
             class="px-2"
             label="Don`t show me this next"
           />
-          <v-spacer />
+          <v-spacer/>
           <v-btn
             color="primary"
             flat
@@ -130,7 +130,12 @@
 <script>
 export default {
   components: {},
-  props: ["nbOfShots"],
+  props: {
+    nbOfShots: {
+      type: Number,
+      default: 0
+    },
+  },
   data() {
     return {
       dialog: false,
@@ -140,7 +145,8 @@ export default {
   watch: {
     dialog(newVal) {
       if (newVal === false) {
-        localStorage.setItem("showHelp", !this.showAgain);
+        let showHelp = !this.showAgain
+        localStorage.setItem("showHelp", showHelp.toString());
         this.$emit("pauseTimer", false);
       }
     }
@@ -169,11 +175,9 @@ export default {
 .roundCorners {
   border-radius: 1em;
 }
+
 .aim-img {
   height: 2em;
-  vertical-align: middle;
-}
-.timer-img {
   vertical-align: middle;
 }
 </style>

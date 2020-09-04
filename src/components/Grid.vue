@@ -1,87 +1,85 @@
 <template>
   <div
-      :id="assignedID"
-      :ref="assignedID"
-      class="grid"
-      :style="gridDimensionObject"
+    :id="assignedID"
+    :ref="assignedID"
+    class="grid"
+    :style="gridDimensionObject"
   >
     <!-- Here is where the ships will be injected (HTML wise) -->
     <slot/>
     <!-- ----- -->
     <!-- Loader Overlay -->
     <div
-        v-if="blockSalvoGrid"
-        class="loading"
+      v-if="blockSalvoGrid"
+      class="loading"
     >
       <v-layout
-          justify-center
-          align-center
-          fill-height
+        justify-center
+        align-center
+        fill-height
       >
         <v-progress-circular
-            :size="(cellSize * gridSize) / 2"
-            color="primary"
-            indeterminate
+          :size="(cellSize * gridSize) / 2"
+          color="primary"
+          indeterminate
         />
       </v-layout>
     </div>
     <div
-        class="grid-cell cell-header top-header left-header"
-        :style="cellSizeStyleObject"
+      class="grid-cell cell-header top-header left-header"
+      :style="cellSizeStyleObject"
     >
       \
     </div>
     <div
-        v-for="x in gridSize"
-        :key="'H-' + x"
-        class="grid-cell cell-header top-header"
-        :style="cellSizeStyleObject"
+      v-for="x in gridSize"
+      :key="'H-' + x"
+      class="grid-cell cell-header top-header"
+      :style="cellSizeStyleObject"
     >
       {{ x }}
     </div>
 
     <div
-        v-for="i in gridSize"
-        :key="'R-' + i"
+      v-for="i in gridSize"
+      :key="'R-' + i"
     >
       <div
-          class="grid-cell cell-header left-header"
-          :style="cellSizeStyleObject"
+        class="grid-cell cell-header left-header"
+        :style="cellSizeStyleObject"
       >
         {{ toRowName(i) }}
       </div>
       <div
-          v-for="j in gridSize"
-          :id="getIdFromCoord(i, j)"
-          :key="j"
-          :ref="getIdFromCoord(i, j)"
-          class="grid-cell effect droppable"
-          :class="cellPropertyObject(getIdFromCoord(i, j)).class"
-          :style="cellPropertyObject(getIdFromCoord(i, j)).style"
-          :data-row="i"
-          :data-col="j"
-          :data-type="null"
+        v-for="j in gridSize"
+        :id="getIdFromCoord(i, j)"
+        :key="j"
+        :ref="getIdFromCoord(i, j)"
+        class="grid-cell effect droppable"
+        :class="cellPropertyObject(getIdFromCoord(i, j)).class"
+        :style="cellPropertyObject(getIdFromCoord(i, j)).style"
+        :data-row="i"
+        :data-col="j"
+        :data-type="null"
       >
         <span
-            v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
-            class="numberOverEverything "
+          v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
+          class="numberOverEverything "
         >{{ getMissileCount(i, j) }}</span>
         <span
-            v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
-            class="targetLocked"
+          v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
+          class="targetLocked"
         >
           <v-progress-circular
-              :size="cellSize / 1.2"
-              :width="cellSize / 8"
-              indeterminate
+            :size="cellSize / 1.2"
+            :width="cellSize / 8"
+            indeterminate
           />
         </span>
         <span
-            v-if="!cellIsEmpty(i, j)"
-            class="numberInCorner"
-        >{{
-            getTurnNumber(i, j)
-          }}</span>
+          v-if="!cellIsEmpty(i, j)"
+          class="numberInCorner"
+        >{{ getTurnNumber(i, j) }}</span>
       </div>
     </div>
   </div>
@@ -141,27 +139,27 @@ export default {
   watch: {
     allHitsList(newVal, oldVal) {
       if (
-          (oldVal === undefined && newVal.length > 0) ||
-          newVal.length > oldVal.length
+        (oldVal === undefined && newVal.length > 0) ||
+        newVal.length > oldVal.length
       ) {
         if (this.assignedID === "salvoGrid") {
-          this.soundEffects.play("farAwayShot");
+          this.soundEffects.play("farAwayShot", true);
         } else {
-          this.soundEffects.play("explosion");
+          this.soundEffects.play("explosion", true);
           let randomNb = Math.floor(Math.random() * 3) + 1;
           setTimeout(
-              () => this.soundEffects.play("underAttack" + randomNb,false),
-              1000
+            () => this.soundEffects.play("underAttack" + randomNb, true),
+            1000
           );
         }
       }
     },
     allMissList(newVal, oldVal) {
       if (
-          (oldVal === undefined && newVal.length > 0) ||
-          newVal.length > (oldVal.length || 0)
+        (oldVal === undefined && newVal.length > 0) ||
+        newVal.length > (oldVal.length || 0)
       ) {
-        this.soundEffects.play("waterSplash");
+        this.soundEffects.play("waterSplash", true);
       }
     }
   },
@@ -264,9 +262,9 @@ export default {
     },
     toRowName(num) {
       let ret = "", a = 1, b = 26;
-//Get String value for a number. Excel's style.
+      //Get String value for a number. Excel's style.
       for (; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     }

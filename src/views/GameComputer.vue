@@ -12,7 +12,7 @@
         xl4
         class="user-bg-color"
       >
-        <UserOverview :user="currentUser" />
+        <UserOverview :user="currentUser"/>
       </v-flex>
       <v-flex
         v-if="$vuetify.breakpoint.mdAndUp"
@@ -22,7 +22,7 @@
         xl4
         class="user-bg-color"
       >
-        <UserOverview :is-user="false" />
+        <UserOverview :is-user="false"/>
       </v-flex>
     </v-layout>
     <v-layout
@@ -243,7 +243,7 @@
             :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length === 0 }"
           >
             <span>or press</span>
-            <v-img :src="require('../assets/spaceBar.png')" />
+            <v-img :src="require('../assets/spaceBar.png')"/>
           </v-flex>
           <v-flex>
             <v-layout
@@ -522,7 +522,7 @@ export default {
       let innerWidth = window.innerWidth;
       if (this.$vuetify.breakpoint) innerWidth = this.$vuetify.breakpoint.width;
       let newPixelValue = +((innerWidth * 0.3) / (this.gridSize + 1)).toFixed(
-          0
+        0
       );
       if (!this.$vuetify.breakpoint.smAndUp)
         newPixelValue = +((innerWidth * 0.8) / (this.gridSize + 1)).toFixed(0);
@@ -531,7 +531,7 @@ export default {
     },
     fireButtonColor() {
       if (this.allMissilePlaced)
-          // return "#3abc12";
+        // return "#3abc12";
         return "#dc3b3b";
       if (this.homeNextSalvoPositions.length > 0 && !this.allMissilePlaced)
         return "#ffe419";
@@ -575,12 +575,12 @@ export default {
       let adjacentCells = [];
       for (let hitcell of this.computerCoordinatesHit) {
         adjacentCells = adjacentCells.concat(
-            this.getAdjacentPositions(hitcell.x, hitcell.y)
+          this.getAdjacentPositions(hitcell.x, hitcell.y)
         );
       }
       let uniquesAdjacentCells = adjacentCells.filter((obj, pos, arr) => {
         return (
-            arr.map(mapObj => mapObj["cellID"]).indexOf(obj["cellID"]) === pos
+          arr.map(mapObj => mapObj["cellID"]).indexOf(obj["cellID"]) === pos
         );
       });
       for (let uniqueAdjacentCell of uniquesAdjacentCells) {
@@ -606,17 +606,17 @@ export default {
       if (!this.homeTurn) return "PROGRESS";
       //Check if allComputerShips are sunk
       let hitsOnComputerShips = this.homeAllSalvoesPositionsList.filter(pos =>
-          this.computerShipsPositionList.includes(pos)
+        this.computerShipsPositionList.includes(pos)
       );
       let hitsOnHomeShips = this.computerAllSalvoesPositionsList.filter(pos =>
-          this.homeShipsPositionList.includes(pos)
+        this.homeShipsPositionList.includes(pos)
       );
       let homeWins =
-          hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
-          hitsOnComputerShips.length !== 0;
+        hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
+        hitsOnComputerShips.length !== 0;
       let computerWins =
-          hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
-          hitsOnHomeShips.length !== 0;
+        hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
+        hitsOnHomeShips.length !== 0;
 
       if (homeWins || computerWins) {
         this.gameFinished = true;
@@ -639,7 +639,7 @@ export default {
       let obj = {};
       for (let ship of this.homeShips) {
         ship.hits = ship.initPosition.filter(pos =>
-            this.computerAllSalvoesPositionsList.includes(pos)
+          this.computerAllSalvoesPositionsList.includes(pos)
         );
         obj[ship.type] = {
           damage: ship.hits.length,
@@ -652,7 +652,7 @@ export default {
       let obj = {};
       for (let ship of this.computerShips) {
         ship.hits = ship.initPosition.filter(pos =>
-            this.homeAllSalvoesPositionsList.includes(pos)
+          this.homeAllSalvoesPositionsList.includes(pos)
         );
         obj[ship.type] = {
           // damage: ship.hits.length,
@@ -664,16 +664,16 @@ export default {
     userGridHits() {
       let obj = {};
       let allMissed = [],
-          allHit = [];
+        allHit = [];
       for (let i = 1; i <= this.salvoTurn; i++) {
         let hit = [];
         let missed = [];
         if (this.computerSalvoPositions[i]) {
           hit = this.homeShipsPositionList.filter(pos =>
-              this.computerSalvoPositions[i].includes(pos)
+            this.computerSalvoPositions[i].includes(pos)
           );
           missed = this.computerSalvoPositions[i].filter(
-              pos => !hit.includes(pos)
+            pos => !hit.includes(pos)
           );
           allHit = [...allHit, ...hit];
           allMissed = [...allMissed, ...missed];
@@ -690,20 +690,20 @@ export default {
       this.$set(this.computerAllSalvoResult, "missed", allMissed);
       this.$set(this.computerAllSalvoResult, "hit", allHit);
       this.computerCoordinatesHit = this.coordinatesComputerSalvo.filter(obj =>
-          allHit.includes(obj.cellID)
+        allHit.includes(obj.cellID)
       );
       return obj;
     },
     opponentGridHits() {
       let obj = {};
       let allMissed = [],
-          allHit = [];
+        allHit = [];
       for (let i = 1; i <= this.salvoTurn; i++) {
         let hit = [];
         let missed = [];
         if (this.homeSalvoPositions[i]) {
           hit = this.computerShipsPositionList.filter(pos =>
-              this.homeSalvoPositions[i].includes(pos)
+            this.homeSalvoPositions[i].includes(pos)
           );
           missed = this.homeSalvoPositions[i].filter(pos => !hit.includes(pos));
           allHit = [...allHit, ...hit];
@@ -745,8 +745,8 @@ export default {
     },
     gameState(newVal, oldVal) {
       if (newVal !== oldVal && oldVal !== null) {
-        if (newVal === "HOME_WINS") this.soundEffects.play("winnerTheme");
-        if (newVal === "COMPUTER_WINS") this.soundEffects.play("loserTheme");
+        if (newVal === "HOME_WINS") this.soundEffects.play("winnerTheme", true);
+        if (newVal === "COMPUTER_WINS") this.soundEffects.play("loserTheme", true);
       }
     }
   },
@@ -792,14 +792,14 @@ export default {
           rqUrl: "/checkLog"
         };
         this.authRequest(payload).then(
-            res => {
-              //User has still has a valid session cookie.
-              this.getData({url: "/player", mutation: "setUserInfo"});
-            },
-            err => {
-              //Was not logged in
-              this.$store.commit("authLogOut");
-            }
+          res => {
+            //User has still has a valid session cookie.
+            this.getData({url: "/player", mutation: "setUserInfo"});
+          },
+          err => {
+            //Was not logged in
+            this.$store.commit("authLogOut");
+          }
         );
       }
     },
@@ -841,7 +841,7 @@ export default {
     },
     placeShipRandomly(shipFleet) {
       //init gameShipFleet positions.
-      this.soundEffects.play("registrationTick");
+      this.soundEffects.play("registrationTick", true);
       shipFleet.forEach(ship => {
         ship.initPosition = [];
       });
@@ -852,13 +852,13 @@ export default {
           let randomY = Math.floor(this.gridSize * Math.random()) + 1;
           let randomDirection = Math.random() >= 0.5;
           if (
-              this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
+            this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
           ) {
             ship.initPosition = this.getShipIdList(
-                randomX,
-                randomY,
-                ship.shipLength,
-                randomDirection
+              randomX,
+              randomY,
+              ship.shipLength,
+              randomDirection
             );
             illegalPlacement = false;
           }
@@ -881,11 +881,11 @@ export default {
       if (this.isWithinBounds(x, y, rotation, ship.shipLength)) {
         // ...then check to make sure it doesn't collide with another ship
         let otherShipLocationList = [].concat.apply(
-            [],
-            shipFleet.map(s => {
-              if (s.type !== ship.type) return s.initPosition;
-              else return [];
-            })
+          [],
+          shipFleet.map(s => {
+            if (s.type !== ship.type) return s.initPosition;
+            else return [];
+          })
         );
         let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
         return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
@@ -937,8 +937,8 @@ export default {
       //check if ship position hit obstacle (hit)
       for (let i = z; i <= endOfShip; i++) {
         let idPos = rotation
-            ? this.getIdFromCoord(i, y)
-            : this.getIdFromCoord(x, i);
+          ? this.getIdFromCoord(i, y)
+          : this.getIdFromCoord(x, i);
         if (this.computerAllSalvoResult.missed.includes(idPos)) return false;
       }
 
@@ -960,7 +960,7 @@ export default {
         return;
       }
       let newPosition =
-          this.toRowName(target.dataset.row) + "" + target.dataset.col;
+        this.toRowName(target.dataset.row) + "" + target.dataset.col;
 
       if (!newPosition.match(/^[A-Z0-9]+$/)) {
         //Check if id of targets correspond to id regex A1 C4...
@@ -999,7 +999,7 @@ export default {
         }
       }
       //CanFire
-      this.soundEffects.play("targetSelect");
+      this.soundEffects.play("targetSelect", true);
 
       this.homeNextSalvoPositions = currentSalvoesPositions;
     },
@@ -1022,7 +1022,7 @@ export default {
       //Get String value for a number. Excel's style.
       let ret = "", a = 1, b = 26;
       for (; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
@@ -1040,7 +1040,7 @@ export default {
         this.showSalvo = false;
         return;
       }
-      this.soundEffects.play("startGame");
+      this.soundEffects.play("startGame", true);
       this.placingShips = false;
       this.showSalvo = true;
       this.canFireSalvo = true;
@@ -1052,9 +1052,9 @@ export default {
       function applySalvo(self) {
         //Method to update salvoes positions and and force reactivity of Vue (as these are object value to update)
         self.$set(
-            self.homeSalvoPositions,
-            self.salvoTurn,
-            self.homeNextSalvoPositions
+          self.homeSalvoPositions,
+          self.salvoTurn,
+          self.homeNextSalvoPositions
         );
         self.homeAllSalvoesPositionsList = [
           ...self.homeAllSalvoesPositionsList,
@@ -1074,18 +1074,19 @@ export default {
         //If music enable, method to update salvo position is in sound callback to avoid overlapping sounds
         if (this.musicPlaying) {
           let randomNb = Math.floor(Math.random() * 3) + 1;
-          let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+          let soundId = this.soundEffects.play("loadAndFire" + randomNb, true);
           let self = this;
           this.soundEffects.rate(2.0, soundId);
           this.soundEffects.on(
-              "end",
-              function () {
-                applySalvo(self); //->function to update inside callback
-                setTimeout(() => {
-                  self.computerTurn();
-                }, 1000);
-              },
-              soundId
+            "end",
+            function () {
+              applySalvo(self); //->function to update inside callback
+              setTimeout(() => {
+                self.computerTurn();
+              }, 1000);
+            },
+            soundId,
+            null,
           );
         } else {
           //If music not enable, we don't have to wait for music to update salvo position.
@@ -1105,10 +1106,10 @@ export default {
 
       //If salvoList length is same size as all the grid positions, (sanity check but normally the game finishes).
       while (
-          list.length < size &&
-          this.computerAllSalvoesPositionsList.length <
-          this.gridSize * this.gridSize
-          ) {
+        list.length < size &&
+        this.computerAllSalvoesPositionsList.length <
+        this.gridSize * this.gridSize
+        ) {
         let obj = {};
         let randomX = Math.floor(this.gridSize * Math.random()) + 1;
         let randomY = Math.floor(this.gridSize * Math.random()) + 1;
@@ -1123,8 +1124,8 @@ export default {
         }
         //check if cell isn't already included in list
         if (
-            !this.computerAllSalvoesPositionsList.includes(idPos) &&
-            !list.includes(idPos)
+          !this.computerAllSalvoesPositionsList.includes(idPos) &&
+          !list.includes(idPos)
         ) {
           list.push(idPos);
           obj["cellID"] = idPos;
@@ -1146,15 +1147,15 @@ export default {
     computerTurn() {
       //Get random positions. Useful when no probabilities were calculated .
       this.computerNextSalvoPositions = this.getRandomPositions(
-          this.maxSalvoSize
+        this.maxSalvoSize
       );
       this.computerFireSalvo();
     },
     computerFireSalvo() {
       this.$set(
-          this.computerSalvoPositions,
-          this.salvoTurn,
-          this.computerNextSalvoPositions
+        this.computerSalvoPositions,
+        this.salvoTurn,
+        this.computerNextSalvoPositions
       );
       this.computerAllSalvoesPositionsList = [
         ...this.computerAllSalvoesPositionsList,
@@ -1221,10 +1222,10 @@ export default {
 .popup {
   background: rgb(2, 0, 36);
   background: linear-gradient(
-      153deg,
-      rgba(2, 0, 36, 0.9248074229691877) 0%,
-      rgba(156, 10, 10, 0.7707457983193278) 44%,
-      rgba(255, 29, 0, 1) 100%
+    153deg,
+    rgba(2, 0, 36, 0.9248074229691877) 0%,
+    rgba(156, 10, 10, 0.7707457983193278) 44%,
+    rgba(255, 29, 0, 1) 100%
   );
   background-size: 300%;
   position: fixed;

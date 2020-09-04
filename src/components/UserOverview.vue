@@ -77,9 +77,7 @@
                 </v-avatar>
               </v-badge>
             </template>
-            <span>{{
-              isUserConnected ? "Player is connected" : "Player is disconnected"
-            }}</span>
+            <span>{{ isUserConnected ? "Player is connected" : "Player is disconnected" }}</span>
           </v-tooltip>
           <v-btn
             v-if="isUser && !isUserDefaultAnonymous"
@@ -128,9 +126,7 @@
                 </v-flex> -->
                 <v-flex v-if="!isComputerMode">
                   Last Connected:
-                  <span class="orange--text">{{
-                    moment(user.lastConnectedDate).calendar()
-                  }}</span>
+                  <span class="orange--text">{{ moment(user.lastConnectedDate).calendar() }} </span>
                 </v-flex>
                 <v-flex>
                   <div v-if="isUser && !isComputerMode">
@@ -187,10 +183,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
+
 export default {
   props: {
-    isUser: { type: Boolean, default: true },
+    isUser: {type: Boolean, default: true},
     user: {
       type: Object,
       default: () => ({
@@ -200,10 +197,10 @@ export default {
         lastConnectedDate: "",
         userName: "NotAComputer",
         email: "SinkAllShips@Skynet.evil",
-        score: { total: 0, won: 0, lost: 0, tied: 0 }
+        score: {total: 0, won: 0, lost: 0, tied: 0}
       })
     },
-    isUserConnected: { type: Boolean, default: true }
+    isUserConnected: {type: Boolean, default: true}
   },
   data: () => ({}),
   computed: {
@@ -217,7 +214,7 @@ export default {
     },
     userAvatar() {
       let avatarFound = this.avatarList.find(
-          avatar => avatar.id === this.user.avatarID
+        avatar => avatar.id === this.user.avatarID
       );
       if (avatarFound !== undefined && avatarFound != null) return avatarFound;
       if (this.user.id === "AI") return this.avatarComputer;
@@ -281,5 +278,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

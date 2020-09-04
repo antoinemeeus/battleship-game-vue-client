@@ -2,10 +2,10 @@
   <v-app dark>
     <div class="background-image-fixed">
       <v-toolbar
-          v-show="this.$route.name !== 'landingPage' || alreadyVisited"
-          dense
-          dark
-          pa-3
+        v-show="this.$route.name !== 'landingPage' || alreadyVisited"
+        dense
+        dark
+        pa-3
       >
         <v-toolbar-side-icon to="/">
           <v-icon @click="soundEffects.play('registrationTick',true)">
@@ -13,8 +13,8 @@
           </v-icon>
         </v-toolbar-side-icon>
         <v-btn
-            to="/lobby"
-            @click.native="soundEffects.play('registrationTick',true)"
+          to="/lobby"
+          @click.native="soundEffects.play('registrationTick',true)"
         >
           <v-icon>fa-globe-europe</v-icon>
           <span class="px-2">Lobby</span>
@@ -25,27 +25,27 @@
 
         <v-spacer/>
         <v-btn
-            icon
-            @click.prevent="soundOnOff()"
+          icon
+          @click.prevent="soundOnOff()"
         >
           <v-icon
-              v-show="musicPlaying"
-              color="white"
+            v-show="musicPlaying"
+            color="white"
           >
             volume_up
           </v-icon>
           <v-icon
-              v-show="!musicPlaying"
-              color="white"
+            v-show="!musicPlaying"
+            color="white"
           >
             volume_off
           </v-icon>
         </v-btn>
         <AvatarButton class="px-2"/>
         <v-icon
-            :class="{ refresh: this.$store.state.loading }"
-            dark
-            small
+          :class="{ refresh: this.$store.state.loading }"
+          dark
+          small
         >
           sync
         </v-icon>
