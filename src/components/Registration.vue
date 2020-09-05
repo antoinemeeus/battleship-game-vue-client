@@ -312,11 +312,14 @@ export default {
             this.handleAuthSuccess("Login", res);
             let playerPayload = {url: "/player", mutation: "setUserInfo"};
             this.getData(playerPayload);
+            console.log("Logged in?");
+            console.log("Data is :", playerPayload);
           },
           err => {
             this.handleAuthErrors("Login", err);
           }
         );
+
       } else {
         return false;
       }

@@ -316,7 +316,6 @@ export default {
         this.pagination.totalItems / this.pagination.rowsPerPage
       );
     },
-
     presentGames() {
       function formatPlayer(playerObj) {
         return playerObj.userName || "-No username saved-";

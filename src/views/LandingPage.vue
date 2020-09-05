@@ -303,24 +303,24 @@ export default {
     }
   },
   mounted() {
-    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500, null);
+    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
   },
   methods: {
     multiplayerSelected() {
       if (this.isAuthenticated) {
         this.$router.push("/lobby");
-        this.soundEffects.play("menuEnter", true);
+        this.soundEffects.play("menuEnter", false);
       } else {
         this.soundEffects.play("registrationTick", true);
         this.dialog = true;
       }
     },
     startPlaying() {
-      if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500, null);
+      if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
       this.$store.commit("setAlreadyVisited", true);
     },
     gameVsComputer() {
-      this.soundEffects.play("menuEnter", true);
+      this.soundEffects.play("menuEnter", false);
       this.$store.commit("setGameDisplayed", {});
       this.$router.push({
         name: "computer",
@@ -331,7 +331,7 @@ export default {
       if (value)
         setTimeout(() => {
           this.dialog = false;
-          this.soundEffects.play("menuEnter", true);
+          this.soundEffects.play("menuEnter", false);
           this.$router.push("/lobby");
         }, 3500);
     }

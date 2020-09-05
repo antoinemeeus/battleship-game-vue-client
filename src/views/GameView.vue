@@ -357,7 +357,7 @@
                 <span class="title">Enemy Grid</span>
                 <Grid
                   ref="salvoGrid"
-                  :assigned-i-d="'salvoGrid'"
+                  :assigned-id="'salvoGrid'"
                   :turn="salvoTurn"
                   :has-ship-list="isGameFinished ? [] : []"
                   :grid-size="gridSize"
@@ -421,7 +421,12 @@ export default {
     InstructionWizard,
     UserOverview
   },
-  props: ["gp"],
+  props: {
+    gp: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       snackbar: false,
@@ -465,13 +470,13 @@ export default {
           type: "submarine",
           shipLength: 3,
           initPosition: ["D2", "E2", "F2"],
-          imgSrc: "/submarine/ShipSubMarineHull"
+          imgSrc: "/ships/submarine/ShipSubMarineHull"
         },
         {
           type: "patrolboat",
           shipLength: 2,
           initPosition: ["E5", "F5"],
-          imgSrc: "/patrolBoat/ShipPatrolHull"
+          imgSrc: "/ships/patrolBoat/ShipPatrolHull"
         }
       ]
     };
@@ -625,8 +630,6 @@ export default {
       //Return if opponent has joined the game session.
       if (this.gameDisplayed.gamePlayers) {
         if (this.gameDisplayed.gamePlayers.length < 2) {
-          //Waiting for opponent then
-          //Return false;
           return true;
         }
       }
@@ -653,7 +656,7 @@ export default {
       // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id === this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id === parseInt(this.gp));
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -684,7 +687,7 @@ export default {
       // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id !== this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id !== parseInt(this.gp));
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -712,8 +715,10 @@ export default {
       }
     },
     playerSalvoes(newObj, oldObj) {
-      if (Object.keys(newObj).length > Object.keys(oldObj).length)
-        this.lockedSalvo = [];
+      if (newObj) {
+        if (Object.keys(newObj).length > Object.keys(oldObj).length)
+          this.lockedSalvo = [];
+      }
     },
     opponentPlayer(newOpponent, oldOpponent) {
       if (newOpponent.id != null && oldOpponent.id == null) {
@@ -744,8 +749,8 @@ export default {
     this.placeShipRandomly();
   },
   mounted() {
-    this.bgMusic.fade(0.6, 0.0, 1000, null);
-    this.bgEpicIntro.fade(0.0, 0.3, 1500, null);
+    this.bgMusic.fade(0.6, 0.0, 1000);
+    this.bgEpicIntro.fade(0.0, 0.3, 1500);
     if (!this.bgEpicIntro.playing()) {
       this.bgEpicIntro.play();
     }
@@ -765,7 +770,7 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.3, 0.0, 1500, null);
+    this.bgEpicIntro.fade(0.3, 0.0, 1500);
     this.stopAutoRefresh();
     next();
   },
@@ -865,24 +870,26 @@ export default {
     },
     isLegal(x, y, rotation, ship) {
       // first, check if the ship is within the grid...
-      if (this.isWithinBounds(x, y, rotation, ship.shipLength)) {
-        // ...then check to make sure it doesn't collide with another ship
-        let otherShipLocationList = [].concat.apply(
-          [],
-          this.ships.map(s => {
-            if (s.type !== ship.type) return s.initPosition;
-            else return [];
-          })
-        );
-        let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
-        return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
-      } else return false;
+      if (!this.isWithinBounds(x, y, rotation, ship.shipLength)) {
+        return false;
+      }
+      // ...then check to make sure it doesn't collide with another ship
+      let otherShipLocationList = [].concat.apply(
+        [],
+        this.ships.map(s => {
+          if (s.type !== ship.type) return s.initPosition;
+          else return [];
+        })
+      );
+      let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
+      return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
+
     },
     getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
-      let ret, b, a;
+      let ret = "", b = 26, a = 1;
       //Get String value for a number. Excel's style.
       for (; (num -= a) >= 0; a = b, b *= 26) {
         ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
@@ -1027,6 +1034,7 @@ export default {
               this.sendingShips = false;
             },
             reject => {
+              console.warn("Failed to getGames gameView", reject);
             }
           );
           // this.handleSuccessAlertMsgs(res, msgIntro);

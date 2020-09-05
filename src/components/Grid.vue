@@ -1,7 +1,7 @@
 <template>
   <div
-    :id="assignedID"
-    :ref="assignedID"
+    :id="assignedId"
+    :ref="assignedId"
     class="grid"
     :style="gridDimensionObject"
   >
@@ -91,7 +91,7 @@ import {mapState, mapActions, mapGetters} from "vuex";
 export default {
   components: {},
   props: {
-    assignedID: {type: String, default: "shipGrid"},
+    assignedId: {type: String, default: "shipGrid"},
     canFire: {type: Boolean, default: false},
     turn: {type: Number, default: 1},
     gridSize: {type: Number, default: 10},
@@ -123,7 +123,7 @@ export default {
       };
     },
     blockSalvoGrid() {
-      return this.gameStateCode === "0" && this.assignedID === "salvoGrid";
+      return this.gameStateCode === "0" && this.assignedId === "salvoGrid";
     },
     allHitsList() {
       let lastTurn = Object.keys(this.hits).length;
@@ -142,7 +142,7 @@ export default {
         (oldVal === undefined && newVal.length > 0) ||
         newVal.length > oldVal.length
       ) {
-        if (this.assignedID === "salvoGrid") {
+        if (this.assignedId === "salvoGrid") {
           this.soundEffects.play("farAwayShot", true);
         } else {
           this.soundEffects.play("explosion", true);
@@ -167,7 +167,7 @@ export default {
     this.$el.removeEventListener("click", this.clickEvent);
   },
   mounted() {
-    if (this.assignedID === "salvoGrid") {
+    if (this.assignedId === "salvoGrid") {
       this.$nextTick(() => {
         this.$el.addEventListener("click", this.clickEvent);
       });
@@ -195,9 +195,9 @@ export default {
         target: isCellTargeted,
         hasShip: isCellContainingShip,
         isOverlapping: isOverlappingCell,
-        fire: this.canFire && this.assignedID === "salvoGrid",
-        wait: !this.canFire && this.assignedID === "salvoGrid",
-        targetHover: this.canFire && this.assignedID === "salvoGrid",
+        fire: this.canFire && this.assignedId === "salvoGrid",
+        wait: !this.canFire && this.assignedId === "salvoGrid",
+        targetHover: this.canFire && this.assignedId === "salvoGrid",
 
         missed: hasMissed,
         hit: hasHit,

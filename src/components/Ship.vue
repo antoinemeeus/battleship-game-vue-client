@@ -96,6 +96,9 @@ export default {
       let x = 0;
       let y = 0;
       for (let shipCellLocation of this.firstLocation) {
+        if (shipCellLocation === undefined) {
+          continue
+        }
         // Find the first occurrence of a digit
         let startIndex = shipCellLocation.search(/[\d+]/);
         // The row is the part from the beginning up until the first digit  A,B...

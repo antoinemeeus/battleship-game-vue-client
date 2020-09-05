@@ -43,7 +43,24 @@
             </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
+        <v-list-tile
+          v-if="isAuthenticated"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title pr-2>
+              Connected as {{ currentUser.userName }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile
+          v-if="isAuthenticated"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title pr-2>
+              UserName {{ currentUser.id }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile
           v-if="isAuthenticated"
           @click="logOut"
@@ -120,7 +137,8 @@ export default {
           this.menu = false;
           this.$router.push("/");
         },
-        err => {}
+        err => {
+        }
       );
       e.preventDefault();
     }

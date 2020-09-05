@@ -201,7 +201,7 @@
           column
         >
           <SalvoMissiles
-            ref
+            ref=""
             :salvo-size="homeNextSalvoPositions.length"
             :missile-number="maxSalvoSize"
           />
@@ -1040,7 +1040,7 @@ export default {
         this.showSalvo = false;
         return;
       }
-      this.soundEffects.play("startGame", true);
+      this.soundEffects.play("startGame", false);
       this.placingShips = false;
       this.showSalvo = true;
       this.canFireSalvo = true;
