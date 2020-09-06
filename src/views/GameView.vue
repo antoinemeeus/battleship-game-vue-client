@@ -940,7 +940,6 @@ export default {
     updatePositions(value) {
       this.$set(this.shipPositions, value.type, value.positions);
       this.selectedShip = value.type;
-      // this.shipPositions[value.type] = value.positions;
     },
     updateInitPositions(value) {
       for (let ship of this.ships) {

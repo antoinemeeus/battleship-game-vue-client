@@ -50,6 +50,24 @@
           sync
         </v-icon>
       </v-toolbar>
+      <v-btn
+        v-show="this.$route.name === 'landingPage' && !alreadyVisited"
+        icon
+        @click.prevent="soundOnOff()"
+      >
+        <v-icon
+          v-show="musicPlaying"
+          color="white"
+        >
+          volume_up
+        </v-icon>
+        <v-icon
+          v-show="!musicPlaying"
+          color="white"
+        >
+          volume_off
+        </v-icon>
+      </v-btn>
       <v-content>
         <router-view/>
       </v-content>

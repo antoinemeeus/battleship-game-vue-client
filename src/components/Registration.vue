@@ -365,12 +365,6 @@ export default {
         return false;
       }
     },
-    newMissingSessionCookieError() {
-      let err = Error();
-      err.code = 428;
-      err.message = "Precondition Required. Failed to receive session cookie from server. Check your cookie permissions."
-      return err;
-    },
   }
 };
 </script>
