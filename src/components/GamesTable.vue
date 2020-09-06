@@ -262,7 +262,6 @@
 
 <script>
 import Registration from "./Registration.vue";
-import axios from "axios";
 import {mapState, mapGetters, mapActions} from "vuex";
 
 export default {
