@@ -57,7 +57,7 @@
         >
           <v-list-tile-content>
             <v-list-tile-title pr-2>
-              UserName {{ currentUser.id }}
+              User id {{ currentUser.id }}
             </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -94,7 +94,6 @@
 
 <script>
 import Registration from "../components/Registration.vue";
-import axios from "axios";
 import {mapState, mapActions, mapGetters} from "vuex";
 
 export default {
