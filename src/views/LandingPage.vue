@@ -270,7 +270,6 @@ import Registration from "../components/Registration.vue";
 import UserOverview from "../components/UserOverview.vue";
 import {mapState, mapActions, mapGetters} from "vuex";
 import {VueperSlides, VueperSlide} from "vueperslides";
-import {Howl, Howler} from "howler";
 import "vueperslides/dist/vueperslides.css";
 
 export default {

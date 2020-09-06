@@ -577,12 +577,6 @@ export default {
       }
       return false;
     },
-    areShipsPlaced() {
-      if (this.gameDisplayed) {
-        return this.gameDisplayed.ships.length >= 5;
-      }
-      return false;
-    },
     lastUserFleet() {
       //Get the last turn fleet state from user game to send to fleetStatus component
       if (!this.objIsEmpty(this.userGridHits)) {
@@ -701,11 +695,6 @@ export default {
       if (this.gameDisplayed.salvoes)
         return this.gameDisplayed.salvoes[this.currentPlayer.id];
       return {};
-    },
-    opponentSalvoes() {
-      if (this.opponentPlayer.id !== undefined && this.opponentPlayer.id != null)
-        return this.gameDisplayed.salvoes[this.opponentPlayer.id];
-      return null;
     }
   },
   watch: {
@@ -760,10 +749,6 @@ export default {
         event.preventDefault();
       }
     };
-    // //Prevent text selection
-    // document.onselectstart = function() {
-    //   return false;
-    // };
     this.$nextTick(() => {
       this.getGame();
       window.addEventListener("keydown", this.gameKeyDownEvent, false);
@@ -794,6 +779,7 @@ export default {
       }
     },
     sendOffLineStatus() {
+      // TODO -> use this method with timer or when quitting the page.
       let payload = {
         data: "",
         rqUrl: "/games/players/" + this.gp + "/is_OFFLINE"
@@ -801,7 +787,6 @@ export default {
       this.postData(payload).then(
         res => {
           this.alertMsg = "You went inactive";
-          //TODO: do something with t
         },
         error => {
           let msg = "update status to offline";
@@ -810,8 +795,7 @@ export default {
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
           } else {
-            this.alertMsg =
-              requestType + msg + "failed : Settings error:" + error.message;
+            this.alertMsg = msg + "failed : Settings error:" + error.message;
           }
         }
       );
@@ -834,7 +818,6 @@ export default {
     },
     placeShipRandomly() {
       this.soundEffects.play("registrationTick", true);
-      let shipCoord;
       //init ships positions.
       this.ships.forEach(ship => {
         ship.initPosition = [];
@@ -962,7 +945,6 @@ export default {
         return;
       }
 
-      let gameD = this.gameDisplayed;
       let playerSalvoes = this.playerSalvoes;
       if (playerSalvoes[this.salvoTurn] === undefined)
         playerSalvoes[this.salvoTurn] = [];
@@ -1074,8 +1056,6 @@ export default {
             res => {
               this.sendingSalvo = false;
               this.lockedSalvo = [];
-            },
-            reject => {
             }
           );
         },
@@ -1121,8 +1101,8 @@ export default {
         res => {
           this.setBoardFromServer();
         },
-        reject => {
-          //console.warn("Failed to getGames gameView", reject);
+        err => {
+          this.alertMsg = "Failed to getGames gameView";
         }
       );
     }

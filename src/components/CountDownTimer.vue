@@ -48,22 +48,6 @@ export default {
       } else if (this.time < 20) {
         return {color: "#ffa500"};
       } else return {};
-    },
-    classObject() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-          return "30";
-        case "sm":
-          return "40";
-        case "md":
-          return "55";
-        case "lg":
-          return "60";
-        case "xl":
-          return "70";
-        default:
-          return "55";
-      }
     }
   },
   beforeDestroy() {

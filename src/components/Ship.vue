@@ -247,7 +247,7 @@ export default {
         Math.round(bowPos.top / this.gridCellSize) * this.gridCellSize;
       return bowPos;
     },
-    onActivated(event) {
+    onActivated() {
       this.isMoving = true;
       this.$refs.ship.limits;
       this.$refs.ship.limits = this.shipBoardLimits();

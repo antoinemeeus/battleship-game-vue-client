@@ -298,7 +298,7 @@ export default {
         this.alertMsg = "";
       }, 5000);
     },
-    logIn(e) {
+    logIn() {
       if (this.valid || this.$refs.form.validate()) {
         let payload = {
           data: {

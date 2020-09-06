@@ -69,7 +69,7 @@ export default {
     this.bgMusic.fade(0.0, 0.6, 1500);
     this.setAutoRefresh();
   },
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate() {
     this.setAutoRefresh();
   },
   beforeRouteLeave(to, from, next) {

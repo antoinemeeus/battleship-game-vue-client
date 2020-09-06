@@ -78,20 +78,6 @@ export default {
     gridListSize() {
       return this.$vuetify.breakpoint.name;
     },
-    buttonSize() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-          return "small";
-        case "sm":
-          return "small";
-        case "lg":
-          return "large";
-        case "xl":
-          return "large";
-        default:
-          return "large";
-      }
-    },
     avatarSize() {
       switch (this.$vuetify.breakpoint.name) {
         case "xs":
