@@ -41,6 +41,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/cursor_AimTarget.png"
+                    alt="aim cursor"
                   >. If you change your mind on a shot position, just click
                   again on the selected cell to cancel the selection.
                 </p>
@@ -50,6 +51,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/launchBtnSB.png"
+                    alt="possible launch buttons"
                   >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
@@ -65,11 +67,13 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/missedCell.png"
+                    alt="missed cell"
                   >
                   blue cell means you missed,
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/hitCell.png"
+                    alt="hit cell"
                   > red
                   cell means you hit a ship
                 </p>
@@ -80,6 +84,7 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/hitCell.png"
+                    alt="hit cell with turn hit"
                   > is
                   the round in which the salvo was fired.
                 </p>
@@ -97,8 +102,9 @@
                   <img
                     class="aim-img px-2"
                     src="../assets/tutorial/timerImg.png"
-                  >The
-                  time counter in the middle is the time that is left for you to
+                    alt="timer"
+                  >
+                  The time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in
                   the time allocated, the already placed shot will be fired
                   automatically, even if your salvo count is 0.

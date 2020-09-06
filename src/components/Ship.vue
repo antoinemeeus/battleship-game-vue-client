@@ -352,7 +352,7 @@ export default {
       let b = 26;
       let a = 1;
       for (; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
