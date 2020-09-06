@@ -185,7 +185,6 @@
 
 <script>
 import AvatarsSelection from "../components/AvatarsSelection.vue";
-import axios from "axios";
 import {mapState, mapActions, mapGetters} from "vuex";
 import {reject} from "q";
 
@@ -274,12 +273,15 @@ export default {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        if (error.response.status === 401)
-          this.alertMsg = requestType + " failed : Invalid Email or Password";
-        else {
-          if (error.response.data)
-            this.alertMsg =
-              requestType + " failed : " + error.response.data.error;
+        switch (error.response.status) {
+          case 401:
+            this.alertMsg = requestType + " failed : Invalid Email or Password";
+            break;
+          case 406:
+            this.alertMsg = requestType + " failed : Couldn't receive Session Cookie from server. Check your cookie settings. (Are you in incognito mode?)";
+            break;
+          default:
+            error.response.data ? this.alertMsg = requestType + " failed : " + error.response.data.error: null;
         }
       } else if (error.request) {
         // The request was made but no response was received
@@ -288,8 +290,7 @@ export default {
         this.alertMsg = requestType + " failed : Request Error: Server is busy";
       } else {
         // Something happened in setting up the request that triggered an Error
-        this.alertMsg =
-          requestType + " failed : Settings error:" + error.message;
+        this.alertMsg =  requestType + " failed : Settings error: " + error.message;
       }
       this.alert = true;
       this.$refs.form.validate();
@@ -312,16 +313,11 @@ export default {
             this.handleAuthSuccess("Login", res);
             let playerPayload = {url: "/player", mutation: "setUserInfo"};
             this.getData(playerPayload);
-            console.log("Logged in?");
-            console.log("Data is :", playerPayload);
           },
           err => {
             this.handleAuthErrors("Login", err);
           }
         );
-
-      } else {
-        return false;
       }
     },
     logOut(e) {
@@ -369,7 +365,13 @@ export default {
       } else {
         return false;
       }
-    }
+    },
+    newMissingSessionCookieError() {
+      let err = Error();
+      err.code = 428;
+      err.message = "Precondition Required. Failed to receive session cookie from server. Check your cookie permissions."
+      return err;
+    },
   }
 };
 </script>
