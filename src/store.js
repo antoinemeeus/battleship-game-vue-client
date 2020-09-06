@@ -243,32 +243,32 @@ export default new Vuex.Store({
             };
             return new Promise((resolve, reject) => {
                 axios(options)
-                    .then(function (res) {
-                        if (document.cookie.indexOf("JSESSIONID") === -1) {
-                            commit("authLogOut");
-                            let err = Error();
-                            err.response = res;
-                            err.response.status = 406;
-                            reject(err);
-                            return;
-                        }
+                    .then((res) => {
                         if (payload.rqUrl.includes("logout")) {
                             commit("authLogOut");
                             resolve(res);
-                            return;
+                        } else {
+                            let checkAuthOptions = options;
+                            checkAuthOptions.url = state.webUrl + "/checkLog";
+                            axios(checkAuthOptions).then(() => {
+                                    commit("authSuccess");
+                                    commit("setRestrictedAccess", false);
+                                    resolve(res);
+                                }
+                            ).catch((err) => {
+                                err.response.status = 406;
+                                commit("authLogOut");
+                                reject(err);
+                            });
                         }
-                        commit("authSuccess");
-                        commit("setRestrictedAccess", false);
-                        resolve(res);
                     })
-                    .catch(function (err) {
-                        console.error(err)
+                    .catch((err) => {
                         commit("authError");
                         commit("authLogOut");
                         commit("setRestrictedAccess", true);
                         commit("setUserInfo", null);
                         reject(err);
-                    });
+                    })
             });
         },
         getData({state, commit}, payload) {
@@ -314,12 +314,12 @@ export default new Vuex.Store({
             };
             return new Promise((resolve, reject) => {
                 axios(options)
-                    .then(function (res) {
+                    .then((res) => {
                         commit("setLoading", false);
                         commit("userAuthorized");
                         resolve(res);
                     })
-                    .catch(function (err) {
+                    .catch((err) => {
                         commit("setLoading", false);
                         if (err.response) {
                             commit("setServerMessage", err.response.data.error);

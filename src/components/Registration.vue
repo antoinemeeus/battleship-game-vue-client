@@ -186,7 +186,6 @@
 <script>
 import AvatarsSelection from "../components/AvatarsSelection.vue";
 import {mapState, mapActions, mapGetters} from "vuex";
-import {reject} from "q";
 
 const qs = require("querystring");
 export default {
@@ -278,10 +277,10 @@ export default {
             this.alertMsg = requestType + " failed : Invalid Email or Password";
             break;
           case 406:
-            this.alertMsg = requestType + " failed : Couldn't receive Session Cookie from server. Check your cookie settings. (Are you in incognito mode?)";
+            this.alertMsg = requestType + " failed : Couldn't receive JSESSIONID Cookie from server. This may due to your browser blocking third-party cookies. Check your cookie settings.";
             break;
           default:
-            error.response.data ? this.alertMsg = requestType + " failed : " + error.response.data.error: null;
+            error.response.data ? this.alertMsg = requestType + " failed : " + error.response.data.error : null;
         }
       } else if (error.request) {
         // The request was made but no response was received
@@ -290,7 +289,7 @@ export default {
         this.alertMsg = requestType + " failed : Request Error: Server is busy";
       } else {
         // Something happened in setting up the request that triggered an Error
-        this.alertMsg =  requestType + " failed : Settings error: " + error.message;
+        this.alertMsg = requestType + " failed : Settings error: " + error.message;
       }
       this.alert = true;
       this.$refs.form.validate();
@@ -328,7 +327,7 @@ export default {
       this.authRequest(payload).then(
         res => {
           this.handleAuthSuccess("Logout", res);
-          this.$router.push("/");
+          this.$route.path !== "/" ? this.$router.push("/") : null;
         },
         err => {
           this.handleAuthErrors("Logout", err);
