@@ -290,7 +290,7 @@
               <Grid
                 v-show="showSalvo"
                 ref="salvoGrid"
-                assigned-i-d="salvoGrid"
+                assigned-id="salvoGrid"
                 :turn="salvoTurn"
                 :has-ship-list="gameFinished ? computerShipsPositionList : []"
                 :grid-size="gridSize"
