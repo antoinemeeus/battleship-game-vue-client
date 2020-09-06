@@ -265,7 +265,8 @@ export default {
       };
       this.authRequest(payload).then(
         res => {
-          this.$router.push("/");
+          this.$router.push("/").catch(err => {
+          });
         },
         err => {
           console.log(

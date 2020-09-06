@@ -327,7 +327,7 @@ export default {
       this.authRequest(payload).then(
         res => {
           this.handleAuthSuccess("Logout", res);
-          this.$route.path !== "/" ? this.$router.push("/") : null;
+          this.$router.push("/").catch(err => {})
         },
         err => {
           this.handleAuthErrors("Logout", err);

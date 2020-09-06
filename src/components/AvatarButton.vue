@@ -134,7 +134,8 @@ export default {
       this.authRequest(payload).then(
         res => {
           this.menu = false;
-          this.$router.push("/");
+          this.$router.push("/").catch(err => {
+          });
         },
         err => {
         }
