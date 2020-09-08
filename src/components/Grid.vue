@@ -1,12 +1,12 @@
 <template>
   <div
-    :id="assignedID"
-    :ref="assignedID"
+    :id="assignedId"
+    :ref="assignedId"
     class="grid"
     :style="gridDimensionObject"
   >
     <!-- Here is where the ships will be injected (HTML wise) -->
-    <slot />
+    <slot/>
     <!-- ----- -->
     <!-- Loader Overlay -->
     <div
@@ -52,22 +52,22 @@
       </div>
       <div
         v-for="j in gridSize"
-        :id="getIdfromCoord(i, j)"
+        :id="getIdFromCoord(i, j)"
         :key="j"
-        :ref="getIdfromCoord(i, j)"
+        :ref="getIdFromCoord(i, j)"
         class="grid-cell effect droppable"
-        :class="cellPropertyObject(getIdfromCoord(i, j)).class"
-        :style="cellPropertyObject(getIdfromCoord(i, j)).style"
+        :class="cellPropertyObject(getIdFromCoord(i, j)).class"
+        :style="cellPropertyObject(getIdFromCoord(i, j)).style"
         :data-row="i"
         :data-col="j"
         :data-type="null"
       >
         <span
-          v-if="isSalvoTarget.includes(getIdfromCoord(i, j))"
+          v-if="isSalvoTarget.includes(getIdFromCoord(i, j))"
           class="numberOverEverything "
         >{{ getMissileCount(i, j) }}</span>
         <span
-          v-if="isSalvoLocked.includes(getIdfromCoord(i, j))"
+          v-if="isSalvoLocked.includes(getIdFromCoord(i, j))"
           class="targetLocked"
         >
           <v-progress-circular
@@ -77,67 +77,35 @@
           />
         </span>
         <span
-          v-if="!cellisEmpty(i, j)"
+          v-if="!cellIsEmpty(i, j)"
           class="numberInCorner"
-        >{{
-          getTurnNumber(i, j)
-        }}</span>
+        >{{ getTurnNumber(i, j) }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from "vuex";
+import {mapState, mapActions, mapGetters} from "vuex";
+
 export default {
   components: {},
   props: {
-    assignedID: { type: String, default: "shipGrid" },
-    canFire: { type: Boolean, default: false },
-    turn: { type: Number, default: 1 },
-    gridSize: { type: Number, default: 10 },
-    cellSize: { type: Number, default: 40 },
-    hasShipList: { type: Array, default: () => [] },
-    duplicateLocation: { type: Array, default: () => [] },
-    isSalvoTarget: { type: Array, default: () => [] },
-    isSalvoLocked: { type: Array, default: () => [] },
-    hits: { type: Object, default: () => ({}) },
-    probabilities: { type: Object, default: () => ({}) },
-    waitingForOpponent: { type: Boolean, default: false }
+    assignedId: {type: String, default: "shipGrid"},
+    canFire: {type: Boolean, default: false},
+    turn: {type: Number, default: 1},
+    gridSize: {type: Number, default: 10},
+    cellSize: {type: Number, default: 40},
+    hasShipList: {type: Array, default: () => []},
+    duplicateLocation: {type: Array, default: () => []},
+    isSalvoTarget: {type: Array, default: () => []},
+    isSalvoLocked: {type: Array, default: () => []},
+    hits: {type: Object, default: () => ({})},
+    probabilities: {type: Object, default: () => ({})},
+    waitingForOpponent: {type: Boolean, default: false}
   },
   data() {
     return {};
-  },
-  watch: {
-    allHitsList(newVal, oldVal) {
-      if (
-        (oldVal == undefined && newVal.length > 0) ||
-        newVal.length > oldVal.length
-      ) {
-        if (this.assignedID == "salvoGrid") {
-          this.soundEffects.play("farAwayShot");
-        } else {
-          this.soundEffects.play("explosion");
-          let randomNb = Math.floor(Math.random() * 3) + 1;
-          setTimeout(
-            () => this.soundEffects.play("underAttack" + randomNb),
-            1000
-          );
-        }
-      }
-    },
-    allMissList(newVal, oldVal) {
-      if (
-        (oldVal == undefined && newVal.length > 0) ||
-        newVal.length > (oldVal.length || 0)
-      ) {
-        this.soundEffects.play("waterSplash");
-      }
-    }
-  },
-
-  beforeDestroy() {
-    this.$el.removeEventListener("click", this.clickEvent);
   },
   computed: {
     ...mapState(["gameDisplayed", "soundEffects"]),
@@ -155,7 +123,7 @@ export default {
       };
     },
     blockSalvoGrid() {
-      return this.gameStateCode == 0 && this.assignedID == "salvoGrid";
+      return this.gameStateCode === "0" && this.assignedId === "salvoGrid";
     },
     allHitsList() {
       let lastTurn = Object.keys(this.hits).length;
@@ -168,8 +136,38 @@ export default {
       return [];
     }
   },
+  watch: {
+    allHitsList(newVal, oldVal) {
+      if (
+        (oldVal === undefined && newVal.length > 0) ||
+        newVal.length > oldVal.length
+      ) {
+        if (this.assignedId === "salvoGrid") {
+          this.soundEffects.play("farAwayShot", true);
+        } else {
+          this.soundEffects.play("explosion", true);
+          let randomNb = Math.floor(Math.random() * 3) + 1;
+          setTimeout(
+            () => this.soundEffects.play("underAttack" + randomNb, true),
+            1000
+          );
+        }
+      }
+    },
+    allMissList(newVal, oldVal) {
+      if (
+        (oldVal === undefined && newVal.length > 0) ||
+        newVal.length > (oldVal.length || 0)
+      ) {
+        this.soundEffects.play("waterSplash", true);
+      }
+    }
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener("click", this.clickEvent);
+  },
   mounted() {
-    if (this.assignedID == "salvoGrid") {
+    if (this.assignedId === "salvoGrid") {
       this.$nextTick(() => {
         this.$el.addEventListener("click", this.clickEvent);
       });
@@ -183,8 +181,8 @@ export default {
     cellPropertyObject(id) {
       let hitTp = this.isInObject(this.hits, id);
 
-      let hasMissed = hitTp.locType == "missed";
-      let hashit = hitTp.locType == "hit";
+      let hasMissed = hitTp.locType === "missed";
+      let hasHit = hitTp.locType === "hit";
       let isCellTargeted = this.isSalvoTarget.includes(id);
       let isCellLockedTarget = this.isSalvoLocked.includes(id);
       let isCellContainingShip = this.hasShipList.includes(id);
@@ -193,17 +191,17 @@ export default {
       let idClass = {
         pulse: isCellTargeted,
         isSalvoTarget: isCellTargeted,
-        targetLocked: isCellLockedTarget && !hashit && !hasMissed,
+        targetLocked: isCellLockedTarget && !hasHit && !hasMissed,
         target: isCellTargeted,
         hasShip: isCellContainingShip,
-        isOverlaping: isOverlappingCell,
-        fire: this.canFire && this.assignedID == "salvoGrid",
-        wait: !this.canFire && this.assignedID == "salvoGrid",
-        targetHover: this.canFire && this.assignedID == "salvoGrid",
+        isOverlapping: isOverlappingCell,
+        fire: this.canFire && this.assignedId === "salvoGrid",
+        wait: !this.canFire && this.assignedId === "salvoGrid",
+        targetHover: this.canFire && this.assignedId === "salvoGrid",
 
         missed: hasMissed,
-        hit: hashit,
-        explosion: hashit
+        hit: hasHit,
+        explosion: hasHit
       };
       let idStyle = {
         width: this.cellSize + "px",
@@ -233,25 +231,25 @@ export default {
           };
         }
       }
-      return { locType: null, turnNumber: null };
+      return {locType: null, turnNumber: null};
     },
     getTurnNumber(i, j) {
-      let id = this.getIdfromCoord(i, j);
+      let id = this.getIdFromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
 
       //When in display mode, display round number.
       if (hitTp.turnNumber) return hitTp.turnNumber;
       return "";
     },
-    cellisEmpty(i, j) {
-      let id = this.getIdfromCoord(i, j);
+    cellIsEmpty(i, j) {
+      let id = this.getIdFromCoord(i, j);
       let hitTp = this.isInObject(this.hits, id);
       let hasLockedClass = this.isSalvoLocked.includes(id);
-      if (hitTp.turnNumber && !hasLockedClass) return false;
-      return true;
+      return !(hitTp.turnNumber && !hasLockedClass);
+
     },
     getMissileCount(i, j) {
-      let id = this.getIdfromCoord(i, j);
+      let id = this.getIdFromCoord(i, j);
 
       let targetTp = this.isSalvoTarget.includes(id);
 
@@ -259,13 +257,14 @@ export default {
       if (targetTp) return this.isSalvoTarget.indexOf(id) + 1;
       return "";
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
+      let ret = "", a = 1, b = 26;
       //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     }
@@ -281,6 +280,7 @@ export default {
 .numberOverEverything {
   position: absolute;
 }
+
 .numberInCorner {
   position: relative;
   width: inherit;
@@ -292,11 +292,13 @@ export default {
 
 .fire {
   /* cursor: url("http://www.gravatar.com/avatar/06ededb95f1c0b1f4f9d987e06d7d82b?s=32&d=identicon&r=PG"),auto; */
-  cursor: url("../assets/cursor_AimTarget.png") 25 25, auto;
+  cursor: url("../assets/tutorial/cursor_AimTarget.png") 25 25, auto;
 }
+
 .wait {
   cursor: wait;
 }
+
 .loading {
   cursor: wait;
   width: inherit;
@@ -305,6 +307,7 @@ export default {
   top: 0;
   left: 0;
 }
+
 .loading:before {
   position: absolute;
   content: " ";
@@ -314,6 +317,7 @@ export default {
   opacity: 0.8;
   background-color: grey;
 }
+
 .grid {
   white-space: nowrap;
   display: block;
@@ -324,6 +328,7 @@ export default {
   /* background-image: url("../assets/ocean_top_view.jpg");
   background-size: fill; */
 }
+
 .grid:before {
   content: " ";
   display: block;
@@ -338,9 +343,11 @@ export default {
   background-repeat: repeat;
   background-size: 100% 100%;
 }
+
 .gameGrid {
   position: relative;
 }
+
 .grid-cell {
   display: inline-flex;
   border: 1px solid rgba(9, 9, 10, 0.3);
@@ -348,24 +355,31 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .cell-header {
   background-color: grey;
 }
+
 .top-header {
   border-top: 0;
 }
+
 .left-header {
   border-left: 0;
 }
+
 .hit {
   background-color: crimson !important;
 }
+
 .hasShip {
   background-color: green;
 }
-.isOverlaping {
+
+.isOverlapping {
   background-color: orange;
 }
+
 .missed {
   content: " ";
   background-color: #64b5f6 !important;
@@ -373,6 +387,7 @@ export default {
   height: inherit;
   z-index: 2;
 }
+
 .missed::before {
   position: absolute;
   content: " ";
@@ -383,12 +398,13 @@ export default {
   animation-fill-mode: forwards;
   animation: runWater 2s 1 steps(45);
 }
+
 @keyframes runWater {
   0% {
     background-position: 4500%;
   }
   100% {
-    background-position: 0%;
+    background-position: 0;
   }
 }
 
@@ -398,6 +414,7 @@ export default {
   height: inherit;
   z-index: 2;
 }
+
 .explosion::before {
   position: absolute;
   content: " ";
@@ -407,20 +424,22 @@ export default {
   background-size: 900% 900%;
   animation: moveX 0.15s steps(9) 1, moveY 1.35s steps(9) 1;
 }
+
 @keyframes moveX {
   0% {
     background-position-x: 900%;
   }
   100% {
-    background-position-x: 0%;
+    background-position-x: 0;
   }
 }
+
 @keyframes moveY {
   0% {
     background-position-y: 900%;
   }
   100% {
-    background-position-y: 0%;
+    background-position-y: 0;
   }
 }
 
@@ -435,20 +454,24 @@ export default {
   background-size: 100%;
   /* animation: run-x-2 0.4s infinite steps(8), run-y-2 1.6s infinite steps(4); */
 }
+
 /* Salvo Locked*/
 .targetLocked {
   background-color: blueviolet;
   z-index: 0;
 }
+
 /*SalvoTarget*/
 .targetHover:hover {
   background-color: blueviolet;
 }
+
 .isSalvoTarget {
   position: relative;
   content: " ";
   background-color: blueviolet;
 }
+
 .isSalvoTarget:after {
   position: absolute;
   content: " ";
@@ -457,11 +480,12 @@ export default {
   height: 80%;
   margin: 1px;
   border-radius: 50%;
-  border: 2px solid #fff;
+  border: 2px solid;
   border-color: transparent #fff transparent #fff;
   animation: expand 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) 1;
   /* animation: rotate 1.8s linear infinite; */
 }
+
 @keyframes expand {
   0% {
     transform: scale(0.4);
@@ -470,6 +494,7 @@ export default {
     transform: scale(1);
   }
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg) scale(1);
@@ -487,9 +512,11 @@ export default {
     transform: rotate(360deg) scale(1);
   }
 }
+
 .pulse {
   content: "";
 }
+
 .pulse::before {
   content: " ";
   height: 100%;

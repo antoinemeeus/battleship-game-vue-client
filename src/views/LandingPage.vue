@@ -141,7 +141,7 @@
                     class="modebox"
                     xs5
                     pa-2
-                    @mouseenter="soundEffects.play('menuHover')"
+                    @mouseenter="soundEffects.play('menuHover',true)"
                   >
                     <v-layout
                       justify-center
@@ -178,9 +178,7 @@
                           :color="radios.color"
                           @click="gameVsComputer()"
                         >
-                          {{
-                            $vuetify.breakpoint.mdAndDown ? "" : "Solo - "
-                          }}
+                          {{ $vuetify.breakpoint.mdAndDown ? "" : "Solo - " }}
                           PLAY
                         </v-btn>
                       </v-flex>
@@ -194,7 +192,7 @@
                     :class="[`elevation-${hover ? 12 : 0}`]"
                     class="modebox"
                     xs5
-                    @mouseenter="soundEffects.play('menuHover')"
+                    @mouseenter="soundEffects.play('menuHover',true)"
                   >
                     <v-layout
                       justify-center
@@ -234,9 +232,9 @@
             >
               <v-layout justify-center>
                 <!-- <Registration
-                  v-if="!isAuthenticated"
-                  class="card-box"
-                /> -->
+            v-if="!isAuthenticated"
+            class="card-box"
+            /> -->
                 <v-dialog
                   v-if="!isAuthenticated"
                   v-model="dialog"
@@ -251,7 +249,7 @@
                       <span>Identify yourself before playing in multiplayer
                         mode</span>
                     </v-flex>
-                    <Registration @loginSuccess="closeModal" />
+                    <Registration @loginSuccess="closeModal"/>
                   </v-flex>
                 </v-dialog>
                 <UserOverview
@@ -270,10 +268,10 @@
 <script>
 import Registration from "../components/Registration.vue";
 import UserOverview from "../components/UserOverview.vue";
-import { mapState, mapActions, mapGetters } from "vuex";
-import { VueperSlides, VueperSlide } from "vueperslides";
-import { Howl, Howler } from "howler";
+import {mapState, mapActions, mapGetters} from "vuex";
+import {VueperSlides, VueperSlide} from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
+
 export default {
   name: "LandingPage",
   components: {
@@ -285,54 +283,54 @@ export default {
   data() {
     return {
       dialog: false,
-      radios: { display: "Normal", diff: "normal", color: "green" },
+      radios: {display: "Normal", diff: "normal", color: "green"},
       difficultyItems: [
-        { display: "Normal", diff: "normal", color: "green" },
-        { display: "Hard", diff: "hard", color: "orange" },
-        { display: "Insane", diff: "insane", color: "red" },
-        { display: "Troll", diff: "troll", color: "purple" }
+        {display: "Normal", diff: "normal", color: "green"},
+        {display: "Hard", diff: "hard", color: "orange"},
+        {display: "Insane", diff: "insane", color: "red"},
+        {display: "Troll", diff: "troll", color: "purple"}
       ]
     };
-  },
-  watch: {
-    radios() {
-      this.soundEffects.play("menuSelect");
-    }
-  },
-  mounted() {
-    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
   },
   computed: {
     ...mapGetters(["currentUser", "isAuthenticated"]),
     ...mapState(["musicPlaying", "soundEffects", "bgMusic", "alreadyVisited"])
   },
+  watch: {
+    radios() {
+      this.soundEffects.play("menuSelect", true);
+    }
+  },
+  mounted() {
+    if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
+  },
   methods: {
     multiplayerSelected() {
       if (this.isAuthenticated) {
         this.$router.push("/lobby");
-        this.soundEffects.play("menuEnter");
+        this.soundEffects.play("menuEnter", false);
       } else {
-        this.soundEffects.play("registrationTick");
+        this.soundEffects.play("registrationTick", true);
         this.dialog = true;
       }
     },
     startPlaying() {
       if (!this.bgMusic.playing()) this.bgMusic.fade(0.0, 0.6, 1500);
-      this.$store.commit("setalreadyVisited", true);
+      this.$store.commit("setAlreadyVisited", true);
     },
     gameVsComputer() {
-      this.soundEffects.play("menuEnter");
+      this.soundEffects.play("menuEnter", false);
       this.$store.commit("setGameDisplayed", {});
       this.$router.push({
         name: "computer",
-        params: { difficulty: this.radios }
+        params: {difficulty: this.radios}
       });
     },
     closeModal(value) {
       if (value)
         setTimeout(() => {
           this.dialog = false;
-          this.soundEffects.play("menuEnter");
+          this.soundEffects.play("menuEnter", false);
           this.$router.push("/lobby");
         }, 3500);
     }
@@ -344,8 +342,9 @@ export default {
   background-color: #3a4e5ec2;
   border: 2px solid #ffe241;
   border-radius: 0.5em;
-  box-shadow: 0px 0px 53px 11px rgba(102, 88, 51, 0.8);
+  box-shadow: 0 0 53px 11px rgba(102, 88, 51, 0.8);
 }
+
 .modebox {
   border: 1px solid #ffe241;
   border-radius: 0.5em;
@@ -356,14 +355,17 @@ export default {
   transform: rotate(-3deg);
   text-shadow: 3px 5px 2px #474747;
 }
+
 .height-box {
   height: 50vh;
 }
+
 .btn-pulse {
   border: 1px solid rgba(255, 237, 77, 0.486);
   box-shadow: 0 0 0 rgba(233, 197, 40, 0.836);
   animation: pulse 1.5s infinite;
 }
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(233, 197, 40, 0.836);

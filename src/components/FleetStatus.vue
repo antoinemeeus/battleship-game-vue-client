@@ -40,17 +40,14 @@
               class="water-line"
               :style="{ fontSize: fontSize }"
             >
-              <span class=" text-capitalize text-truncate white--text pl-2">{{
-                ship.type
-              }}</span>
+              <span class=" text-capitalize text-truncate white--text pl-2">{{ ship.type }}</span>
               <span class=" white--text pr-2">
                 {{
-                  fleetHasDamageInfo
-                    ? getShipDamage(ship)
-                    : getShipSunk(ship)
-                      ? ship.length
-                      : "?"
-                }}/{{ ship.length }}</span>
+                  fleetHasDamageInfo ? getShipDamage(ship) : getShipSunk(ship) ? ship.length : "?"
+                }}/{{
+                  ship.length
+                }}
+              </span>
             </v-layout>
             <v-expand-transition>
               <div
@@ -70,7 +67,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import {mapState, mapActions} from "vuex";
+
 export default {
   components: {},
   props: ["fleetState", "imageBaseWidth", "fleetName"],
@@ -82,60 +80,38 @@ export default {
           length: 5,
           dmg: 0,
           sunk: false,
-          imgUrl: require("../assets/Carrier/Carrier_FrontView_2.png")
+          imgUrl: require("../assets/ships/carrier/Carrier_FrontView_2.png")
         },
         {
           type: "battleship",
           sunk: false,
           length: 4,
           dmg: 0,
-          imgUrl: require("../assets/Battleship/Battleship_FrontView_2.png")
+          imgUrl: require("../assets/ships/battleship/Battleship_FrontView_2.png")
         },
         {
           type: "destroyer",
           sunk: false,
           length: 3,
           dmg: 0,
-          imgUrl: require("../assets/Destroyer/Destroyer_FrontView_2.png")
+          imgUrl: require("../assets/ships/destroyer/Destroyer_FrontView_2.png")
         },
         {
           type: "submarine",
           sunk: false,
           length: 3,
           dmg: 0,
-          imgUrl: require("../assets/Submarine/Submarine_FrontView_2.png")
+          imgUrl: require("../assets/ships/submarine/Submarine_FrontView_2.png")
         },
         {
           type: "patrolboat",
           sunk: false,
           length: 2,
           dmg: 0,
-          imgUrl: require("../assets/PatrolBoat/PatrolBoat_FrontView_2.png")
+          imgUrl: require("../assets/ships/patrolBoat/PatrolBoat_FrontView_2.png")
         }
       ]
     };
-  },
-  watch: {
-    //Sound logic
-    fleetState(newVal, oldVal) {
-      if (newVal != undefined && newVal != null && oldVal != undefined) {
-        for (let ship of this.ships) {
-          if (newVal[ship.type].sunk && !oldVal[ship.type].sunk) {
-            //On opponent sound
-            if (newVal[ship.type].damage == undefined)
-              setTimeout(() => this.soundEffects.play("targetDestroyed"), 1000);
-            //On current sound
-            else {
-              let randomNb = Math.floor(Math.random() * 3) + 1;
-              setTimeout(
-                () => this.soundEffects.play("userShipDestroyed" + randomNb),
-                2000
-              );
-            }
-          }
-        }
-      }
-    }
   },
   computed: {
     ...mapState(["soundEffects"]),
@@ -152,9 +128,30 @@ export default {
       }
     },
     fleetHasDamageInfo() {
-      if (this.fleetState && this.fleetState.carrier.hasOwnProperty("damage"))
-        return true;
-      return false;
+      return !!(this.fleetState && this.fleetState.carrier.hasOwnProperty("damage"));
+
+    }
+  },
+  watch: {
+    //Sound logic
+    fleetState(newVal, oldVal) {
+      if (newVal !== undefined && newVal !== null && oldVal !== undefined) {
+        for (let ship of this.ships) {
+          if (newVal[ship.type].sunk && !oldVal[ship.type].sunk) {
+            //On opponent sound
+            if (newVal[ship.type].damage === undefined)
+              setTimeout(() => this.soundEffects.play("targetDestroyed", true), 1000);
+            //On current sound
+            else {
+              let randomNb = Math.floor(Math.random() * 3) + 1;
+              setTimeout(
+                () => this.soundEffects.play("userShipDestroyed" + randomNb, true),
+                2000
+              );
+            }
+          }
+        }
+      }
     }
   },
   methods: {
@@ -196,6 +193,7 @@ export default {
   background-color: #979aa1;
   /* border: 2px grey solid; */
 }
+
 .card-style {
   border-radius: 6px;
   /* background: radial-gradient(
@@ -218,9 +216,11 @@ export default {
     #b26339 100%
   ); */
 }
+
 .ship-container {
   position: relative;
 }
+
 .water-line {
   /* background-color: #203a58; */
   background: #373b44; /* fallback for old browsers */
@@ -239,6 +239,7 @@ export default {
   height: 100%;
   z-index: 1;
 }
+
 .damage {
   position: absolute;
   z-index: 2;
@@ -249,6 +250,7 @@ export default {
   background-image: url("../assets/explosion/explosion.png");
   opacity: 0.8;
 }
+
 .overlay {
   position: absolute;
   background-color: crimson;

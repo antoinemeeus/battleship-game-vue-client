@@ -40,7 +40,8 @@
                   a salvo.
                   <img
                     class="aim-img px-2"
-                    src="../assets/cursor_AimTarget.png"
+                    src="../assets/tutorial/cursor_AimTarget.png"
+                    alt="aim cursor"
                   >. If you change your mind on a shot position, just click
                   again on the selected cell to cancel the selection.
                 </p>
@@ -49,11 +50,12 @@
                 <p>
                   <img
                     class="aim-img px-2"
-                    src="../assets/launchBtnSB.png"
+                    src="../assets/tutorial/launchBtnSB.png"
+                    alt="possible launch buttons"
                   >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
-                  middle or by pressing the spacebar of the keyboard. Of cours
+                  middle or by pressing the space key of the keyboard. Of course, it
                   is better if you place all available missiles on the enemy
                   grid to increase the chance to hit a ship.
                 </p>
@@ -64,12 +66,14 @@
                   enemy grid.
                   <img
                     class="aim-img px-2"
-                    src="../assets/missedCell.png"
+                    src="../assets/tutorial/missedCell.png"
+                    alt="missed cell"
                   >
                   blue cell means you missed,
                   <img
                     class="aim-img px-2"
-                    src="../assets/hitCell.png"
+                    src="../assets/tutorial/hitCell.png"
+                    alt="hit cell"
                   > red
                   cell means you hit a ship
                 </p>
@@ -79,7 +83,8 @@
                   The number in the top left corner of a shot cell
                   <img
                     class="aim-img px-2"
-                    src="../assets/hitCell.png"
+                    src="../assets/tutorial/hitCell.png"
+                    alt="hit cell with turn hit"
                   > is
                   the round in which the salvo was fired.
                 </p>
@@ -96,9 +101,10 @@
                 <p>
                   <img
                     class="aim-img px-2"
-                    src="../assets/timerImg.png"
-                  >The
-                  time counter in the middle is the time that is left for you to
+                    src="../assets/tutorial/timerImg.png"
+                    alt="timer"
+                  >
+                  The time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in
                   the time allocated, the already placed shot will be fired
                   automatically, even if your salvo count is 0.
@@ -113,7 +119,7 @@
             class="px-2"
             label="Don`t show me this next"
           />
-          <v-spacer />
+          <v-spacer/>
           <v-btn
             color="primary"
             flat
@@ -130,7 +136,12 @@
 <script>
 export default {
   components: {},
-  props: ["nbOfShots"],
+  props: {
+    nbOfShots: {
+      type: Number,
+      default: 0
+    },
+  },
   data() {
     return {
       dialog: false,
@@ -139,8 +150,9 @@ export default {
   },
   watch: {
     dialog(newVal) {
-      if (newVal == false) {
-        localStorage.setItem("showHelp", !this.showAgain);
+      if (newVal === false) {
+        let showHelp = !this.showAgain
+        localStorage.setItem("showHelp", showHelp.toString());
         this.$emit("pauseTimer", false);
       }
     }
@@ -151,7 +163,7 @@ export default {
   methods: {
     getShowHelp() {
       let showHelpBool = localStorage.getItem("showHelp");
-      if (showHelpBool == "false") {
+      if (showHelpBool === "false") {
         this.dialog = false;
         this.showAgain = true;
         this.$emit("pauseTimer", false);
@@ -169,11 +181,9 @@ export default {
 .roundCorners {
   border-radius: 1em;
 }
+
 .aim-img {
   height: 2em;
-  vertical-align: middle;
-}
-.timer-img {
   vertical-align: middle;
 }
 </style>

@@ -14,7 +14,7 @@
         </h1>
         <div class="pa-3">
           <p>
-            Oups, it's seems that this page was not remove in production... Well
+            Oops, it's seems that this page was not remove in production... Well
             there is nothing here.
           </p>
           <p>Or maybe not...</p>

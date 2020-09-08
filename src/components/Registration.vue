@@ -26,7 +26,7 @@
         @click="
           choiceSignIn = !choiceSignIn;
           lastEmailTaken = '';
-          soundEffects.play('registrationTick');
+          soundEffects.play('registrationTick',true);
         "
       >
         {{
@@ -39,7 +39,7 @@
         small
         @click="
           choiceSignIn = !choiceSignIn;
-          soundEffects.play('registrationTick');
+          soundEffects.play('registrationTick',true);
         "
       >
         Create new account
@@ -78,7 +78,7 @@
                 row
                 align-center
               >
-                <AvatarsSelection v-model="avatarID" />
+                <AvatarsSelection v-model="avatarID"/>
                 <div class="subheading">
                   Select an avatar.
                 </div>
@@ -105,7 +105,7 @@
                   v-model="email"
                   clearable
                   :rules="emailRules"
-                  label="Email adress"
+                  label="Email address"
                   :error-messages="emailIsTaken ? 'E-mail already in use' : ''"
                   :append-icon="emailIsTaken ? 'warning' : ''"
                   required
@@ -146,7 +146,7 @@
           <v-btn
             color="red"
             type="submit"
-            :loading="status == 'loading'"
+            :loading="status === 'loading'"
             @click="logOut"
           >
             <v-icon>exit_to_app</v-icon>
@@ -161,8 +161,8 @@
       >
         <v-btn
           v-if="!choiceSignIn && !isAuthenticated"
-          :loading="status == 'loading'"
-          :disabled="status == 'loading' || !valid"
+          :loading="status === 'loading'"
+          :disabled="status === 'loading' || !valid"
           color="success"
           type="submit"
           @click="logIn"
@@ -171,8 +171,8 @@
         </v-btn>
         <v-btn
           v-if="choiceSignIn && !isAuthenticated"
-          :loading="status == 'loading'"
-          :disabled="!valid || status == 'loading'"
+          :loading="status === 'loading'"
+          :disabled="!valid || status === 'loading'"
           color="primary"
           @click="signUp"
         >
@@ -185,9 +185,8 @@
 
 <script>
 import AvatarsSelection from "../components/AvatarsSelection.vue";
-import axios from "axios";
-import { mapState, mapActions, mapGetters } from "vuex";
-import { reject } from "q";
+import {mapState, mapActions, mapGetters} from "vuex";
+
 const qs = require("querystring");
 export default {
   components: {
@@ -220,24 +219,6 @@ export default {
     ],
     email: null
   }),
-  created() {
-    let payload = {
-      data: {},
-      rqUrl: "/checkLog"
-    };
-    this.authRequest(payload).then(
-      res => {
-        let playerPayload = { url: "/player", mutation: "setUserInfo" };
-        this.getData(playerPayload);
-      },
-      err => {
-        this.$store.commit("authLogOut");
-      }
-    );
-  },
-  mounted() {
-    this.valid = false;
-  },
   computed: {
     ...mapState([
       "status",
@@ -249,18 +230,36 @@ export default {
     ]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
-      return this.avatarList.find(av => av.id == this.currentUser.avatarID);
+      return this.avatarList.find(av => av.id === this.currentUser.avatarID);
     },
     emailIsTaken() {
-      return this.email == this.lastEmailTaken && this.email != "";
+      return this.email === this.lastEmailTaken && this.email !== "";
     }
+  },
+  created() {
+    let payload = {
+      data: {},
+      rqUrl: "/checkLog"
+    };
+    this.authRequest(payload).then(
+      res => {
+        let playerPayload = {url: "/player", mutation: "setUserInfo"};
+        this.getData(playerPayload);
+      },
+      err => {
+        this.$store.commit("authLogOut");
+      }
+    );
+  },
+  mounted() {
+    this.valid = false;
   },
   methods: {
     ...mapActions(["authRequest", "postData", "getData"]),
     handleAuthSuccess(requestType, response) {
       this.alert = true;
       this.alertType = "success";
-      this.alertMsg = requestType + " successfull";
+      this.alertMsg = requestType + " successful";
       this.$emit("loginSuccess", true);
       setTimeout(() => {
         this.alert = false;
@@ -273,12 +272,15 @@ export default {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        if (error.response.status === 401)
-          this.alertMsg = requestType + " failed : Invalid Email or Password";
-        else {
-          if (error.response.data)
-            this.alertMsg =
-              requestType + " failed : " + error.response.data.error;
+        switch (error.response.status) {
+          case 401:
+            this.alertMsg = requestType + " failed : Invalid Email or Password";
+            break;
+          case 406:
+            this.alertMsg = requestType + " failed : Couldn't receive JSESSIONID Cookie from server. This may due to your browser blocking third-party cookies. Check your cookie settings.";
+            break;
+          default:
+            error.response.data ? this.alertMsg = requestType + " failed : " + error.response.data.error : null;
         }
       } else if (error.request) {
         // The request was made but no response was received
@@ -287,8 +289,7 @@ export default {
         this.alertMsg = requestType + " failed : Request Error: Server is busy";
       } else {
         // Something happened in setting up the request that triggered an Error
-        this.alertMsg =
-          requestType + " failed : Settings error:" + error.message;
+        this.alertMsg = requestType + " failed : Settings error: " + error.message;
       }
       this.alert = true;
       this.$refs.form.validate();
@@ -297,7 +298,7 @@ export default {
         this.alertMsg = "";
       }, 5000);
     },
-    logIn(e) {
+    logIn() {
       if (this.valid || this.$refs.form.validate()) {
         let payload = {
           data: {
@@ -309,15 +310,13 @@ export default {
         this.authRequest(payload).then(
           res => {
             this.handleAuthSuccess("Login", res);
-            let playerPayload = { url: "/player", mutation: "setUserInfo" };
+            let playerPayload = {url: "/player", mutation: "setUserInfo"};
             this.getData(playerPayload);
           },
           err => {
             this.handleAuthErrors("Login", err);
           }
         );
-      } else {
-        return false;
       }
     },
     logOut(e) {
@@ -328,7 +327,7 @@ export default {
       this.authRequest(payload).then(
         res => {
           this.handleAuthSuccess("Logout", res);
-          this.$router.push("/");
+          this.$router.push("/").catch(err => {})
         },
         err => {
           this.handleAuthErrors("Logout", err);
@@ -356,7 +355,7 @@ export default {
           err => {
             if (
               err.response &&
-              err.response.data.error == "Email already taken"
+              err.response.data.error === "Email already taken"
             ) {
               this.lastEmailTaken = this.email;
             } else this.handleAuthErrors("SignUp", err);
@@ -365,7 +364,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   }
 };
 </script>
@@ -374,6 +373,7 @@ export default {
 .bg-col {
   background-color: rgb(250, 252, 255);
 }
+
 .bg-transparent {
   background-color: rgba(58, 82, 110, 0.11);
 }

@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapState, mapActions } from "vuex";
+import {mapState, mapActions} from "vuex";
+
 export default {
   data: () => ({
     pagination: {
@@ -108,17 +108,12 @@ export default {
         value: "total",
         class: "text-xs-center"
       },
-      { text: "Won", align: "center", value: "won" },
-      { text: "Lost", align: "center", value: "lost" },
-      { text: "Tied", align: "center", value: "tied" }
+      {text: "Won", align: "center", value: "won"},
+      {text: "Lost", align: "center", value: "lost"},
+      {text: "Tied", align: "center", value: "tied"}
     ],
     fetchedGames: []
   }),
-  watch: {
-    presentPlayers(newPPlayers) {
-      this.pagination.totalItems = newPPlayers.length;
-    }
-  },
   computed: {
     ...mapState(["players", "loading"]),
     presentPlayers() {
@@ -131,7 +126,7 @@ export default {
         return player;
       });
 
-      return pPlayers.filter(player => player.total != 0);
+      return pPlayers.filter(player => player.total !== 0);
     },
     pages() {
       if (
@@ -145,18 +140,23 @@ export default {
       );
     }
   },
+  watch: {
+    presentPlayers(newPPlayers) {
+      this.pagination.totalItems = newPPlayers.length;
+    }
+  },
+  created() {
+    this.getPlayers();
+  },
   methods: {
     ...mapActions(["getData"]),
     getPlayers() {
-      let payload = { mutation: "setPlayers", url: "/players" };
+      let payload = {mutation: "setPlayers", url: "/players"};
       this.getData(payload);
     },
     toPlayerBoard(id) {
       this.$router.push("/game?gp=" + id);
     }
-  },
-  created() {
-    this.getPlayers();
   }
 };
 </script>
@@ -165,6 +165,7 @@ export default {
 .dark-bg {
   background-color: rgba(68, 69, 70, 0.822);
 }
+
 .table-height {
   max-height: 50vh;
   overflow-y: auto;

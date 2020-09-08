@@ -18,7 +18,7 @@
           d-block
         >
           <div class="title">
-            Acces Denied
+            Access Denied
           </div>
           <div>{{ serverMessage }}</div>
         </v-alert>
@@ -55,7 +55,7 @@
           xl4
           class="user-bg-color"
         >
-          <UserOverview :user="currentPlayer" />
+          <UserOverview :user="currentPlayer"/>
         </v-flex>
         <v-flex
           xs6
@@ -172,7 +172,7 @@
                   >
                     <td
                       class="text-capitalize pr-2"
-                      :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
+                      :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
                     >
                       <span>{{ ship }}</span>
                     </td>
@@ -182,7 +182,7 @@
                         :key="ship + id"
                         class="px-2 id-indv"
                         :class="
-                          ship == selectedShip ? 'blue-grey darken-1' : ''
+                          ship === selectedShip ? 'blue-grey darken-1' : ''
                         "
                         :style="
                           getShipOverlappingPositions.includes(id)
@@ -229,20 +229,24 @@
                     </p>
                     <p>
                       You can also decide to place all ships randomly by click
-                      the <v-icon class="px-1">
+                      the
+                      <v-icon class="px-1">
                         fa-random
-                      </v-icon> random button.
+                      </v-icon>
+                      random button.
                     </p>
                     <p>
                       When you are ready, go to battle by clicking the
                       <v-icon class="px-1">
                         fa-play
-                      </v-icon> start button.
+                      </v-icon>
+                      start button.
                     </p>
                     <p>
                       <v-icon color="red px-1">
                         warning
-                      </v-icon> You will not be
+                      </v-icon>
+                      You will not be
                       able to rotate a ship if the the next position contains an
                       obstacle or is outside the grid.
                     </p>
@@ -305,10 +309,10 @@
             </v-flex>
             <v-flex
               class="text-xs-center spaceBar"
-              :class="{ 'spaceBar-opaque': salvoPositions.length == 0 }"
+              :class="{ 'spaceBar-opaque': salvoPositions.length === 0 }"
             >
               <span> or press</span>
-              <v-img :src="require('../assets/spaceBar.png')" />
+              <v-img :src="require('../assets/tutorial/spaceBar.png')"/>
             </v-flex>
             <v-flex>
               <v-layout
@@ -353,7 +357,7 @@
                 <span class="title">Enemy Grid</span>
                 <Grid
                   ref="salvoGrid"
-                  :assigned-i-d="'salvoGrid'"
+                  :assigned-id="'salvoGrid'"
                   :turn="salvoTurn"
                   :has-ship-list="isGameFinished ? [] : []"
                   :grid-size="gridSize"
@@ -405,7 +409,7 @@ import FleetStatus from "../components/FleetStatus.vue";
 import SalvoMissiles from "../components/SalvoMissiles.vue";
 import InstructionWizard from "../components/InstructionWizard.vue";
 import UserOverview from "../components/UserOverview.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
 
 export default {
   name: "GameView",
@@ -417,7 +421,12 @@ export default {
     InstructionWizard,
     UserOverview
   },
-  props: ["gp"],
+  props: {
+    gp: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       snackbar: false,
@@ -443,31 +452,31 @@ export default {
           type: "carrier",
           shipLength: 5,
           initPosition: ["A2", "A3", "A4", "A5", "A6"],
-          imgSrc: "/Carrier/ShipCarrierHull"
+          imgSrc: "/ships/carrier/ShipCarrierHull"
         },
         {
           type: "battleship",
           shipLength: 4,
           initPosition: ["I5", "I6", "I7", "I8"],
-          imgSrc: "/Battleship/ShipBattleshipHull"
+          imgSrc: "/ships/battleship/ShipBattleshipHull"
         },
         {
           type: "destroyer",
           shipLength: 3,
           initPosition: ["C7", "C8", "C9"],
-          imgSrc: "/Destroyer/ShipDestroyerHull"
+          imgSrc: "/ships/destroyer/ShipDestroyerHull"
         },
         {
           type: "submarine",
           shipLength: 3,
           initPosition: ["D2", "E2", "F2"],
-          imgSrc: "/Submarine/ShipSubMarineHull"
+          imgSrc: "/ships/submarine/ShipSubMarineHull"
         },
         {
           type: "patrolboat",
           shipLength: 2,
           initPosition: ["E5", "F5"],
-          imgSrc: "/PatrolBoat/ShipPatrolHull"
+          imgSrc: "/ships/patrolBoat/ShipPatrolHull"
         }
       ]
     };
@@ -495,9 +504,8 @@ export default {
     timeLeftToPlayInSec() {
       let now = this.moment.utc();
       let timeSinceLastUpdate = now.diff(this.lastUpdate, "seconds");
-      let timeLeftInSec = this.countDownTime - timeSinceLastUpdate;
 
-      return timeLeftInSec;
+      return this.countDownTime - timeSinceLastUpdate;
     },
     allMissilePlaced() {
       return this.salvoPositions.length >= this.maxSalvoSize;
@@ -521,7 +529,7 @@ export default {
       let newPixelValue = +((innerWidth * 0.28) / (this.gridSize + 1)).toFixed(
         0
       );
-      if (newPixelValue != NaN) return newPixelValue;
+      if (!isNaN(newPixelValue)) return newPixelValue;
       return 40;
     },
     gameResult() {
@@ -541,18 +549,14 @@ export default {
     waitingOpToJoin() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        if (stateCode == "0") {
-          return true;
-        } else return false;
+        return stateCode === "0";
       }
       return true;
     },
     waitingOpponent() {
       if (this.gameDisplayed && this.gameDisplayed.gameState) {
         let stateCode = this.gameDisplayed.gameState.code;
-        if (stateCode == "0" || stateCode == "1" || stateCode == "2") {
-          return true;
-        } else return false;
+        return stateCode === "0" || stateCode === "1" || stateCode === "2";
       }
       return true;
     },
@@ -566,16 +570,10 @@ export default {
     },
     isGameFinished() {
       if (this.gameState != null) {
-        if (this.gameState.code == "5") {
+        if (this.gameState.code === "5") {
           this.stopAutoRefresh();
           return true;
         }
-      }
-      return false;
-    },
-    areShipsPlaced() {
-      if (this.gameDisplayed) {
-        return this.gameDisplayed.ships.length >= 5;
       }
       return false;
     },
@@ -626,8 +624,6 @@ export default {
       //Return if opponent has joined the game session.
       if (this.gameDisplayed.gamePlayers) {
         if (this.gameDisplayed.gamePlayers.length < 2) {
-          //Waiting for opponent then
-          //Return false;
           return true;
         }
       }
@@ -635,19 +631,15 @@ export default {
     },
     placingShips() {
       //Check if user has finished placing ships. Get info from server, no from local.
-      if (
-        this.gameDisplayed.ships &&
+      return this.gameDisplayed.ships &&
         this.gameDisplayed.ships.length <= 0 &&
-        this.gameDisplayed.gameState.code <= 1
-      ) {
-        return true;
-      }
-      return false;
+        this.gameDisplayed.gameState.code <= 1;
+
     },
     canFireSalvo() {
       //Check if user can fire a salvo.
       if (this.gameState != null) {
-        return this.gameState.code == "4" && !this.sendingSalvo;
+        return this.gameState.code === "4" && !this.sendingSalvo;
       }
       return false;
     },
@@ -655,10 +647,10 @@ export default {
       //Return the current player from server info
       //Add 2 properties from gamePlayer server info:
       // -LastPlayedDate
-      // -LastConenctedDate
+      // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id == this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id === parseInt(this.gp));
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -670,7 +662,7 @@ export default {
     },
     isOpponentConnected() {
       //Return the opponent connection status for visual info to the user
-      //False if opponent didn't execute a action (like firing a salvo) since an arbitrary amounnt of time (300s)
+      //False if opponent didn't execute a action (like firing a salvo) since an arbitrary amount of time (300s)
       //True if opponent is considered connected
       if (this.opponentPlayer.lastConnectedDate) {
         let now = this.moment();
@@ -686,10 +678,10 @@ export default {
       //Return the opponent player from server info
       //Add 2 properties from gamePlayer server info:
       // -LastPlayedDate
-      // -LastConenctedDate
+      // -LastConnectedDate
       let gamePlayers = this.gameDisplayed.gamePlayers;
       if (gamePlayers) {
-        let cur_gp = gamePlayers.find(gameP => gameP.id != this.gp);
+        let cur_gp = gamePlayers.find(gameP => gameP.id !== parseInt(this.gp));
         if (cur_gp) {
           let obj = cur_gp.player;
           obj["lastPlayedDate"] = cur_gp.lastPlayedDate;
@@ -703,11 +695,6 @@ export default {
       if (this.gameDisplayed.salvoes)
         return this.gameDisplayed.salvoes[this.currentPlayer.id];
       return {};
-    },
-    opponentSalvoes() {
-      if (this.opponentPlayer.id != undefined && this.opponentPlayer.id != null)
-        return this.gameDisplayed.salvoes[this.opponentPlayer.id];
-      return null;
     }
   },
   watch: {
@@ -717,8 +704,10 @@ export default {
       }
     },
     playerSalvoes(newObj, oldObj) {
-      if (Object.keys(newObj).length > Object.keys(oldObj).length)
-        this.lockedSalvo = [];
+      if (newObj) {
+        if (Object.keys(newObj).length > Object.keys(oldObj).length)
+          this.lockedSalvo = [];
+      }
     },
     opponentPlayer(newOpponent, oldOpponent) {
       if (newOpponent.id != null && oldOpponent.id == null) {
@@ -727,10 +716,10 @@ export default {
       }
     },
     gameResult(newVal, oldVal) {
-      if (newVal != oldVal) {
-        newVal == "WON"
-          ? this.soundEffects.play("winnerTheme")
-          : this.soundEffects.play("loserTheme");
+      if (newVal !== oldVal) {
+        newVal === "WON"
+          ? this.soundEffects.play("winnerTheme", true)
+          : this.soundEffects.play("loserTheme", true);
       }
     },
     gameState(newGameState, oldGameState) {
@@ -755,15 +744,11 @@ export default {
       this.bgEpicIntro.play();
     }
     this.sendingSalvo = false;
-    window.onkeydown = function(event) {
+    window.onkeydown = function (event) {
       if (event.keyCode === 32) {
         event.preventDefault();
       }
     };
-    // //Prevent text selection
-    // document.onselectstart = function() {
-    //   return false;
-    // };
     this.$nextTick(() => {
       this.getGame();
       window.addEventListener("keydown", this.gameKeyDownEvent, false);
@@ -789,11 +774,12 @@ export default {
       }
     },
     gameKeyDownEvent(event) {
-      if (event.keyCode == 32) {
+      if (event.keyCode === 32) {
         if (!this.placingShips && this.canFireSalvo) this.fireSalvo();
       }
     },
     sendOffLineStatus() {
+      // TODO -> use this method with timer or when quitting the page.
       let payload = {
         data: "",
         rqUrl: "/games/players/" + this.gp + "/is_OFFLINE"
@@ -801,7 +787,6 @@ export default {
       this.postData(payload).then(
         res => {
           this.alertMsg = "You went inactive";
-          //TODO: do something with t
         },
         error => {
           let msg = "update status to offline";
@@ -810,22 +795,21 @@ export default {
           } else if (error.request) {
             this.alertMsg = msg + " failed : Request Error: " + error.request;
           } else {
-            this.alertMsg =
-              requestType + msg + "failed : Settings error:" + error.message;
+            this.alertMsg = msg + "failed : Settings error:" + error.message;
           }
         }
       );
     },
     getDuplicates(arr) {
-      var object = {};
-      var result = [];
+      let object = {};
+      let result = [];
 
-      arr.forEach(function(item) {
+      arr.forEach(function (item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
 
-      for (var prop in object) {
+      for (let prop in object) {
         if (object[prop] >= 2) {
           result.push(prop);
         }
@@ -833,9 +817,8 @@ export default {
       return result;
     },
     placeShipRandomly() {
-      this.soundEffects.play("registrationTick");
-      let shipCoord;
-      //reinit ships positions.
+      this.soundEffects.play("registrationTick", true);
+      //init ships positions.
       this.ships.forEach(ship => {
         ship.initPosition = [];
       });
@@ -846,15 +829,14 @@ export default {
           let randomY = Math.floor(this.gridSize * Math.random()) + 1;
           let randomDirection = Math.random() >= 0.5;
           if (this.isLegal(randomX, randomY, randomDirection, ship)) {
-            let shipLocation = this.getShipIdList(
+            ship.initPosition = this.getShipIdList(
               randomX,
               randomY,
               ship.shipLength,
               randomDirection
             );
-            ship.initPosition = shipLocation;
             illegalPlacement = false;
-          } else continue;
+          }
         }
       }
     },
@@ -862,37 +844,38 @@ export default {
       let listLoc = [];
       for (let i = 1; i <= length; i++) {
         if (rotation) {
-          listLoc.push(this.getIdfromCoord(x + i, y));
+          listLoc.push(this.getIdFromCoord(x + i, y));
         } else {
-          listLoc.push(this.getIdfromCoord(x, y + i));
+          listLoc.push(this.getIdFromCoord(x, y + i));
         }
       }
       return listLoc;
     },
     isLegal(x, y, rotation, ship) {
       // first, check if the ship is within the grid...
-      if (this.isWithinBounds(x, y, rotation, ship.shipLength)) {
-        // ...then check to make sure it doesn't collide with another ship
-        let otherShipLocationList = [].concat.apply(
-          [],
-          this.ships.map(s => {
-            if (s.type != ship.type) return s.initPosition;
-            else return [];
-          })
-        );
-        let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
-        if (otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0))
-          return false;
-        else return true;
-      } else return false;
+      if (!this.isWithinBounds(x, y, rotation, ship.shipLength)) {
+        return false;
+      }
+      // ...then check to make sure it doesn't collide with another ship
+      let otherShipLocationList = [].concat.apply(
+        [],
+        this.ships.map(s => {
+          if (s.type !== ship.type) return s.initPosition;
+          else return [];
+        })
+      );
+      let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
+      return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
+
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     toRowName(num) {
+      let ret = "", b = 26, a = 1;
       //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
@@ -906,7 +889,7 @@ export default {
     },
 
     setBoardFromServer() {
-      if (this.playerSalvoes != undefined) {
+      if (this.playerSalvoes !== undefined) {
         let playerSalvoesTurnsList = Object.keys(this.playerSalvoes);
         this.salvoTurn = Math.max(
           Math.max(...playerSalvoesTurnsList) + 1,
@@ -916,17 +899,17 @@ export default {
       // this.salvoTurn = Object.keys(this.playerSalvoes).length + 1;
       if (this.gameDisplayed.ships) {
         for (let server_ship of this.gameDisplayed.ships) {
-          let gridShip = this.ships.find(ship => ship.type == server_ship.type);
+          let gridShip = this.ships.find(ship => ship.type === server_ship.type);
           gridShip.initPosition = server_ship.locations;
         }
       }
     },
     setAutoRefresh() {
-      var self = this;
+      let self = this;
       if (this.autoRefresh == null && !this.isGameFinished) {
         this.autoRefresh = setInterval(
-          function() {
-            if (this.$route.name == "game") self.getGame();
+          function () {
+            if (this.$route.name === "game") self.getGame();
             else this.stopAutoRefresh();
           }.bind(this),
           5000
@@ -940,11 +923,10 @@ export default {
     updatePositions(value) {
       this.$set(this.shipPositions, value.type, value.positions);
       this.selectedShip = value.type;
-      // this.shipPositions[value.type] = value.positions;
     },
     updateInitPositions(value) {
       for (let ship of this.ships) {
-        if (value.type == ship.type) {
+        if (value.type === ship.type) {
           ship.initPosition = value.initPosition;
         }
       }
@@ -963,15 +945,14 @@ export default {
         return;
       }
 
-      let gameD = this.gameDisplayed;
       let playerSalvoes = this.playerSalvoes;
-      if (playerSalvoes[this.salvoTurn] == undefined)
+      if (playerSalvoes[this.salvoTurn] === undefined)
         playerSalvoes[this.salvoTurn] = [];
 
       //check if newPosition is not already fired at
       let alreadyFiredPosition = false;
       for (const key of Object.keys(playerSalvoes)) {
-        if (playerSalvoes[key].includes(newPosition) && key != this.salvoTurn) {
+        if (playerSalvoes[key].includes(newPosition) && key !== this.salvoTurn) {
           alreadyFiredPosition = true;
           break;
         }
@@ -980,7 +961,7 @@ export default {
         return;
       }
       //CanFire
-      this.soundEffects.play("targetSelect");
+      this.soundEffects.play("targetSelect", true);
       let currentSalvoesPositions = this.salvoPositions;
       //Check if arrays of salvoPositions doesn't contain duplicates
       if (!currentSalvoesPositions.includes(newPosition)) {
@@ -1017,7 +998,7 @@ export default {
       let entries = Object.entries(this.shipPositions);
       let listOfShip = [];
       for (let [key, value] of entries) {
-        listOfShip.push({ type: key, locations: value });
+        listOfShip.push({type: key, locations: value});
       }
       let payload = {
         data: listOfShip,
@@ -1033,7 +1014,9 @@ export default {
             res => {
               this.sendingShips = false;
             },
-            reject => {}
+            reject => {
+              console.warn("Failed to getGames gameView", reject);
+            }
           );
           // this.handleSuccessAlertMsgs(res, msgIntro);
         },
@@ -1073,8 +1056,7 @@ export default {
             res => {
               this.sendingSalvo = false;
               this.lockedSalvo = [];
-            },
-            reject => {}
+            }
           );
         },
         error => {
@@ -1100,16 +1082,14 @@ export default {
       if (this.overlappingShips()) {
         return;
       }
-      this.soundEffects.play("startGame");
+      this.soundEffects.play("startGame", true);
       this.userIsReady = true;
       this.sendShipToServer();
       this.selectedShip = "";
-      // this.$refs.timer.setTime({minutes:2,secondes:0});
-      // this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
     },
     fireSalvo() {
       let randomNb = Math.floor(Math.random() * 3) + 1;
-      let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+      let soundId = this.soundEffects.play("loadAndFire" + randomNb, true);
       this.soundEffects.rate(2.0, soundId);
       this.sendSalvoToServer();
     },
@@ -1121,8 +1101,8 @@ export default {
         res => {
           this.setBoardFromServer();
         },
-        reject => {
-          //console.warn("Failed to getGames gameView", reject);
+        err => {
+          this.alertMsg = "Failed to getGames gameView";
         }
       );
     }
@@ -1136,15 +1116,18 @@ export default {
   border: 2px #363a49 solid;
   border-radius: 0 0 1em 1em;
 }
+
 .instruction-box {
   max-width: 700px;
   background-color: rgba(73, 69, 69, 0.61);
   border-radius: 1em;
   border: 2px white solid;
 }
+
 .id-indv {
   width: 3em;
 }
+
 .id-row {
   display: flex;
   justify-content: flex-start;
@@ -1153,19 +1136,23 @@ export default {
 .middle-flex {
   width: 10vw;
 }
+
 .fire-button {
   align-self: center;
   justify-self: center;
   /* width: inherit; */
 }
+
 .spaceBar {
   align-self: center;
   justify-self: center;
   width: 60%;
 }
+
 .spaceBar-opaque {
   opacity: 0.4;
 }
+
 .popup {
   background: rgb(2, 0, 36);
   background: linear-gradient(
@@ -1184,10 +1171,9 @@ export default {
   min-height: 150px;
   top: 40%;
   left: 0;
-  -webkit-animation: slide-in-fwd-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: scale-in-hor-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both,
-    bg-pan-left 2s infinite both alternate;
+  bg-pan-left 2s infinite both alternate;
 }
 
 @-webkit-keyframes scale-in-hor-center {
@@ -1202,6 +1188,7 @@ export default {
     opacity: 1;
   }
 }
+
 @keyframes scale-in-hor-center {
   0% {
     -webkit-transform: scaleX(0);
@@ -1214,26 +1201,30 @@ export default {
     opacity: 1;
   }
 }
+
 .bg-pan {
   -webkit-animation: bg-pan-left infinite both;
   animation: bg-pan-left infinite both;
 }
+
 @-webkit-keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
+
 @keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
+
 .fillHeight {
   height: 100vh;
 }

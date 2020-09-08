@@ -24,7 +24,7 @@
         lg10
         pa-3
       >
-        <GamesTable />
+        <GamesTable/>
       </v-flex>
       <v-flex
         xs12
@@ -40,7 +40,7 @@
         lg10
         pa-3
       >
-        <LeaderBoard />
+        <LeaderBoard/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -49,7 +49,8 @@
 <script>
 import GamesTable from "../components/GamesTable.vue";
 import LeaderBoard from "../components/LeaderBoard.vue";
-import { mapActions, mapState } from "vuex";
+import {mapActions, mapState} from "vuex";
+
 export default {
   name: "Lobby",
   components: {
@@ -58,7 +59,7 @@ export default {
   },
   data() {
     return {
-      autorefresh: null
+      autoRefresh: null
     };
   },
   computed: {
@@ -68,7 +69,7 @@ export default {
     this.bgMusic.fade(0.0, 0.6, 1500);
     this.setAutoRefresh();
   },
-  beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate() {
     this.setAutoRefresh();
   },
   beforeRouteLeave(to, from, next) {
@@ -81,19 +82,19 @@ export default {
   methods: {
     ...mapActions(["getData"]),
     getGames() {
-      let payload = { mutation: "setGames", url: "/games" };
+      let payload = {mutation: "setGames", url: "/games"};
       this.getData(payload);
     },
     getPlayers() {
-      let payload = { mutation: "setPlayers", url: "/players" };
+      let payload = {mutation: "setPlayers", url: "/players"};
       this.getData(payload);
     },
     setAutoRefresh() {
-      var self = this;
+      let self = this;
       if (this.autoRefresh == null) {
         this.autoRefresh = setInterval(
-          function() {
-            if (this.$route.name == "lobby") {
+          function () {
+            if (this.$route.name === "lobby") {
               self.getGames();
               self.getPlayers();
             } else this.stopAutoRefresh();
@@ -113,6 +114,6 @@ export default {
 .bg-box {
   background-color: #3a4e5ec2;
 
-  box-shadow: 0px 0px 53px 11px rgba(32, 46, 77, 0.8);
+  box-shadow: 0 0 53px 11px rgba(32, 46, 77, 0.8);
 }
 </style>

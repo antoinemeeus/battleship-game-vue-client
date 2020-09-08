@@ -33,13 +33,15 @@
       class="ship "
       :class="{ selected: isShipSelected }"
       :src="getImage()"
+      alt="Selected ship"
     >
   </VueDragResize>
 </template>
 
 <script>
 import VueDragResize from "vue-drag-resize";
-import { mapState, mapActions } from "vuex";
+import {mapState, mapActions} from "vuex";
+
 export default {
   components: {
     VueDragResize
@@ -66,7 +68,6 @@ export default {
       overlapping: false
     };
   },
-
   computed: {
     ...mapState(["soundEffects"]),
     battleShipDim() {
@@ -80,10 +81,10 @@ export default {
         _w = this.gridCellSize * this.shipLength;
       }
 
-      return { h: _h, w: _w, _ph: _parent_square_dim, _pw: _parent_square_dim };
+      return {h: _h, w: _w, _ph: _parent_square_dim, _pw: _parent_square_dim};
     },
     isShipSelected() {
-      return this.type == this.shipSelected && this.canMove;
+      return this.type === this.shipSelected && this.canMove;
     },
     initShipPosition() {
       //Method that takes in the list of string of locations type A1,B1...
@@ -95,6 +96,9 @@ export default {
       let x = 0;
       let y = 0;
       for (let shipCellLocation of this.firstLocation) {
+        if (shipCellLocation === undefined) {
+          continue
+        }
         // Find the first occurrence of a digit
         let startIndex = shipCellLocation.search(/[\d+]/);
         // The row is the part from the beginning up until the first digit  A,B...
@@ -108,7 +112,7 @@ export default {
       }
       //Case no information, lists are empty,
       if (columnList.length <= 0 || rowList.length <= 0) {
-        return { posX: this.gridCellSize, posY: this.gridCellSize };
+        return {posX: this.gridCellSize, posY: this.gridCellSize};
       }
 
       if (this.hasDuplicates(columnList)) {
@@ -123,7 +127,7 @@ export default {
         this.rotate = true;
       }
       //Apply new bow position
-      return { posX: x * this.gridCellSize, posY: y * this.gridCellSize };
+      return {posX: x * this.gridCellSize, posY: y * this.gridCellSize};
     }
   },
   watch: {
@@ -155,10 +159,10 @@ export default {
       return url;
     },
     shakeImage() {
-      this.soundEffects.play("errorIllegalPos");
+      this.soundEffects.play("errorIllegalPos", true);
       let element = this.$refs.ship.$el;
       element.classList.add("shake");
-      setTimeout(function() {
+      setTimeout(function () {
         element.classList.remove("shake");
       }, 500);
     },
@@ -166,15 +170,15 @@ export default {
     isShipOverlapping() {
       //flatten all the ships positions to an array
       this.overlapping = false;
-      let allshipsPos = this.allShipsPositions;
-      let keys = Object.keys(allshipsPos);
+      let allShipsPositions = this.allShipsPositions;
+      let keys = Object.keys(allShipsPositions);
       for (let key of keys) {
-        if (key != this.type) {
-          let found = allshipsPos[key].some(pos =>
+        if (key !== this.type) {
+          let found = allShipsPositions[key].some(pos =>
             this.shipPositions.includes(pos)
           );
           if (found) {
-            //Forbiden position placement
+            //Forbidden position placement
             this.overlapping = true;
             return true;
           }
@@ -183,11 +187,11 @@ export default {
       return false;
     },
     rotateShip() {
-      let bowPos = { left: this.$refs.ship.left, top: this.$refs.ship.top };
+      let bowPos = {left: this.$refs.ship.left, top: this.$refs.ship.top};
       this.rotate = !this.rotate;
       this.getElementBelowBow(bowPos);
-      if (this.outOfBounds == true || this.isShipOverlapping()) {
-        //Forbiden position placement
+      if (this.outOfBounds === true || this.isShipOverlapping()) {
+        //Forbidden position placement
         this.shakeImage();
         this.resetShipPosLastValid();
       } else {
@@ -195,34 +199,34 @@ export default {
         this.passPositionToParent();
       }
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     getPositionOfShip(bowElement) {
       let rowIdx = parseInt(bowElement.dataset.row);
       let colIdx = parseInt(bowElement.dataset.col);
       //Arrays of grid indexes representatives of ship position
-      let shipIndexArray = [{ row: rowIdx, col: colIdx }];
+      let shipIndexArray = [{row: rowIdx, col: colIdx}];
       this.outOfBounds = false;
-      //Infer  position of Ship base on lenght, rotation and bowPosition and checks if OutOfBounds
+      //Infer  position of Ship base on length, rotation and bowPosition and checks if OutOfBounds
       for (let i = 1; i < this.shipLength; i++) {
         if (this.rotate) {
           if (colIdx + i > this.gridSize) {
             this.outOfBounds = true;
           } else {
-            shipIndexArray.push({ row: rowIdx, col: colIdx + i });
+            shipIndexArray.push({row: rowIdx, col: colIdx + i});
           }
         } else {
           if (rowIdx + i > this.gridSize) {
             this.outOfBounds = true;
           } else {
-            shipIndexArray.push({ row: rowIdx + i, col: colIdx });
+            shipIndexArray.push({row: rowIdx + i, col: colIdx});
           }
         }
       }
       //Format array of grid indexes to array of position string LetterNumber (A1,B1..) and save it
       this.shipPositions = shipIndexArray.map(idx =>
-        this.getIdfromCoord(idx.row, idx.col)
+        this.getIdFromCoord(idx.row, idx.col)
       );
     },
     getElementBelowBow(bowPos) {
@@ -243,7 +247,7 @@ export default {
         Math.round(bowPos.top / this.gridCellSize) * this.gridCellSize;
       return bowPos;
     },
-    onActivated(event) {
+    onActivated() {
       this.isMoving = true;
       this.$refs.ship.limits;
       this.$refs.ship.limits = this.shipBoardLimits();
@@ -269,12 +273,11 @@ export default {
         this.passPositionToParent();
         this.passStopPositionToParent();
         if (this.canMove) {
-          let idsound = this.soundEffects.play("shipMoving");
-          this.soundEffects.volume(0.4, idsound);
+          let idSound = this.soundEffects.play("shipMoving", true);
+          this.soundEffects.volume(0.4, idSound);
         }
       }
     },
-
     snapShipToGrid(pos) {
       let nearestGridPos = this.getNearestGridPos(pos);
       let shipDragged = this.$refs.ship;
@@ -316,8 +319,7 @@ export default {
       this.shipPositionBeforeMoving.rotation = rotation;
     },
     resetShipPosLastValid() {
-      if (this.shipPositionBeforeMoving.rotation === "V") this.rotate = true;
-      else this.rotate = false;
+      this.rotate = this.shipPositionBeforeMoving.rotation === "V";
       this.snapShipToGrid(this.shipPositionBeforeMoving);
     },
     shipBoardLimits() {
@@ -346,13 +348,17 @@ export default {
      * @return {string}  The column name.
      */
     toRowName(num) {
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+      let ret = "";
+      let b = 26;
+      let a = 1;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
     nameRowToNumber(letters) {
-      for (var p = 0, n = 0; p < letters.length; p++) {
+      let n = 0, p = 0;
+      for (; p < letters.length; p++) {
         n = letters[p].charCodeAt() - 64 + n * 26;
       }
       return n;
@@ -369,6 +375,7 @@ export default {
   object-fit: contain;
   /* z-index: -1; */
 }
+
 .grabbable {
   -webkit-user-select: none;
   cursor: move; /* fallback if grab cursor is unsupported */
@@ -377,11 +384,13 @@ export default {
 .buttonPos {
   top: -10px !important;
 }
+
 .selected {
   border: 1px solid rgba(87, 221, 93, 0.486);
   box-shadow: 0 0 0 rgba(87, 221, 94, 0.836);
   animation: pulse 1.5s infinite;
 }
+
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(87, 221, 94, 0.836);
@@ -393,10 +402,12 @@ export default {
     box-shadow: 0 0 0 0 rgba(87, 221, 94, 0);
   }
 }
+
 .shake {
   animation: shake 0.5s;
   animation-iteration-count: 2;
 }
+
 @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);

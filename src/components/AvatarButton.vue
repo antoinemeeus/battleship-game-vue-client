@@ -43,7 +43,24 @@
             </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
+        <v-list-tile
+          v-if="isAuthenticated"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title pr-2>
+              Connected as {{ currentUser.userName }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile
+          v-if="isAuthenticated"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title pr-2>
+              User id {{ currentUser.id }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile
           v-if="isAuthenticated"
           @click="logOut"
@@ -69,7 +86,7 @@
       max-width="500"
     >
       <v-flex shrink>
-        <Registration @loginSuccess="closeModal" />
+        <Registration @loginSuccess="closeModal"/>
       </v-flex>
     </v-dialog>
   </div>
@@ -77,8 +94,8 @@
 
 <script>
 import Registration from "../components/Registration.vue";
-import axios from "axios";
-import { mapState, mapActions, mapGetters } from "vuex";
+import {mapState, mapActions, mapGetters} from "vuex";
+
 export default {
   components: {
     Registration
@@ -88,16 +105,15 @@ export default {
     dialog: false,
     avatarID: 1
   }),
-  created() {},
-  mounted() {
-    this.valid = false;
-  },
   computed: {
     ...mapState(["loading", "avatarList"]),
     ...mapGetters(["currentUser", "isAuthenticated"]),
     selectedAvatar() {
-      return this.avatarList.find(av => av.id == this.currentUser.avatarID);
+      return this.avatarList.find(av => av.id === this.currentUser.avatarID);
     }
+  },
+  mounted() {
+    this.valid = false;
   },
   methods: {
     ...mapActions(["authRequest", "postData", "getData"]),
@@ -118,14 +134,14 @@ export default {
       this.authRequest(payload).then(
         res => {
           this.menu = false;
-          this.$router.push("/");
+          this.$router.push("/").catch(err => {
+          });
         },
-        err => {}
+        err => {
+        }
       );
       e.preventDefault();
     }
   }
 };
 </script>
-
-<style></style>

@@ -12,7 +12,7 @@
         xl4
         class="user-bg-color"
       >
-        <UserOverview :user="currentUser" />
+        <UserOverview :user="currentUser"/>
       </v-flex>
       <v-flex
         v-if="$vuetify.breakpoint.mdAndUp"
@@ -22,7 +22,7 @@
         xl4
         class="user-bg-color"
       >
-        <UserOverview :is-user="false" />
+        <UserOverview :is-user="false"/>
       </v-flex>
     </v-layout>
     <v-layout
@@ -111,7 +111,7 @@
                 >
                   <td
                     class="text-capitalize pr-2"
-                    :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
+                    :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
                   >
                     <span>{{ ship }}</span>
                   </td>
@@ -120,7 +120,7 @@
                       v-for="id in location"
                       :key="ship + id"
                       class="px-2 id-indv"
-                      :class="ship == selectedShip ? 'blue-grey darken-1' : ''"
+                      :class="ship === selectedShip ? 'blue-grey darken-1' : ''"
                       :style="
                         getShipOverlappingPositions.includes(id)
                           ? { color: 'orange' }
@@ -160,24 +160,28 @@
                     a ship, click on the
                     <v-icon color="blue px-1">
                       cached
-                    </v-icon>button.
+                    </v-icon>
+                    button.
                   </p>
                   <p>
                     You can also decide to place all ships randomly by click the
                     <v-icon class="px-1">
                       fa-random
-                    </v-icon>random button.
+                    </v-icon>
+                    random button.
                   </p>
                   <p>
                     When you are ready, go to battle by clicking the
                     <v-icon class="px-1">
                       fa-play
-                    </v-icon>start button.
+                    </v-icon>
+                    start button.
                   </p>
                   <p>
                     <v-icon color="red px-1">
                       warning
-                    </v-icon>You will not be
+                    </v-icon>
+                    You will not be
                     able to rotate a ship if the the next position contains an
                     obstacle or is outside the grid.
                   </p>
@@ -197,7 +201,7 @@
           column
         >
           <SalvoMissiles
-            ref
+            ref=""
             :salvo-size="homeNextSalvoPositions.length"
             :missile-number="maxSalvoSize"
           />
@@ -236,10 +240,10 @@
           </v-flex>
           <v-flex
             class="text-xs-center spaceBar"
-            :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length == 0 }"
+            :class="{ 'spaceBar-opaque': homeNextSalvoPositions.length === 0 }"
           >
             <span>or press</span>
-            <v-img :src="require('../assets/spaceBar.png')" />
+            <v-img :src="require('../assets/tutorial/spaceBar.png')"/>
           </v-flex>
           <v-flex>
             <v-layout
@@ -286,7 +290,7 @@
               <Grid
                 v-show="showSalvo"
                 ref="salvoGrid"
-                assigned-i-d="salvoGrid"
+                assigned-id="salvoGrid"
                 :turn="salvoTurn"
                 :has-ship-list="gameFinished ? computerShipsPositionList : []"
                 :grid-size="gridSize"
@@ -319,19 +323,19 @@
       column
     >
       <span
-        v-if="gameState == 'TIE'"
+        v-if="gameState === 'TIE'"
         class="display-3"
       >YOU TIED</span>
       <span
-        v-if="gameState == 'HOME_WINS'"
+        v-if="gameState === 'HOME_WINS'"
         class="display-3"
       >YOU WIN!</span>
       <span
-        v-if="gameState == 'COMPUTER_WINS'"
+        v-if="gameState === 'COMPUTER_WINS'"
         class="display-3"
       >YOU LOSE</span>
       <span
-        v-if="gameState == 'PROGRESS'"
+        v-if="gameState === 'PROGRESS'"
         class="display-3"
       >TEST PROGRESS</span>
       <v-flex>
@@ -354,7 +358,7 @@ import SalvoMissiles from "../components/SalvoMissiles.vue";
 import CountDownTimer from "../components/CountDownTimer.vue";
 import InstructionWizard from "../components/InstructionWizard.vue";
 import UserOverview from "../components/UserOverview.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
 
 export default {
   name: "AgainstComputer",
@@ -370,7 +374,7 @@ export default {
   props: {
     difficulty: {
       type: Object,
-      default: () => ({ display: "Normal", diff: "normal", color: "green" })
+      default: () => ({display: "Normal", diff: "normal", color: "green"})
     }
   },
   data() {
@@ -405,35 +409,35 @@ export default {
           hits: [],
           shipLength: 5,
           initPosition: ["A2", "A3", "A4", "A5", "A6"],
-          imgSrc: "/Carrier/ShipCarrierHull"
+          imgSrc: "/ships/carrier/ShipCarrierHull"
         },
         {
           type: "battleship",
           hits: [],
           shipLength: 4,
           initPosition: ["I5", "I6", "I7", "I8"],
-          imgSrc: "/Battleship/ShipBattleshipHull"
+          imgSrc: "/ships/battleship/ShipBattleshipHull"
         },
         {
           type: "destroyer",
           hits: [],
           shipLength: 3,
           initPosition: ["C7", "C8", "C9"],
-          imgSrc: "/Destroyer/ShipDestroyerHull"
+          imgSrc: "/ships/destroyer/ShipDestroyerHull"
         },
         {
           type: "submarine",
           hits: [],
           shipLength: 3,
           initPosition: ["D2", "E2", "F2"],
-          imgSrc: "/Submarine/ShipSubMarineHull"
+          imgSrc: "/ships/submarine/ShipSubMarineHull"
         },
         {
           type: "patrolboat",
           hits: [],
           shipLength: 2,
           initPosition: ["E5", "F5"],
-          imgSrc: "/PatrolBoat/ShipPatrolHull"
+          imgSrc: "/ships/patrolBoat/ShipPatrolHull"
         }
       ],
       computerShips: [
@@ -469,51 +473,6 @@ export default {
         }
       ]
     };
-  },
-  watch: {
-    pauseTimer(newVal) {
-      if (newVal && this.gameStart) {
-        this.$refs.timer.start();
-      } else this.$refs.timer.stop();
-    },
-    gameState(newVal, oldVal) {
-      if (newVal != oldVal && oldVal != (undefined || null)) {
-        if (newVal == "HOME_WINS") this.soundEffects.play("winnerTheme");
-        if (newVal == "COMPUTER_WINS") this.soundEffects.play("loserTheme");
-      }
-    }
-  },
-  beforeRouteLeave(to, from, next) {
-    this.bgEpicIntro.fade(0.3, 0.0, 1500);
-    next();
-  },
-  created() {
-    this.placeShipRandomly(this.homeShips);
-    this.placeShipRandomly(this.computerShips);
-  },
-
-  mounted() {
-    this.bgMusic.fade(0.6, 0.0, 1000);
-    this.bgEpicIntro.fade(0.0, 0.3, 1500);
-    if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
-    this.getUserData();
-    //Prevent space default behavior
-    window.onkeydown = function(event) {
-      if (event.keyCode === 32) {
-        event.preventDefault();
-      }
-    };
-    //Prevent text selection
-    document.onselectstart = function() {
-      return false;
-    };
-    this.$nextTick(() => {
-      window.addEventListener("keydown", this.gameKeyDownEvent, false);
-    });
-  },
-  beforeDestroy() {
-    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
-    window.onkeydown = null;
   },
   computed: {
     ...mapState([
@@ -557,8 +516,7 @@ export default {
     },
     showHelp() {
       let showHelp = localStorage.getItem("showHelp");
-      if (showHelp == "true") return true;
-      else return false;
+      return showHelp === "true";
     },
     cellSize() {
       let innerWidth = window.innerWidth;
@@ -568,7 +526,7 @@ export default {
       );
       if (!this.$vuetify.breakpoint.smAndUp)
         newPixelValue = +((innerWidth * 0.8) / (this.gridSize + 1)).toFixed(0);
-      if (newPixelValue != NaN) return newPixelValue;
+      if (!isNaN(newPixelValue)) return newPixelValue;
       return 40;
     },
     fireButtonColor() {
@@ -583,7 +541,7 @@ export default {
       if (this.gamesInfo.player != null) {
         return this.gamesInfo.player;
       }
-      return { userName: "Anonymous" };
+      return {userName: "Anonymous"};
     },
     probabilityMap() {
       let map = [];
@@ -637,7 +595,7 @@ export default {
       for (let i = 1; i <= this.gridSize; i++) {
         for (let j = 1; j <= this.gridSize; j++) {
           let prob = this.probabilityMap[i - 1][j - 1];
-          obj[this.getIdfromCoord(i, j)] = { prob: prob, x: i, y: j };
+          obj[this.getIdFromCoord(i, j)] = {prob: prob, x: i, y: j};
         }
       }
       return obj;
@@ -655,10 +613,10 @@ export default {
       );
       let homeWins =
         hitsOnComputerShips.length >= this.computerShipsPositionList.length &&
-        hitsOnComputerShips.length != 0;
+        hitsOnComputerShips.length !== 0;
       let computerWins =
         hitsOnHomeShips.length >= this.homeShipsPositionList.length &&
-        hitsOnHomeShips.length != 0;
+        hitsOnHomeShips.length !== 0;
 
       if (homeWins || computerWins) {
         this.gameFinished = true;
@@ -728,7 +686,7 @@ export default {
           missLoc: missed
         };
       }
-      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of opponent info in the same vue $tick.
+      //Bad practice to update data inside computed()! This is a hacky way of forcing update of opponent info in the same vue $tick.
       this.$set(this.computerAllSalvoResult, "missed", allMissed);
       this.$set(this.computerAllSalvoResult, "hit", allHit);
       this.computerCoordinatesHit = this.coordinatesComputerSalvo.filter(obj =>
@@ -759,7 +717,7 @@ export default {
           missLoc: missed
         };
       }
-      //Bad practice to udpate data inside computed()! This is a hacky way of forcing update of user info in the same vue $tick.
+      //Bad practice to update data inside computed()! This is a hacky way of forcing update of user info in the same vue $tick.
       this.$set(this.homeAllSalvoResult, "missed", allMissed);
       this.$set(this.homeAllSalvoResult, "hit", allHit);
       return obj;
@@ -779,6 +737,50 @@ export default {
       return this.getDuplicates(this.homeShipsPositionList);
     }
   },
+  watch: {
+    pauseTimer(newVal) {
+      if (newVal && this.gameStart) {
+        this.$refs.timer.start();
+      } else this.$refs.timer.stop();
+    },
+    gameState(newVal, oldVal) {
+      if (newVal !== oldVal && oldVal !== null) {
+        if (newVal === "HOME_WINS") this.soundEffects.play("winnerTheme", true);
+        if (newVal === "COMPUTER_WINS") this.soundEffects.play("loserTheme", true);
+      }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.bgEpicIntro.fade(0.3, 0.0, 1500);
+    next();
+  },
+  created() {
+    this.placeShipRandomly(this.homeShips);
+    this.placeShipRandomly(this.computerShips);
+  },
+  mounted() {
+    this.bgMusic.fade(0.6, 0.0, 1000);
+    this.bgEpicIntro.fade(0.0, 0.3, 1500);
+    if (!this.bgEpicIntro.playing()) this.bgEpicIntro.play();
+    this.getUserData();
+    //Prevent space default behavior
+    window.onkeydown = function (event) {
+      if (event.keyCode === 32) {
+        event.preventDefault();
+      }
+    };
+    //Prevent text selection
+    document.onselectstart = function () {
+      return false;
+    };
+    this.$nextTick(() => {
+      window.addEventListener("keydown", this.gameKeyDownEvent, false);
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.gameKeyDownEvent, false);
+    window.onkeydown = null;
+  },
   methods: {
     ...mapActions(["authRequest", "getData", "postData"]),
     getUserData() {
@@ -792,7 +794,7 @@ export default {
         this.authRequest(payload).then(
           res => {
             //User has still has a valid session cookie.
-            this.getData({ url: "/player", mutation: "setUserInfo" });
+            this.getData({url: "/player", mutation: "setUserInfo"});
           },
           err => {
             //Was not logged in
@@ -802,7 +804,7 @@ export default {
       }
     },
     wizardUnpausedTimer(val) {
-      //Event triggered when user finished to read the intruction. Start countdown timer when first salvo is fired.
+      //Event triggered when user finished to read the instruction. Start countdown timer when first salvo is fired.
       this.pauseTimer = val;
     },
     timerEnd() {
@@ -817,20 +819,20 @@ export default {
     },
     gameKeyDownEvent(event) {
       //Fire salvo when space is pressed and we are in placing ship mode.
-      if (!this.placingShips && event.keyCode == 32) {
+      if (!this.placingShips && event.keyCode === 32) {
         this.fireSalvo();
       }
     },
     getDuplicates(arr) {
-      var object = {};
-      var result = [];
+      let object = {};
+      let result = [];
 
-      arr.forEach(function(item) {
+      arr.forEach(function (item) {
         if (!object[item]) object[item] = 0;
         object[item] += 1;
       });
 
-      for (var prop in object) {
+      for (let prop in object) {
         if (object[prop] >= 2) {
           result.push(prop);
         }
@@ -838,8 +840,8 @@ export default {
       return result;
     },
     placeShipRandomly(shipFleet) {
-      //reinit gameShipFleet positions.
-      this.soundEffects.play("registrationTick");
+      //init gameShipFleet positions.
+      this.soundEffects.play("registrationTick", true);
       shipFleet.forEach(ship => {
         ship.initPosition = [];
       });
@@ -852,15 +854,14 @@ export default {
           if (
             this.isLegal(randomX, randomY, randomDirection, ship, shipFleet)
           ) {
-            let shipLocation = this.getShipIdList(
+            ship.initPosition = this.getShipIdList(
               randomX,
               randomY,
               ship.shipLength,
               randomDirection
             );
-            ship.initPosition = shipLocation;
             illegalPlacement = false;
-          } else continue;
+          }
         }
       }
     },
@@ -868,9 +869,9 @@ export default {
       let listLoc = [];
       for (let i = 0; i < length; i++) {
         if (rotation) {
-          listLoc.push(this.getIdfromCoord(x + i, y));
+          listLoc.push(this.getIdFromCoord(x + i, y));
         } else {
-          listLoc.push(this.getIdfromCoord(x, y + i));
+          listLoc.push(this.getIdFromCoord(x, y + i));
         }
       }
       return listLoc;
@@ -882,14 +883,12 @@ export default {
         let otherShipLocationList = [].concat.apply(
           [],
           shipFleet.map(s => {
-            if (s.type != ship.type) return s.initPosition;
+            if (s.type !== ship.type) return s.initPosition;
             else return [];
           })
         );
         let shipLoc = this.getShipIdList(x, y, ship.shipLength, rotation);
-        if (otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0))
-          return false;
-        else return true;
+        return !otherShipLocationList.some(r => shipLoc.indexOf(r) >= 0);
       } else return false;
     },
     increaseProbability(i, j, rotation, ship, map) {
@@ -903,13 +902,13 @@ export default {
       let adj = [];
 
       if (y + 1 <= this.gridSize)
-        adj.push({ cellID: this.getIdfromCoord(x, y + 1), x: x, y: y + 1 });
+        adj.push({cellID: this.getIdFromCoord(x, y + 1), x: x, y: y + 1});
       if (y - 1 > 0)
-        adj.push({ cellID: this.getIdfromCoord(x, y - 1), x: x, y: y - 1 });
+        adj.push({cellID: this.getIdFromCoord(x, y - 1), x: x, y: y - 1});
       if (x + 1 <= this.gridSize)
-        adj.push({ cellID: this.getIdfromCoord(x + 1, y), x: x + 1, y: y });
+        adj.push({cellID: this.getIdFromCoord(x + 1, y), x: x + 1, y: y});
       if (x - 1 > 0)
-        adj.push({ cellID: this.getIdfromCoord(x - 1, y), x: x - 1, y: y });
+        adj.push({cellID: this.getIdFromCoord(x - 1, y), x: x - 1, y: y});
 
       return adj;
     },
@@ -919,7 +918,7 @@ export default {
       let max = Math.max(...arr.map(obj => obj.prob));
       return Object.keys(obj).find(key => obj[key].prob === max);
     },
-    getIdfromCoord(row, col) {
+    getIdFromCoord(row, col) {
       return this.toRowName(row) + "" + col;
     },
     isWithinBounds(x, y, rotation, L) {
@@ -938,8 +937,8 @@ export default {
       //check if ship position hit obstacle (hit)
       for (let i = z; i <= endOfShip; i++) {
         let idPos = rotation
-          ? this.getIdfromCoord(i, y)
-          : this.getIdfromCoord(x, i);
+          ? this.getIdFromCoord(i, y)
+          : this.getIdFromCoord(x, i);
         if (this.computerAllSalvoResult.missed.includes(idPos)) return false;
       }
 
@@ -951,7 +950,7 @@ export default {
     },
     updateInitPositions(value) {
       for (let ship of this.homeShips) {
-        if (value.type == ship.type) {
+        if (value.type === ship.type) {
           ship.initPosition = value.initPosition;
         }
       }
@@ -969,12 +968,12 @@ export default {
       }
       let playerSalvoes = this.homeSalvoPositions;
 
-      if (playerSalvoes[this.salvoTurn] == undefined)
+      if (playerSalvoes[this.salvoTurn] === undefined)
         playerSalvoes[this.salvoTurn] = [];
       //check if newPosition is not already fired at
       let alreadyFiredPosition = false;
       for (const key of Object.keys(playerSalvoes)) {
-        if (playerSalvoes[key].includes(newPosition) && key != this.salvoTurn) {
+        if (playerSalvoes[key].includes(newPosition) && key !== this.salvoTurn) {
           alreadyFiredPosition = true;
           break;
         }
@@ -1000,7 +999,7 @@ export default {
         }
       }
       //CanFire
-      this.soundEffects.play("targetSelect");
+      this.soundEffects.play("targetSelect", true);
 
       this.homeNextSalvoPositions = currentSalvoesPositions;
     },
@@ -1021,8 +1020,9 @@ export default {
     },
     toRowName(num) {
       //Get String value for a number. Excel's style.
-      for (var ret = "", a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
-        ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+      let ret = "", a = 1, b = 26;
+      for (; (num -= a) >= 0; a = b, b *= 26) {
+        ret = String.fromCharCode(Math.floor((num % b) / a) + 65) + ret;
       }
       return ret;
     },
@@ -1035,17 +1035,17 @@ export default {
         return;
       }
       if (this.overlappingShips()) {
-        //Ships are ovelapping
+        //Ships are overlapping
         this.placingShips = true;
         this.showSalvo = false;
         return;
       }
-      this.soundEffects.play("startGame");
+      this.soundEffects.play("startGame", false);
       this.placingShips = false;
       this.showSalvo = true;
       this.canFireSalvo = true;
       this.selectedShip = "";
-      this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
+      this.$refs.timer.setTime({minutes: 0, seconds: this.countDownTime});
     },
     fireSalvo() {
       //Method to fireSalvo to computer ships.
@@ -1074,18 +1074,19 @@ export default {
         //If music enable, method to update salvo position is in sound callback to avoid overlapping sounds
         if (this.musicPlaying) {
           let randomNb = Math.floor(Math.random() * 3) + 1;
-          let soundId = this.soundEffects.play("loadAndFire" + randomNb);
+          let soundId = this.soundEffects.play("loadAndFire" + randomNb, true);
           let self = this;
           this.soundEffects.rate(2.0, soundId);
           this.soundEffects.on(
             "end",
-            function() {
-              applySalvo(self); //->funciton to update inside callback
+            function () {
+              applySalvo(self); //->function to update inside callback
               setTimeout(() => {
                 self.computerTurn();
               }, 1000);
             },
-            soundId
+            soundId,
+            null,
           );
         } else {
           //If music not enable, we don't have to wait for music to update salvo position.
@@ -1107,33 +1108,33 @@ export default {
       while (
         list.length < size &&
         this.computerAllSalvoesPositionsList.length <
-          this.gridSize * this.gridSize
-      ) {
+        this.gridSize * this.gridSize
+        ) {
         let obj = {};
         let randomX = Math.floor(this.gridSize * Math.random()) + 1;
         let randomY = Math.floor(this.gridSize * Math.random()) + 1;
         //if position already in salvo list, generate new one.
-        let idpos = this.getIdfromCoord(randomX, randomY);
+        let idPos = this.getIdFromCoord(randomX, randomY);
 
-        //get cell with max probabilies of having a ship
+        //get cell with max probabilities of having a ship
         if (this.salvoTurn > 1) {
-          idpos = this.getMaxProbCellID(this.makeProbabilitiesDTO);
-          randomX = this.makeProbabilitiesDTO[idpos].x;
-          randomY = this.makeProbabilitiesDTO[idpos].y;
+          idPos = this.getMaxProbCellID(this.makeProbabilitiesDTO);
+          randomX = this.makeProbabilitiesDTO[idPos].x;
+          randomY = this.makeProbabilitiesDTO[idPos].y;
         }
         //check if cell isn't already included in list
         if (
-          !this.computerAllSalvoesPositionsList.includes(idpos) &&
-          !list.includes(idpos)
+          !this.computerAllSalvoesPositionsList.includes(idPos) &&
+          !list.includes(idPos)
         ) {
-          list.push(idpos);
-          obj["cellID"] = idpos;
+          list.push(idPos);
+          obj["cellID"] = idPos;
           obj["x"] = randomX;
           obj["y"] = randomY;
           coordList.push(obj);
         }
         //delete from probability stack the cell that was jut included
-        delete this.makeProbabilitiesDTO[idpos];
+        delete this.makeProbabilitiesDTO[idPos];
       }
       //Concat new list to array of position
       this.coordinatesComputerSalvo = [
@@ -1144,7 +1145,7 @@ export default {
       return list;
     },
     computerTurn() {
-      //Get random positions. Usefull when no probabilies were calculated .
+      //Get random positions. Useful when no probabilities were calculated .
       this.computerNextSalvoPositions = this.getRandomPositions(
         this.maxSalvoSize
       );
@@ -1162,7 +1163,7 @@ export default {
       ];
       //Reset timer and flags
       this.$refs.timer.reset();
-      this.$refs.timer.setTime({ minutes: 0, secondes: this.countDownTime });
+      this.$refs.timer.setTime({minutes: 0, seconds: this.countDownTime});
       this.$refs.timer.start();
       this.pauseTimer = true;
       this.canFireSalvo = true;
@@ -1176,20 +1177,24 @@ export default {
 .user-bg-color {
   background-color: #373d5598;
 }
+
 .game-box {
   background-color: #373d5598;
   border: 2px #363a49 solid;
   border-radius: 0 1em;
 }
+
 .instruction-box {
   max-width: 700px;
   background-color: rgba(73, 69, 69, 0.61);
   border-radius: 1em;
   border: 2px white solid;
 }
+
 .id-indv {
   width: 3em;
 }
+
 .id-row {
   display: flex;
   justify-content: flex-start;
@@ -1198,18 +1203,22 @@ export default {
 .middle-flex {
   width: 10vw;
 }
+
 .fire-button {
   align-self: center;
   justify-self: center;
 }
+
 .spaceBar {
   align-self: center;
   justify-self: center;
   width: 60%;
 }
+
 .spaceBar-opaque {
   opacity: 0.4;
 }
+
 .popup {
   background: rgb(2, 0, 36);
   background: linear-gradient(
@@ -1227,10 +1236,9 @@ export default {
   height: 25vh;
   top: 40%;
   left: 0;
-  -webkit-animation: slide-in-fwd-center 0.4s
-    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-fwd-center 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: scale-in-hor-center 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both,
-    bg-pan-left 2s infinite both alternate;
+  bg-pan-left 2s infinite both alternate;
 }
 
 @-webkit-keyframes scale-in-hor-center {
@@ -1245,6 +1253,7 @@ export default {
     opacity: 1;
   }
 }
+
 @keyframes scale-in-hor-center {
   0% {
     -webkit-transform: scaleX(0);
@@ -1257,24 +1266,27 @@ export default {
     opacity: 1;
   }
 }
+
 .bg-pan {
   -webkit-animation: bg-pan-left infinite both;
   animation: bg-pan-left infinite both;
 }
+
 @-webkit-keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
+
 @keyframes bg-pan-left {
   0% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 </style>

@@ -34,14 +34,15 @@
           color="green"
           @click="createGame()"
         >
-          <v-icon>fa-plus</v-icon><span class="px-2">Create New Game</span>
+          <v-icon>fa-plus</v-icon>
+          <span class="px-2">Create New Game</span>
         </v-btn>
         <v-dialog
           v-model="dialog"
           max-width="500"
         >
           <v-flex shrink>
-            <Registration @loginSuccess="closeModal" />
+            <Registration @loginSuccess="closeModal"/>
           </v-flex>
         </v-dialog>
         <!-- <v-btn @click="playAgainstComputer()">Play Against Computer</v-btn> -->
@@ -61,7 +62,8 @@
             class="absolute-center"
             @click="openModal()"
           >
-            <v-icon>fa-sign-in-alt</v-icon><span class="px-2">Login to create New Game</span>
+            <v-icon>fa-sign-in-alt</v-icon>
+            <span class="px-2">Login to create New Game</span>
           </v-btn>
         </div>
         <div>
@@ -105,7 +107,8 @@
                           :src="playerAvatar(props.item.avatarP1).src"
                           :alt="playerAvatar(props.item.avatarP1).name"
                         >
-                      </v-avatar><span
+                      </v-avatar>
+                      <span
                         class="pl-2"
                       >{{ props.item.player1 }} -
                         {{ props.item.p1_.email }}</span>
@@ -139,15 +142,16 @@
                           :src="playerAvatar(props.item.avatarP1).src"
                           :alt="playerAvatar(props.item.avatarP1).name"
                         >
-                      </v-avatar><span class="pl-2">{{ props.item.p1_.name }}</span>
+                      </v-avatar>
+                      <span class="pl-2">{{ props.item.p1_.name }}</span>
                     </div>
                     <v-chip
                       v-if="props.item.isFinished"
                       light
                       :color="
-                        props.item.p1_.result == 'won'
+                        props.item.p1_.result === 'won'
                           ? 'yellow'
-                          : props.item.p1_.result == 'tie'
+                          : props.item.p1_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
@@ -155,11 +159,7 @@
                     >
                       <v-icon>
                         {{
-                          props.item.p1_.result == "won"
-                            ? "star"
-                            : props.item.p1_.result == "tie"
-                              ? "fa-equals"
-                              : "fa-skull-crossbones"
+                          props.item.p1_.result === "won" ? "star" : props.item.p1_.result === "tie" ? "fa-equals" : "fa-skull-crossbones"
                         }}
                       </v-icon>
                       <span class="pl-2">{{ props.item.p1_.result }}</span>
@@ -181,7 +181,8 @@
                           :src="playerAvatar(props.item.avatarP2).src"
                           :alt="playerAvatar(props.item.avatarP2).name"
                         >
-                      </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
+                      </v-avatar>
+                      <span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-btn
                       v-if="props.item.p2_.isUser"
@@ -214,15 +215,16 @@
                           :src="playerAvatar(props.item.avatarP2).src"
                           :alt="playerAvatar(props.item.avatarP2).name"
                         >
-                      </v-avatar><span class="pl-2">{{ props.item.p2_.name }}</span>
+                      </v-avatar>
+                      <span class="pl-2">{{ props.item.p2_.name }}</span>
                     </div>
                     <v-chip
                       v-if="props.item.isFinished"
                       light
                       :color="
-                        props.item.p2_.result == 'won'
+                        props.item.p2_.result === 'won'
                           ? 'yellow'
-                          : props.item.p2_.result == 'tie'
+                          : props.item.p2_.result === 'tie'
                             ? 'cyan'
                             : 'red lighten-3'
                       "
@@ -230,11 +232,7 @@
                     >
                       <v-icon>
                         {{
-                          props.item.p2_.result == "won"
-                            ? "star"
-                            : props.item.p2_.result == "tie"
-                              ? "fa-equals"
-                              : "fa-skull-crossbones"
+                          props.item.p2_.result === "won" ? "star" : props.item.p2_.result === "tie" ? "fa-equals" : "fa-skull-crossbones"
                         }}
                       </v-icon>
                       <span class="pl-2">{{ props.item.p2_.result }}</span>
@@ -264,8 +262,8 @@
 
 <script>
 import Registration from "./Registration.vue";
-import axios from "axios";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
+
 export default {
   components: {
     Registration
@@ -285,9 +283,9 @@ export default {
         value: "created",
         class: "table-bg"
       },
-      { text: "Player 1", value: "player1", class: "table-bg" },
-      { text: "Player 2", value: "player2", class: "table-bg" },
-      { text: "Status", value: "status", class: "table-bg px-1" }
+      {text: "Player 1", value: "player1", class: "table-bg"},
+      {text: "Player 2", value: "player2", class: "table-bg"},
+      {text: "Status", value: "status", class: "table-bg px-1"}
       // { text: "Action", value: "actionObj", class: "px-1" }
     ],
     pagination: {
@@ -317,17 +315,17 @@ export default {
         this.pagination.totalItems / this.pagination.rowsPerPage
       );
     },
-
     presentGames() {
       function formatPlayer(playerObj) {
         return playerObj.userName || "-No username saved-";
       }
+
       let newGameList = [];
       if (this.gamesInfo.games) {
         newGameList = this.gamesInfo.games.map(game => {
           let status = "In progress";
           let isFinished = false;
-          let action = { actionType: 0, id: null };
+          let action = {actionType: 0, id: null};
           let p1_ = {
             isUser: false,
             isJoined: false,
@@ -352,10 +350,10 @@ export default {
           if (game.gamePlayers[0]) {
             p1_.name = formatPlayer(game.gamePlayers[0].player);
             p1_.avatarID = game.gamePlayers[0].player.avatarID;
-            (p1_.player_id = game.gamePlayers[0].player.id),
-              (p1_.gp_id = game.gamePlayers[0].id);
+            p1_.player_id = game.gamePlayers[0].player.id;
+            p1_.gp_id = game.gamePlayers[0].id;
             p1_.isJoined = true;
-            if (this.currentUser.id == p1_.player_id) {
+            if (this.currentUser.id === p1_.player_id) {
               p1_.isUser = true;
               p2_.isUser = false;
             }
@@ -363,10 +361,10 @@ export default {
           if (game.gamePlayers[1]) {
             p2_.name = formatPlayer(game.gamePlayers[1].player);
             p2_.avatarID = game.gamePlayers[1].player.avatarID;
-            (p2_.player_id = game.gamePlayers[1].player.id),
-              (p2_.gp_id = game.gamePlayers[1].id);
+            p2_.player_id = game.gamePlayers[1].player.id;
+            p2_.gp_id = game.gamePlayers[1].id;
             p2_.isJoined = true;
-            if (this.currentUser.id == p2_.player_id) {
+            if (this.currentUser.id === p2_.player_id) {
               p2_.isUser = true;
               p1_.isUser = false;
             }
@@ -377,10 +375,10 @@ export default {
             status =
               "Finished - " + this.moment(game.scores[0].finishDate).calendar();
             game.scores.map(sc => {
-              if (sc.playerID == p1_.player_id) {
+              if (sc.playerID === p1_.player_id) {
                 p1_.score = sc.score;
               }
-              if (sc.playerID == p2_.player_id) {
+              if (sc.playerID === p2_.player_id) {
                 p2_.score = sc.score;
               }
             });
@@ -393,7 +391,7 @@ export default {
               p1_.result = "lost";
               p2_.result = "won";
             }
-            if (p1_.score == p2_.score) {
+            if (p1_.score === p2_.score) {
               p1_.result = "tie";
               p2_.result = "tie";
             }
@@ -427,11 +425,19 @@ export default {
       return newGameList;
     }
   },
+  watch: {
+    isAuthenticated() {
+      this.getGames();
+    }
+  },
+  created() {
+    this.getGames();
+  },
   methods: {
     ...mapActions(["getData", "postData"]),
     playerAvatar(p_avatar) {
       if (p_avatar == null) return this.avatarList[0];
-      return this.avatarList.find(av => av.id == p_avatar);
+      return this.avatarList.find(av => av.id === p_avatar);
     },
     openModal() {
       this.dialog = true;
@@ -469,14 +475,14 @@ export default {
       }, 5000);
     },
     getGames() {
-      let payload = { mutation: "setGames", url: "/games" };
+      let payload = {mutation: "setGames", url: "/games"};
       this.getData(payload);
     },
     clearGameView() {
       this.$store.commit("setGameDisplayed", {});
     },
     createGame() {
-      let payload = { data: {}, rqUrl: "/games" };
+      let payload = {data: {}, rqUrl: "/games"};
       let msgIntro = "Game Creation";
       //Erase memory in store:
       this.clearGameView();
@@ -531,14 +537,6 @@ export default {
       this.clearGameView();
       this.$router.push("/game?gp=" + id);
     }
-  },
-  watch: {
-    isAuthenticated() {
-      this.getGames();
-    }
-  },
-  created() {
-    this.getGames();
   }
 };
 </script>
@@ -551,18 +549,22 @@ export default {
 .finished-row-bg {
   background-color: rgba(80, 102, 105, 0.623);
 }
+
 .dark-bg {
   background-color: rgba(68, 69, 70, 0.822);
 }
+
 .anchor {
   position: relative;
 }
+
 .wrapper-abs-btn {
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 10;
 }
+
 .absolute-center {
   position: absolute;
   top: 50%;

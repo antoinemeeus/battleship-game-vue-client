@@ -10,12 +10,12 @@
       >
         <v-img
           v-if="m <= missileLeft"
-          :src="require('../assets/missile_2.png')"
+          :src="require('../assets/missiles/missile_2.png')"
           class="image-missile-big"
         />
         <v-img
           v-else
-          :src="require('../assets/missile_2_used.png')"
+          :src="require('../assets/missiles/missile_2_used.png')"
           class="image-missile-big"
         />
       </v-flex>
@@ -30,13 +30,15 @@ export default {
   data() {
     return {};
   },
-  create() {},
+  create() {
+  },
   computed: {
     missileLeft() {
       return this.missileNumber - this.salvoSize;
     }
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+  },
   methods: {}
 };
 </script>
@@ -45,9 +47,11 @@ export default {
 .missile-legend {
   border: 2px grey solid;
 }
+
 .image-missile-big {
   width: inherit;
 }
+
 .image-missile-small {
   width: 20px;
 }
