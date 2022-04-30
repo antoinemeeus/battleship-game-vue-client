@@ -1,46 +1,46 @@
 <template>
   <v-container
+    fluid
     ma-0
     pa-0
-    fluid
   >
     <v-layout
+      align-center
+      justify-center
       row
       wrap
-      justify-center
-      align-center
     >
       <v-flex
-        xs12
         lg10
         pa-2
+        xs12
       >
         <h2 class="display-2 text-xs-center">
           Game List
         </h2>
       </v-flex>
       <v-flex
-        xs12
         lg10
         pa-3
+        xs12
       >
-        <GamesTable/>
+        <GamesTable />
       </v-flex>
       <v-flex
-        xs12
         lg10
         pa-3
+        xs12
       >
         <h2 class="display-2 text-xs-center">
           Leader Board
         </h2>
       </v-flex>
       <v-flex
-        xs12
         lg10
         pa-3
+        xs12
       >
-        <LeaderBoard/>
+        <LeaderBoard />
       </v-flex>
     </v-layout>
   </v-container>
@@ -52,68 +52,68 @@ import LeaderBoard from "../components/LeaderBoard.vue";
 import {mapActions, mapState} from "vuex";
 
 export default {
-  name: "Lobby",
-  components: {
-    GamesTable,
-    LeaderBoard
-  },
-  data() {
-    return {
-      autoRefresh: null
-    };
-  },
-  computed: {
-    ...mapState(["bgMusic"])
-  },
-  mounted() {
-    this.bgMusic.fade(0.0, 0.6, 1500);
-    this.setAutoRefresh();
-  },
-  beforeRouteUpdate() {
-    this.setAutoRefresh();
-  },
-  beforeRouteLeave(to, from, next) {
-    this.stopAutoRefresh();
-    next();
-  },
-  beforeDestroy() {
-    this.stopAutoRefresh();
-  },
-  methods: {
-    ...mapActions(["getData"]),
-    getGames() {
-      let payload = {mutation: "setGames", url: "/games"};
-      this.getData(payload);
+    name: "LobbyComponent",
+    components: {
+        GamesTable,
+        LeaderBoard
     },
-    getPlayers() {
-      let payload = {mutation: "setPlayers", url: "/players"};
-      this.getData(payload);
+    beforeRouteUpdate() {
+        this.setAutoRefresh();
     },
-    setAutoRefresh() {
-      let self = this;
-      if (this.autoRefresh == null) {
-        this.autoRefresh = setInterval(
-          function () {
-            if (this.$route.name === "lobby") {
-              self.getGames();
-              self.getPlayers();
-            } else this.stopAutoRefresh();
-          }.bind(this),
-          10000
-        );
-      }
+    beforeRouteLeave(to, from, next) {
+        this.stopAutoRefresh();
+        next();
     },
-    stopAutoRefresh() {
-      clearInterval(this.autoRefresh);
-      this.autoRefresh = null;
+    data() {
+        return {
+            autoRefresh: null
+        };
+    },
+    computed: {
+        ...mapState(["bgMusic"])
+    },
+    mounted() {
+        this.bgMusic.fade(0.0, 0.6, 1500);
+        this.setAutoRefresh();
+    },
+    beforeDestroy() {
+        this.stopAutoRefresh();
+    },
+    methods: {
+        ...mapActions(["getData"]),
+        getGames() {
+            let payload = {mutation: "setGames", url: "/games"};
+            this.getData(payload);
+        },
+        getPlayers() {
+            let payload = {mutation: "setPlayers", url: "/players"};
+            this.getData(payload);
+        },
+        setAutoRefresh() {
+            let self = this;
+            if (this.autoRefresh == null) {
+                this.autoRefresh = setInterval(
+                    function () {
+                        if (this.$route.name === "lobby") {
+                            self.getGames();
+                            self.getPlayers();
+                        } else this.stopAutoRefresh();
+                    }.bind(this),
+                    10000
+                );
+            }
+        },
+        stopAutoRefresh() {
+            clearInterval(this.autoRefresh);
+            this.autoRefresh = null;
+        }
     }
-  }
 };
 </script>
 <style scoped>
 .bg-box {
-  background-color: #3a4e5ec2;
+    background-color: #3a4e5ec2;
 
-  box-shadow: 0 0 53px 11px rgba(32, 46, 77, 0.8);
+    box-shadow: 0 0 53px 11px rgba(32, 46, 77, 0.8);
 }
 </style>

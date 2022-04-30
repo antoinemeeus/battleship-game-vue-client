@@ -23,7 +23,7 @@
           <span class="px-3  font-weight-light">Battleship Game </span>
         </v-toolbar-title>
 
-        <v-spacer/>
+        <v-spacer />
         <v-btn
           icon
           @click.prevent="soundOnOff()"
@@ -41,7 +41,7 @@
             volume_off
           </v-icon>
         </v-btn>
-        <AvatarButton class="px-2"/>
+        <AvatarButton class="px-2" />
         <v-icon
           :class="{ refresh: $store.state.loading }"
           dark
@@ -69,7 +69,7 @@
         </v-icon>
       </v-btn>
       <v-content>
-        <router-view/>
+        <router-view />
       </v-content>
     </div>
   </v-app>
@@ -80,43 +80,43 @@ import AvatarButton from "./components/AvatarButton.vue";
 import {mapState} from "vuex";
 
 export default {
-  name: "App",
-  components: {AvatarButton},
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapState(["musicPlaying", "alreadyVisited", "soundEffects"])
-  },
-  methods: {
-    soundOnOff() {
-      if (this.musicPlaying) {
-        this.$store.commit("stopMusic");
-      } else {
-        this.$store.commit("playMusic");
-      }
+    name: "App",
+    components: {AvatarButton},
+    data() {
+        return {};
+    },
+    computed: {
+        ...mapState(["musicPlaying", "alreadyVisited", "soundEffects"])
+    },
+    methods: {
+        soundOnOff() {
+            if (this.musicPlaying) {
+                this.$store.commit("stopMusic");
+            } else {
+                this.$store.commit("playMusic");
+            }
+        }
     }
-  }
 };
 </script>
 
 <style scoped>
 .background-image-fixed {
-  min-height: 100vh;
-  background-attachment: fixed;
-  background-image: url("./assets/battle_ship_background.jpg");
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-image: url("./assets/battle_ship_background.jpg");
 }
 
 .refresh {
-  animation: rotation 2s infinite linear reverse;
+    animation: rotation 2s infinite linear reverse;
 }
 
 @keyframes rotation {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(359deg);
-  }
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+    }
 }
 </style>

@@ -4,7 +4,7 @@ import axios from "axios";
 import {Howl, Howler} from "howler";
 
 Vue.use(Vuex);
-const qs = require("querystring");
+const qs = require('qs');
 
 export default new Vuex.Store({
     state: {

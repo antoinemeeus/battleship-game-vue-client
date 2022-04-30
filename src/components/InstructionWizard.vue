@@ -1,7 +1,7 @@
 <template>
   <v-layout
-    row
     justify-center
+    row
   >
     <v-dialog
       v-model="dialog"
@@ -18,8 +18,8 @@
         </v-btn>
       </template>
       <v-card
-        elevation="8"
         class="roundCorners"
+        elevation="8"
       >
         <v-card-title class="headline">
           How to play
@@ -39,9 +39,9 @@
                   Using your mouse, click on the enemy grid cells where to place
                   a salvo.
                   <img
+                    alt="aim cursor"
                     class="aim-img px-2"
                     src="../assets/tutorial/cursor_AimTarget.png"
-                    alt="aim cursor"
                   >. If you change your mind on a shot position, just click
                   again on the selected cell to cancel the selection.
                 </p>
@@ -49,9 +49,9 @@
               <li>
                 <p>
                   <img
+                    alt="possible launch buttons"
                     class="aim-img px-2"
                     src="../assets/tutorial/launchBtnSB.png"
-                    alt="possible launch buttons"
                   >
                   Once at least one shot is placed on the enemy grid, you can
                   send your salvo by clicking the button fire that is in the
@@ -65,15 +65,15 @@
                   After a few second you can see the result of your shots on the
                   enemy grid.
                   <img
+                    alt="missed cell"
                     class="aim-img px-2"
                     src="../assets/tutorial/missedCell.png"
-                    alt="missed cell"
                   >
                   blue cell means you missed,
                   <img
+                    alt="hit cell"
                     class="aim-img px-2"
                     src="../assets/tutorial/hitCell.png"
-                    alt="hit cell"
                   > red
                   cell means you hit a ship
                 </p>
@@ -82,9 +82,9 @@
                 <p>
                   The number in the top left corner of a shot cell
                   <img
+                    alt="hit cell with turn hit"
                     class="aim-img px-2"
                     src="../assets/tutorial/hitCell.png"
-                    alt="hit cell with turn hit"
                   > is
                   the round in which the salvo was fired.
                 </p>
@@ -100,9 +100,9 @@
               <li>
                 <p>
                   <img
+                    alt="timer"
                     class="aim-img px-2"
                     src="../assets/tutorial/timerImg.png"
-                    alt="timer"
                   >
                   The time counter in the middle is the time that is left for you to
                   place your salvo and fire it. If you don't fire your salvo in
@@ -119,7 +119,7 @@
             class="px-2"
             label="Don`t show me this next"
           />
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             color="primary"
             flat
@@ -135,55 +135,55 @@
 
 <script>
 export default {
-  components: {},
-  props: {
-    nbOfShots: {
-      type: Number,
-      default: 0
+    components: {},
+    props: {
+        nbOfShots: {
+            type: Number,
+            default: 0
+        },
     },
-  },
-  data() {
-    return {
-      dialog: false,
-      showAgain: false
-    };
-  },
-  watch: {
-    dialog(newVal) {
-      if (newVal === false) {
-        let showHelp = !this.showAgain
-        localStorage.setItem("showHelp", showHelp.toString());
-        this.$emit("pauseTimer", false);
-      }
+    data() {
+        return {
+            dialog: false,
+            showAgain: false
+        };
+    },
+    watch: {
+        dialog(newVal) {
+            if (newVal === false) {
+                let showHelp = !this.showAgain
+                localStorage.setItem("showHelp", showHelp.toString());
+                this.$emit("pauseTimer", false);
+            }
+        }
+    },
+    created() {
+        this.getShowHelp();
+    },
+    methods: {
+        getShowHelp() {
+            let showHelpBool = localStorage.getItem("showHelp");
+            if (showHelpBool === "false") {
+                this.dialog = false;
+                this.showAgain = true;
+                this.$emit("pauseTimer", false);
+            } else {
+                this.dialog = true;
+                this.showAgain = false;
+                this.$emit("pauseTimer", true);
+            }
+        }
     }
-  },
-  created() {
-    this.getShowHelp();
-  },
-  methods: {
-    getShowHelp() {
-      let showHelpBool = localStorage.getItem("showHelp");
-      if (showHelpBool === "false") {
-        this.dialog = false;
-        this.showAgain = true;
-        this.$emit("pauseTimer", false);
-      } else {
-        this.dialog = true;
-        this.showAgain = false;
-        this.$emit("pauseTimer", true);
-      }
-    }
-  }
 };
 </script>
 
 <style scoped>
 .roundCorners {
-  border-radius: 1em;
+    border-radius: 1em;
 }
 
 .aim-img {
-  height: 2em;
-  vertical-align: middle;
+    height: 2em;
+    vertical-align: middle;
 }
 </style>

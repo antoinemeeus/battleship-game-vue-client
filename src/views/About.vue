@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-layout
-      justify-center
       align-center
       column
+      justify-center
     >
       <v-flex
-        xs7
         class="title bg"
+        xs7
       >
         <h1 class="pa-3">
           This is an about page
@@ -37,8 +37,15 @@
     </v-layout>
   </div>
 </template>
+
+<script>
+export default {
+    name: "AboutView"
+}
+</script>
+
 <style scoped>
 .bg {
-  background-color: rgba(40, 47, 68, 0.671);
+    background-color: rgba(40, 47, 68, 0.671);
 }
 </style>

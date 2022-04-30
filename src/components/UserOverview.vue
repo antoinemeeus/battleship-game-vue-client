@@ -5,8 +5,8 @@
     dark
     flat
     max-width="800"
-    min-width="350"
     min-height="212"
+    min-width="350"
   >
     <v-card-title>
       <div
@@ -31,9 +31,9 @@
     </v-card-title>
     <v-card-text v-if="waitingToJoin">
       <v-layout
-        justify-center
         align-center
         fill-height
+        justify-center
       >
         <v-progress-circular
           :size="100"
@@ -45,9 +45,9 @@
     <v-card-text v-if="!waitingToJoin">
       <v-layout row>
         <v-flex
-          xs3
           align-self-center
           text-xs-center
+          xs3
         >
           <v-tooltip top>
             <template #activator="{ on }">
@@ -67,12 +67,12 @@
                 </template>
                 <v-avatar
                   :size="80"
-                  color="grey lighten-4"
                   class="avatar_hover"
+                  color="grey lighten-4"
                 >
                   <img
-                    :src="userAvatar.src"
                     :alt="userAvatar.name"
+                    :src="userAvatar.src"
                   >
                 </v-avatar>
               </v-badge>
@@ -81,11 +81,11 @@
           </v-tooltip>
           <v-btn
             v-if="isUser && !isUserDefaultAnonymous"
-            color="red"
-            :loading="status === 'loading'"
-            small
             :icon="$vuetify.breakpoint.mdAndDown"
+            :loading="status === 'loading'"
             :round="$vuetify.breakpoint.mdAndDown"
+            color="red"
+            small
             @click.stop="logOut()"
           >
             <span v-if="!$vuetify.breakpoint.mdAndDown">Logout</span>
@@ -105,13 +105,13 @@
             <span v-if="!isUser">Enemy information & Statistics :</span>
           </v-flex>
           <v-layout
-            row
             class=" text-no-wrap"
+            row
           >
             <v-flex px-1>
               <v-layout
-                fill-height
                 column
+                fill-height
               >
                 <v-flex>
                   Email:<span class="orange--text"> {{ user.email }}</span>
@@ -145,8 +145,8 @@
               </v-layout>
             </v-flex>
             <v-flex
-              px-1
               hidden-sm-and-down
+              px-1
             >
               <v-layout column>
                 <v-flex>
@@ -183,99 +183,99 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
-  props: {
-    isUser: {type: Boolean, default: true},
-    user: {
-      type: Object,
-      default: () => ({
-        avatarID: 11,
-        id: "AI",
-        lastPlayedDate: "",
-        lastConnectedDate: "",
-        userName: "NotAComputer",
-        email: "SinkAllShips@Skynet.evil",
-        score: {total: 0, won: 0, lost: 0, tied: 0}
-      })
-    },
-    isUserConnected: {type: Boolean, default: true}
-  },
-  data: () => ({}),
-  computed: {
-    ...mapState(["avatarList", "avatarComputer", "status"]),
-    ...mapGetters(["gameStateCode"]),
-    isComputerMode() {
-      return this.$route.name === "computer";
-    },
-    isUserDefaultAnonymous() {
-      return this.user.id == null;
-    },
-    userAvatar() {
-      let avatarFound = this.avatarList.find(
-        avatar => avatar.id === this.user.avatarID
-      );
-      if (avatarFound !== undefined && avatarFound != null) return avatarFound;
-      if (this.user.id === "AI") return this.avatarComputer;
-      return this.avatarList[0];
-    },
-    waitingToJoin() {
-      return this.gameStateCode === "0" && !this.isUser;
-    },
-    userActions() {
-      switch (this.gameStateCode) {
-        case "-2":
-          return "";
-        case "1":
-          return "Placing Ships";
-        case "5":
-          return "Game finished";
-        case "3":
-          return "Waiting for opponent";
-        case "4":
-          return "Placing salvo!";
-        default:
-          return "Waiting for opponent...";
-      }
-    },
-    opponentActions() {
-      switch (this.gameStateCode) {
-        case "-2":
-          return "";
-        case "2":
-          return "Placing Ships";
-        case "5":
-          return "Game finished";
-        case "3":
-          return "Placing salvo!";
-        case "4":
-          return "Waiting for you!";
-        default:
-          return "Waiting for opponent...";
-      }
-    }
-  },
-  methods: {
-    ...mapActions(["authRequest"]),
-    logOut() {
-      let payload = {
-        data: {},
-        rqUrl: "/logout"
-      };
-      this.authRequest(payload).then(
-        res => {
-          this.$router.push("/").catch(err => {
-          });
+    props: {
+        isUser: {type: Boolean, default: true},
+        user: {
+            type: Object,
+            default: () => ({
+                avatarID: 11,
+                id: "AI",
+                lastPlayedDate: "",
+                lastConnectedDate: "",
+                userName: "NotAComputer",
+                email: "SinkAllShips@Skynet.evil",
+                score: {total: 0, won: 0, lost: 0, tied: 0}
+            })
         },
-        err => {
-          console.log(
-            "Error login out with userOverview",
-            err.response || err.request
-          );
+        isUserConnected: {type: Boolean, default: true}
+    },
+    data: () => ({}),
+    computed: {
+        ...mapState(["avatarList", "avatarComputer", "status"]),
+        ...mapGetters(["gameStateCode"]),
+        isComputerMode() {
+            return this.$route.name === "computer";
+        },
+        isUserDefaultAnonymous() {
+            return this.user.id == null;
+        },
+        userAvatar() {
+            let avatarFound = this.avatarList.find(
+                avatar => avatar.id === this.user.avatarID
+            );
+            if (avatarFound !== undefined && avatarFound != null) return avatarFound;
+            if (this.user.id === "AI") return this.avatarComputer;
+            return this.avatarList[0];
+        },
+        waitingToJoin() {
+            return this.gameStateCode === "0" && !this.isUser;
+        },
+        userActions() {
+            switch (this.gameStateCode) {
+                case "-2":
+                    return "";
+                case "1":
+                    return "Placing Ships";
+                case "5":
+                    return "Game finished";
+                case "3":
+                    return "Waiting for opponent";
+                case "4":
+                    return "Placing salvo!";
+                default:
+                    return "Waiting for opponent...";
+            }
+        },
+        opponentActions() {
+            switch (this.gameStateCode) {
+                case "-2":
+                    return "";
+                case "2":
+                    return "Placing Ships";
+                case "5":
+                    return "Game finished";
+                case "3":
+                    return "Placing salvo!";
+                case "4":
+                    return "Waiting for you!";
+                default:
+                    return "Waiting for opponent...";
+            }
         }
-      );
+    },
+    methods: {
+        ...mapActions(["authRequest"]),
+        logOut() {
+            let payload = {
+                data: {},
+                rqUrl: "/logout"
+            };
+            this.authRequest(payload).then(
+                res => {
+                    this.$router.push("/").catch(err => {
+                    });
+                },
+                err => {
+                    console.log(
+                        "Error login out with userOverview",
+                        err.response || err.request
+                    );
+                }
+            );
+        }
     }
-  }
 };
 </script>

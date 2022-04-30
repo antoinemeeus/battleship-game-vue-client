@@ -2,8 +2,8 @@
   <div>
     <v-menu
       v-model="menu"
-      offset-y
       nudge-left="50%"
+      offset-y
     >
       <template #activator="{ on }">
         <v-btn
@@ -17,8 +17,8 @@
             v-on="on"
           >
             <img
-              :src="selectedAvatar.src"
               :alt="selectedAvatar.name"
+              :src="selectedAvatar.src"
             >
           </v-avatar>
         </v-btn>
@@ -29,8 +29,8 @@
           @click.stop="openModal"
         >
           <v-list-tile-avatar
-            tile
             :size="30"
+            tile
           >
             <v-icon color="green">
               fa-sign-in-alt
@@ -66,8 +66,8 @@
           @click="logOut"
         >
           <v-list-tile-avatar
-            tile
             :size="30"
+            tile
           >
             <v-icon color="red">
               fa-sign-out-alt
@@ -86,7 +86,7 @@
       max-width="500"
     >
       <v-flex shrink>
-        <Registration @loginSuccess="closeModal"/>
+        <Registration @loginSuccess="closeModal" />
       </v-flex>
     </v-dialog>
   </div>
@@ -94,54 +94,54 @@
 
 <script>
 import Registration from "../components/Registration.vue";
-import {mapState, mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
-  components: {
-    Registration
-  },
-  data: () => ({
-    menu: false,
-    dialog: false,
-    avatarID: 1
-  }),
-  computed: {
-    ...mapState(["loading", "avatarList"]),
-    ...mapGetters(["currentUser", "isAuthenticated"]),
-    selectedAvatar() {
-      return this.avatarList.find(av => av.id === this.currentUser.avatarID);
-    }
-  },
-  mounted() {
-    this.valid = false;
-  },
-  methods: {
-    ...mapActions(["authRequest", "postData", "getData"]),
-    openModal() {
-      this.dialog = true;
+    components: {
+        Registration
     },
-    closeModal(value) {
-      if (value)
-        setTimeout(() => {
-          this.dialog = false;
-        }, 2500);
-    },
-    logOut(e) {
-      let payload = {
-        data: {},
-        rqUrl: "/logout"
-      };
-      this.authRequest(payload).then(
-        res => {
-          this.menu = false;
-          this.$router.push("/").catch(err => {
-          });
-        },
-        err => {
+    data: () => ({
+        menu: false,
+        dialog: false,
+        avatarID: 1
+    }),
+    computed: {
+        ...mapState(["loading", "avatarList"]),
+        ...mapGetters(["currentUser", "isAuthenticated"]),
+        selectedAvatar() {
+            return this.avatarList.find(av => av.id === this.currentUser.avatarID);
         }
-      );
-      e.preventDefault();
+    },
+    mounted() {
+        this.valid = false;
+    },
+    methods: {
+        ...mapActions(["authRequest", "postData", "getData"]),
+        openModal() {
+            this.dialog = true;
+        },
+        closeModal(value) {
+            if (value)
+                setTimeout(() => {
+                    this.dialog = false;
+                }, 2500);
+        },
+        logOut(e) {
+            let payload = {
+                data: {},
+                rqUrl: "/logout"
+            };
+            this.authRequest(payload).then(
+                res => {
+                    this.menu = false;
+                    this.$router.push("/").catch(err => {
+                    });
+                },
+                err => {
+                }
+            );
+            e.preventDefault();
+        }
     }
-  }
 };
 </script>

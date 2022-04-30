@@ -25,34 +25,30 @@
 
 <script>
 export default {
-  components: {},
-  props: ["salvoSize", "missileNumber"],
-  data() {
-    return {};
-  },
-  create() {
-  },
-  computed: {
-    missileLeft() {
-      return this.missileNumber - this.salvoSize;
-    }
-  },
-  beforeDestroy() {
-  },
-  methods: {}
+    components: {},
+    props: ["salvoSize", "missileNumber"],
+    data() {
+        return {};
+    },
+    create() {
+    },
+    computed: {
+        missileLeft() {
+            return this.missileNumber - this.salvoSize;
+        }
+    },
+    beforeDestroy() {
+    },
+    methods: {}
 };
 </script>
 
 <style scoped>
 .missile-legend {
-  border: 2px grey solid;
+    border: 2px grey solid;
 }
 
 .image-missile-big {
-  width: inherit;
-}
-
-.image-missile-small {
-  width: 20px;
+    width: inherit;
 }
 </style>

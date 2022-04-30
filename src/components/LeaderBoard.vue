@@ -1,17 +1,17 @@
 <template>
   <v-layout
-    pa-0
     ma-0
+    pa-0
   >
     <v-layout
-      row
-      wrap
       justify-center
+      row
       style="overflow:auto"
+      wrap
     >
       <v-flex
-        xs12
         class="dark-bg"
+        xs12
       >
         <v-btn
           dark
@@ -24,16 +24,15 @@
       </v-flex>
       <v-flex xs12>
         <v-data-table
-          class="table-height"
           :headers="headers"
           :items="presentPlayers"
-          :pagination.sync="pagination"
-          dark
           :loading="loading"
+          :pagination.sync="pagination"
+          class="table-height"
+          dark
           hide-actions
         >
           <v-progress-linear
-            #progress
             color="red"
             indeterminate
           />
@@ -67,9 +66,9 @@
           <v-pagination
             v-show="pagination.totalItems > pagination.rowsPerPage"
             v-model="pagination.page"
-            dark
-            color="orange"
             :length="pages"
+            color="orange"
+            dark
           />
         </div>
       </v-flex>
@@ -78,96 +77,96 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import {mapActions, mapState} from "vuex";
 
 export default {
-  data: () => ({
-    pagination: {
-      descending: true,
-      rowsPerPage: 8,
-      sortBy: "total",
-      totalItems: null
-    },
-    headers: [
-      {
-        text: "Id",
-        align: "center",
-        value: "id",
-        sortable: false
-      },
-      {
-        text: "Player",
-        align: "right",
-        value: "player",
-        sortable: false,
-        class: "text-xs-right"
-      },
-      {
-        text: "Total Score",
-        align: "center",
-        value: "total",
-        class: "text-xs-center"
-      },
-      {text: "Won", align: "center", value: "won"},
-      {text: "Lost", align: "center", value: "lost"},
-      {text: "Tied", align: "center", value: "tied"}
-    ],
-    fetchedGames: []
-  }),
-  computed: {
-    ...mapState(["players", "loading"]),
-    presentPlayers() {
-      //flatten players.score to direct properties to make sortables items.
-      let pPlayers = this.players.map(player => {
-        player["total"] = player.score.total;
-        player["won"] = player.score.won;
-        player["lost"] = player.score.lost;
-        player["tied"] = player.score.tied;
-        return player;
-      });
+    data: () => ({
+        pagination: {
+            descending: true,
+            rowsPerPage: 8,
+            sortBy: "total",
+            totalItems: null
+        },
+        headers: [
+            {
+                text: "Id",
+                align: "center",
+                value: "id",
+                sortable: false
+            },
+            {
+                text: "Player",
+                align: "right",
+                value: "player",
+                sortable: false,
+                class: "text-xs-right"
+            },
+            {
+                text: "Total Score",
+                align: "center",
+                value: "total",
+                class: "text-xs-center"
+            },
+            {text: "Won", align: "center", value: "won"},
+            {text: "Lost", align: "center", value: "lost"},
+            {text: "Tied", align: "center", value: "tied"}
+        ],
+        fetchedGames: []
+    }),
+    computed: {
+        ...mapState(["players", "loading"]),
+        presentPlayers() {
+            //flatten players.score to direct properties to make sortables items.
+            let pPlayers = this.players.map(player => {
+                player["total"] = player.score.total;
+                player["won"] = player.score.won;
+                player["lost"] = player.score.lost;
+                player["tied"] = player.score.tied;
+                return player;
+            });
 
-      return pPlayers.filter(player => player.total !== 0);
-    },
-    pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      )
-        return 0;
+            return pPlayers.filter(player => player.total !== 0);
+        },
+        pages() {
+            if (
+                this.pagination.rowsPerPage == null ||
+                this.pagination.totalItems == null
+            )
+                return 0;
 
-      return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
-      );
-    }
-  },
-  watch: {
-    presentPlayers(newPPlayers) {
-      this.pagination.totalItems = newPPlayers.length;
-    }
-  },
-  created() {
-    this.getPlayers();
-  },
-  methods: {
-    ...mapActions(["getData"]),
-    getPlayers() {
-      let payload = {mutation: "setPlayers", url: "/players"};
-      this.getData(payload);
+            return Math.ceil(
+                this.pagination.totalItems / this.pagination.rowsPerPage
+            );
+        }
     },
-    toPlayerBoard(id) {
-      this.$router.push("/game?gp=" + id);
+    watch: {
+        presentPlayers(newPPlayers) {
+            this.pagination.totalItems = newPPlayers.length;
+        }
+    },
+    created() {
+        this.getPlayers();
+    },
+    methods: {
+        ...mapActions(["getData"]),
+        getPlayers() {
+            let payload = {mutation: "setPlayers", url: "/players"};
+            this.getData(payload);
+        },
+        toPlayerBoard(id) {
+            this.$router.push("/game?gp=" + id);
+        }
     }
-  }
 };
 </script>
 
 <style scoped>
 .dark-bg {
-  background-color: rgba(68, 69, 70, 0.822);
+    background-color: rgba(68, 69, 70, 0.822);
 }
 
 .table-height {
-  max-height: 50vh;
-  overflow-y: auto;
+    max-height: 50vh;
+    overflow-y: auto;
 }
 </style>
