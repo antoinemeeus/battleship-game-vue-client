@@ -2,7 +2,7 @@
   <v-app dark>
     <div class="background-image-fixed">
       <v-toolbar
-        v-show="this.$route.name !== 'landingPage' || alreadyVisited"
+        v-show="$route.name !== 'landingPage' || alreadyVisited"
         dense
         dark
         pa-3
@@ -43,7 +43,7 @@
         </v-btn>
         <AvatarButton class="px-2"/>
         <v-icon
-          :class="{ refresh: this.$store.state.loading }"
+          :class="{ refresh: $store.state.loading }"
           dark
           small
         >
@@ -51,7 +51,7 @@
         </v-icon>
       </v-toolbar>
       <v-btn
-        v-show="this.$route.name === 'landingPage' && !alreadyVisited"
+        v-show="$route.name === 'landingPage' && !alreadyVisited"
         icon
         @click.prevent="soundOnOff()"
       >

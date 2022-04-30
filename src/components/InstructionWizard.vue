@@ -7,7 +7,7 @@
       v-model="dialog"
       max-width="800"
     >
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           icon
           v-on="on"

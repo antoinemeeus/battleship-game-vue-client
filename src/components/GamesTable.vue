@@ -77,7 +77,7 @@
             :loading="loading"
           >
             <v-progress-linear
-              v-slot:progress
+              #progress
               color="red"
               indeterminate
             />

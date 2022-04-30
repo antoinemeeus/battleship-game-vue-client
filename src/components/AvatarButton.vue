@@ -5,7 +5,7 @@
       offset-y
       nudge-left="50%"
     >
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           fab
           icon

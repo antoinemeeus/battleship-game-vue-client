@@ -33,7 +33,7 @@
           hide-actions
         >
           <v-progress-linear
-            v-slot:progress
+            #progress
             color="red"
             indeterminate
           />

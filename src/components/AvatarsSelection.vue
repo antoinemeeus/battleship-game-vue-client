@@ -4,7 +4,7 @@
     :disabled="fixed"
     transition="scale-transition"
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-bind="{
           small: $vuetify.breakpoint.smAndDown,

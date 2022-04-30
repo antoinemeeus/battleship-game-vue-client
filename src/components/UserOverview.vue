@@ -50,13 +50,13 @@
           text-xs-center
         >
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-badge
                 :color="isUserConnected ? 'green' : 'red'"
                 left
                 overlap
               >
-                <template v-slot:badge>
+                <template #badge>
                   <v-icon
                     dark
                     small
